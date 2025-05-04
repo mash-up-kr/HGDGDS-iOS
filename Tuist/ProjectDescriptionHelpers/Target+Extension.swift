@@ -1,0 +1,86 @@
+//
+//  Target+Extension.swift
+//  Config
+//
+//  Created by iOS신상우 on 4/26/25.
+//
+
+import ProjectDescription
+
+//MARK: - App Target 생성
+public extension Target {
+    
+    static func makeAppTarget(
+        name: String,
+        bundleId: String,
+        deploymentTargetsVersion: String,
+        infoPlist: [String : Plist.Value],
+        entitlements: String,
+        scripts: [TargetScript],
+        dependencies: [TargetDependency],
+        settings: Settings
+    ) -> Target {
+        let appTaget: Target = .target(
+            name: name,
+            destinations: .iOS,
+            product: .app,
+            bundleId: bundleId,
+            deploymentTargets: .iOS(deploymentTargetsVersion),
+            infoPlist: .extendingDefault(with: infoPlist),
+            sources: ["Sources/**"],
+            resources: ["Resources/**"],
+            entitlements: .file(path: .relativeToRoot(entitlements)),
+            scripts: scripts,
+            dependencies: dependencies,
+            settings: settings
+        )
+        
+        return appTaget
+    }
+}
+
+//MARK: - Static Library Target 생성
+public extension Target {
+    static func makeStaticLirbraryTarget(
+        name: String,
+        bundleId: String,
+        deploymentTargetsVersion: String,
+        dependencies: [TargetDependency]
+    ) -> Target {
+        let target: Target = .target(
+            name: name,
+            destinations: .iOS,
+            product: .staticLibrary,
+            bundleId: bundleId,
+            deploymentTargets: .iOS(deploymentTargetsVersion),
+            sources: ["Sources/**"],
+            dependencies: dependencies
+        )
+        
+        return target
+    }
+}
+
+//MARK: - Dynamic Framework Target 생성
+public extension Target {
+    static func makeDynamicFrameworkTarget(
+        name: String,
+        bundleId: String,
+        deploymentTargetsVersion: String,
+        dependencies: [TargetDependency],
+        hasResources: Bool = true
+    ) -> Target {
+        let appTaget: Target = .target(
+            name: name,
+            destinations: .iOS,
+            product: .framework,
+            bundleId: bundleId,
+            deploymentTargets: .iOS(deploymentTargetsVersion),
+            sources: ["Sources/**"],
+            resources: hasResources ? ["Resources/**"] : nil,
+            dependencies: dependencies
+        )
+        
+        return appTaget
+    }
+}

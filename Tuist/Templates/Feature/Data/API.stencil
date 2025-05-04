@@ -1,0 +1,14 @@
+//
+//  {{ name }}API.swift
+//  {{ name }}
+//
+//  Created by {{ autor }} on {{ date }}.
+//
+
+import Foundation
+import Network
+import {{ name }}Domain
+
+final class {{ name }}API: Networkable {
+
+}

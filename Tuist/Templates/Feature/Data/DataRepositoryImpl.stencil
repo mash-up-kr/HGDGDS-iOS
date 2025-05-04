@@ -1,0 +1,14 @@
+//
+//  {{ name }}RepositoryImpl.swift
+//  {{ name }}
+//
+//  Created by {{ autor }} on {{ date }}.
+//
+
+import Foundation
+import {{ name }}Domain
+
+final class {{ name }}RepositoryImpl: {{ name }}Repository {
+    private let network: Networkable
+    // TODO: private let localDBManager: LocalDB프로토콜
+}

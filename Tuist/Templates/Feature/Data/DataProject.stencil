@@ -1,0 +1,27 @@
+//
+//  {{ name }}DataProject.swift
+//  {{ name }}
+//
+//  Created by {{ autor }} on {{ date }}.
+//
+
+
+import ProjectDescription
+import ProjectDescriptionHelpers
+
+let project = Project(
+    name: "{{ name }}Data",
+    targets: [
+        .makeDynamicFrameworkTarget(
+            name: "{{ name }}Data",
+            bundleId: "\(Constants.organizationName).{{ name }}Data",
+            deploymentTargetsVersion: "\(Constants.targetVersion)",
+            dependencies: [
+                DependencyContainer.{{ name }}Domain,
+                DependencyContainer.HGNetwork,
+                DependencyContainer.HGDataBase,
+            ],
+            hasResources: false
+        )
+    ]
+)

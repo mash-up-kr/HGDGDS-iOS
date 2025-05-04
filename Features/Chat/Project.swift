@@ -1,0 +1,27 @@
+//
+//  Project.stencil
+//  Config
+//
+//  Created by iOS신상우 on 4/26/25.
+//
+
+import ProjectDescription
+import ProjectDescriptionHelpers
+
+let project = Project(
+    name: "ChatFeature",
+    targets: [
+        .makeDynamicFrameworkTarget(
+            name: "ChatFeature",
+            bundleId: "\(Constants.organizationName).Chat",
+            deploymentTargetsVersion: "\(Constants.targetVersion)",
+            dependencies: [
+                DependencyContainer.ChatDomain,
+                DependencyContainer.HGCommon,
+                DependencyContainer.HGLogger,
+                DependencyContainer.HGDesignSystem,
+            ],
+            hasResources: false
+        )
+    ]
+)
