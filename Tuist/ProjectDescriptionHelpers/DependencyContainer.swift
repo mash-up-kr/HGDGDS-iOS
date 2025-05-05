@@ -47,7 +47,7 @@ public extension DependencyContainer {
 
 
 // MARK: - Convenience Method
-private extension TargetDependency {
+private extension TargetDependency {    
     static func featureProject(name: String) -> TargetDependency {
         .project(target: "\(name)Feature", path: .relativeToRoot("Features/\(name)"))
     }

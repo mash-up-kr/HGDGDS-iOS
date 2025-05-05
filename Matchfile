@@ -1,0 +1,13 @@
+git_url("https://github.com/iosdevSW/HGDGDS_Match.git")
+
+storage_mode("git")
+
+type("development") # The default type, can be: appstore, adhoc, enterprise or development
+
+app_identifier(["HGDGDS.HGDGDS-iOS"])
+username("iosdev.sw@gmail.com") # Your Apple Developer Portal username
+force_for_new_devices(true)
+# For all available options run `fastlane match --help`
+# Remove the # in the beginning of the line to enable the other options
+
+# The docs are available on https://docs.fastlane.tools/actions/match
