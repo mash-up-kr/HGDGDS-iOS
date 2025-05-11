@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Network
+import HGNetwork
 import UserDomain
 
 final class UserAPI: Networkable {

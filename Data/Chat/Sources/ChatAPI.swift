@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Network
+import HGNetwork
 import ChatDomain
 
 final class ChatAPI: Networkable {

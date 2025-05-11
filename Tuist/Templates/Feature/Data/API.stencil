@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import Network
+import HGNetwork
 import {{ name }}Domain
 
-final class {{ name }}API: Networkable {
+struct {{ name }}API: EndPointable {
 
 }

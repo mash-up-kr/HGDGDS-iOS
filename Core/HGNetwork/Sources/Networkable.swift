@@ -1,12 +1,12 @@
 //
-//  Network.swift
-//  AppManifests
+//  Networkable.swift
+//  HGNetwork
 //
-//  Created by iOS신상우 on 4/28/25.
+//  Created by iOS신상우 on 5/10/25.
 //
 
 import Alamofire
 
 public protocol Networkable {
-    // TODO: 추상화
+    
 }
