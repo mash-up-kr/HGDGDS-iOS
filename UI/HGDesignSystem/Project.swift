@@ -30,5 +30,6 @@ let project = Project(
                 ThirdParty.Nuke
             ]
         )
-    ]
+    ],
+    resourceSynthesizers: .default
 )

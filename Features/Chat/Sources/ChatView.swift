@@ -5,5 +5,12 @@
 //  Created by  on .
 //
 
-import SwifUI
+import SwiftUI
 import ChatDomain
+import HGDesignSystem
+
+struct ChatView: View {
+    var body: some View {
+        Text("")
+    }
+}
