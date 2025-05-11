@@ -18,12 +18,7 @@ let project = Project(
             bundleId: "\(Constants.organizationName).HGThridParty",
             deploymentTargetsVersion: Constants.targetVersion,
             dependencies: [
-//                .ThirdParty.FirebaseCrashlytics,
-//                .ThirdParty.FirebaseMessaging,
-//                .ThirdParty.KakaoSDKAuth,
-//                .ThirdParty.KakaoSDKCommon,
-//                .ThirdParty.KakaoSDKUser,
-//                .ThirdParty.Lottie
+
             ]
         )
     ]

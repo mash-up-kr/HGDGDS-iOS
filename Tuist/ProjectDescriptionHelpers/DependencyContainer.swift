@@ -8,63 +8,86 @@
 import Foundation
 import ProjectDescription
 
-public struct DependencyContainer { }
+public enum DependencyContainer { }
+
+fileprivate enum DependencyName: String {
+    case user = "User"
+    case chat = "Chat"
+    case booking = "Booking"
+    
+    case hgNetwork = "HGNetwork"
+    case hgDatabase = "HGDataBase"
+    case hgLogger = "HGLogger"
+    case hgCommon = "HGCommon"
+    case hgThridParty = "HGThridParty"
+    
+    case hgDesignSystem = "HGDesignSystem"
+}
 
 // MARK: - Feature
 public extension DependencyContainer {
-    static let UserFeature: TargetDependency = .featureProject(name: "User")
-    static let ChatFeature: TargetDependency = .featureProject(name: "Chat")
-    static let BookingFeature: TargetDependency = .featureProject(name: "Booking")
+    static let UserFeature: TargetDependency = .featureProject(with: .user)
+    static let ChatFeature: TargetDependency = .featureProject(with: .chat)
+    static let BookingFeature: TargetDependency = .featureProject(with: .booking)
 }
 
 // MARK: - Domain
 public extension DependencyContainer {
-    static let UserDomain: TargetDependency = .domainProject(name: "User")
-    static let ChatDomain: TargetDependency = .domainProject(name: "Chat")
-    static let BookingDomain: TargetDependency = .domainProject(name: "Booking")
+    static let UserDomain: TargetDependency = .domainProject(with: .user)
+    static let ChatDomain: TargetDependency = .domainProject(with: .chat)
+    static let BookingDomain: TargetDependency = .domainProject(with: .booking)
 }
 
 // MARK: - Data
 public extension DependencyContainer {
-    static let UserData: TargetDependency = .dataProject(name: "User")
-    static let ChatData: TargetDependency = .dataProject(name: "Chat")
-    static let BookingData: TargetDependency = .dataProject(name: "Booking")
+    static let UserData: TargetDependency = .dataProject(with: .user)
+    static let ChatData: TargetDependency = .dataProject(with: .chat)
+    static let BookingData: TargetDependency = .dataProject(with: .booking)
 }
 
 // MARK: - Core
 public extension DependencyContainer {
-    static let HGNetwork: TargetDependency = .coreProject(name: "HGNetwork")
-    static let HGDataBase: TargetDependency = .coreProject(name: "HGDataBase")
-    static let HGLogger: TargetDependency = .coreProject(name: "HGLogger")
-    static let HGCommon: TargetDependency = .coreProject(name: "HGCommon")
-    static let HGThirdParty: TargetDependency = .coreProject(name: "HGThirdParty")
+    static let HGNetwork: TargetDependency = .coreProject(with: .hgNetwork)
+    static let HGDataBase: TargetDependency = .coreProject(with: .hgDatabase)
+    static let HGLogger: TargetDependency = .coreProject(with: .hgLogger)
+    static let HGCommon: TargetDependency = .coreProject(with: .hgCommon)
+    static let HGThirdParty: TargetDependency = .coreProject(with: .hgThridParty)
 }
 
 // MARK: - UI
 public extension DependencyContainer {
-    static let HGDesignSystem: TargetDependency = .uiProject(name: "HGDesignSystem")
+    static let HGDesignSystem: TargetDependency = .uiProject(with: .hgDesignSystem)
 }
 
 
 // MARK: - Convenience Method
 private extension TargetDependency {    
-    static func featureProject(name: String) -> TargetDependency {
-        .project(target: "\(name)Feature", path: .relativeToRoot("Features/\(name)"))
+    static func featureProject(with dependecyName: DependencyName) -> TargetDependency {
+        .project(
+            target: "\(dependecyName.rawValue)Feature",
+            path: .relativeToRoot("Features/\(dependecyName.rawValue)")
+        )
     }
     
-    static func domainProject(name: String) -> TargetDependency {
-        .project(target: "\(name)Domain", path: .relativeToRoot("Domain/\(name)"))
+    static func domainProject(with dependecyName: DependencyName) -> TargetDependency {
+        .project(
+            target: "\(dependecyName.rawValue)Domain",
+            path: .relativeToRoot("Domain/\(dependecyName.rawValue)")
+        )
     }
     
-    static func dataProject(name: String) -> TargetDependency {
-        .project(target: "\(name)Data", path: .relativeToRoot("Data/\(name)"))
+    static func dataProject(with dependecyName: DependencyName) -> TargetDependency {
+        .project(
+            target: "\(dependecyName.rawValue)Data",
+            path: .relativeToRoot("Data/\(dependecyName)")
+        )
     }
     
-    static func coreProject(name: String) -> TargetDependency {
-        .project(target: name, path: .relativeToRoot("Core/\(name)"))
+    static func coreProject(with dependecyName: DependencyName) -> TargetDependency {
+        .project(target: dependecyName.rawValue, path: .relativeToRoot("Core/\(dependecyName.rawValue)"))
     }
     
-    static func uiProject(name: String) -> TargetDependency {
-        .project(target: name, path: .relativeToRoot("UI/\(name)"))
+    static func uiProject(with dependecyName: DependencyName) -> TargetDependency {
+        .project(target: dependecyName.rawValue, path: .relativeToRoot("UI/\(dependecyName.rawValue)"))
     }
 }

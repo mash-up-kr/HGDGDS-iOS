@@ -27,8 +27,6 @@ let project = Project(
             dependencies: [
                 DependencyContainer.HGLogger,
                 DependencyContainer.HGCommon,
-                
-                ThirdParty.Lottie
             ],
             settings: .settings(
                 base: [
