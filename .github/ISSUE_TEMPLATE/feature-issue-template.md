@@ -16,6 +16,13 @@ assignees: iosdevSW
 - [ ] 세부적으로 적어주세요
 
 
-## 📸 참고 스크린샷 (Optional)
-- 참고하기 좋은 이미지가 있다면 첨부해주세요
-- ex) 작업하는 Figma 화면, 에러로그 등
+<!--
+ ## 📸 참고 스크린샷 (Optional)
+ - 참고하기 좋은 이미지가 있다면 첨부해주세요
+ - ex) 작업하는 Figma 화면, 에러로그 등
+ 
+ <img src="https://github.com/namsoo5.png" width="300" height="400"/>
+ |제목1|제목2|
+ |:---:|:---:|
+ |이미지1|이미지2|
+ -->
