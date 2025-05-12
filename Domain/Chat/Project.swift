@@ -14,7 +14,6 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "ChatDomain",
-            bundleId: "\(Constants.organizationName).ChatDomain",
             deploymentTargetsVersion: "\(Constants.targetVersion)",
             dependencies: [
 

@@ -11,7 +11,7 @@ import PackageDescription
         productTypes: [
             "Alamofire": .framework,
             "Nuke": .framework,
-            "Lottie": .framework,
+//            "Lottie": .framework,
             "Firebase": .framework
         ]
     )

@@ -8,7 +8,6 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "HGCommon",
-            bundleId: "\(Constants.organizationName).HGCommon",
             deploymentTargetsVersion: Constants.targetVersion,
             dependencies: [],
             hasResources: false

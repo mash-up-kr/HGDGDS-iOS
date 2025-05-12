@@ -15,7 +15,6 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "{{ name }}Data",
-            bundleId: "\(Constants.organizationName).{{ name }}Data",
             deploymentTargetsVersion: "\(Constants.targetVersion)",
             dependencies: [
                 DependencyContainer.{{ name }}Domain,

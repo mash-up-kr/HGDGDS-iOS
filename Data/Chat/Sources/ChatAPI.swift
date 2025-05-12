@@ -9,6 +9,6 @@ import Foundation
 import HGNetwork
 import ChatDomain
 
-final class ChatAPI: Networkable {
+struct ChatAPI: EndPointable {
 
 }

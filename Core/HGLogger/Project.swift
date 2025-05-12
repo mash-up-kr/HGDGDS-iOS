@@ -17,7 +17,6 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: name,
-            bundleId: "\(Constants.organizationName).\(name)",
             deploymentTargetsVersion: Constants.targetVersion,
             dependencies: [],
             hasResources: false

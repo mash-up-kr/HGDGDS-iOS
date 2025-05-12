@@ -8,7 +8,6 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "HGNetwork",
-            bundleId: "\(Constants.organizationName).HGNetwork",
             deploymentTargetsVersion: Constants.targetVersion,
             dependencies: [
                 ThirdParty.Alamofire

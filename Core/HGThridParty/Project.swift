@@ -10,7 +10,6 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "HGThridParty",
-            bundleId: "\(Constants.organizationName).HGThridParty",
             deploymentTargetsVersion: Constants.targetVersion,
             dependencies: [
 

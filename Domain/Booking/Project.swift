@@ -14,7 +14,6 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "BookingDomain",
-            bundleId: "\(Constants.organizationName).BookingDomain",
             deploymentTargetsVersion: "\(Constants.targetVersion)",
             dependencies: [
 

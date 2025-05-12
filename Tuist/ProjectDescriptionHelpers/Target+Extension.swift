@@ -12,7 +12,6 @@ public extension Target {
     
     static func makeAppTarget(
         name: String,
-        bundleId: String,
         deploymentTargetsVersion: String,
         infoPlist: [String : Plist.Value],
         entitlements: String,
@@ -24,7 +23,7 @@ public extension Target {
             name: name,
             destinations: .iOS,
             product: .app,
-            bundleId: bundleId,
+            bundleId: "\(Constants.organizationName).\(name)",
             deploymentTargets: .iOS(deploymentTargetsVersion),
             infoPlist: .extendingDefault(with: infoPlist),
             sources: ["Sources/**"],
@@ -43,7 +42,6 @@ public extension Target {
 public extension Target {
     static func makeStaticLirbraryTarget(
         name: String,
-        bundleId: String,
         deploymentTargetsVersion: String,
         dependencies: [TargetDependency]
     ) -> Target {
@@ -51,7 +49,7 @@ public extension Target {
             name: name,
             destinations: .iOS,
             product: .staticLibrary,
-            bundleId: bundleId,
+            bundleId: "\(Constants.organizationName).\(name)",
             deploymentTargets: .iOS(deploymentTargetsVersion),
             sources: ["Sources/**"],
             dependencies: dependencies,
@@ -66,17 +64,16 @@ public extension Target {
 public extension Target {
     static func makeDynamicFrameworkTarget(
         name: String,
-        bundleId: String,
         deploymentTargetsVersion: String,
         infoPlist: [String : Plist.Value] = [:],
         dependencies: [TargetDependency],
         hasResources: Bool = true
     ) -> Target {
-        let appTaget: Target = .target(
+        return .target(
             name: name,
             destinations: .iOS,
             product: .framework,
-            bundleId: bundleId,
+            bundleId: "\(Constants.organizationName).\(name)",
             deploymentTargets: .iOS(deploymentTargetsVersion),
             infoPlist: .default,
             sources: ["Sources/**"],
@@ -84,7 +81,5 @@ public extension Target {
             dependencies: dependencies,
             settings: .defaultSettings
         )
-        
-        return appTaget
     }
 }

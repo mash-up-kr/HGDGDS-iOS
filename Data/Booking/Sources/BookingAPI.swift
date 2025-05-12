@@ -9,6 +9,6 @@ import Foundation
 import HGNetwork
 import BookingDomain
 
-final class BookingAPI: Networkable {
+struct BookingAPI: EndPointable {
 
 }
