@@ -10,6 +10,7 @@ import ProjectDescriptionHelpers
 
 let project = Project(
     name: "BookingFeature",
+    settings: .defaultSettings,
     targets: [
         .makeDynamicFrameworkTarget(
             name: "BookingFeature",

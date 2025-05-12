@@ -11,6 +11,7 @@ import ProjectDescriptionHelpers
 
 let project = Project(
     name: "UserData",
+    settings: .defaultSettings,
     targets: [
         .makeDynamicFrameworkTarget(
             name: "UserData",

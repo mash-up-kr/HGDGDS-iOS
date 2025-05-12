@@ -13,12 +13,7 @@ fileprivate let name = "HGLogger"
 let project = Project(
     name: name,
     packages: [],
-    settings: .settings(
-        configurations: [
-            .debug(name: .debug),
-            .release(name: .release)
-        ]
-    ),
+    settings: .defaultSettings,
     targets: [
         .makeDynamicFrameworkTarget(
             name: name,

@@ -10,6 +10,7 @@ import ProjectDescriptionHelpers
 
 let project = Project(
     name: "ChatDomain",
+    settings: .defaultSettings,
     targets: [
         .makeDynamicFrameworkTarget(
             name: "ChatDomain",

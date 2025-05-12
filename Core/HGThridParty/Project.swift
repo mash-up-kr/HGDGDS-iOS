@@ -6,12 +6,7 @@ let project = Project(
     packages: [
         
     ],
-    settings: .settings(
-        configurations: [
-            .debug(name: .debug),
-            .release(name: .release)
-        ]
-    ),
+    settings: .defaultSettings,
     targets: [
         .makeDynamicFrameworkTarget(
             name: "HGThridParty",

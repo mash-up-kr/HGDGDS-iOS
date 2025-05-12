@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct HGDGDSIOSApp: App {
+struct HGDGDSiOSApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

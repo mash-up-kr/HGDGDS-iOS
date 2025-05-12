@@ -4,12 +4,7 @@ import ProjectDescriptionHelpers
 let project = Project(
     name: "HGNetwork",
     packages: [],
-    settings: .settings(
-        configurations: [
-            .debug(name: .debug),
-            .release(name: .release)
-        ]
-    ),
+    settings: .defaultSettings,
     targets: [
         .makeDynamicFrameworkTarget(
             name: "HGNetwork",

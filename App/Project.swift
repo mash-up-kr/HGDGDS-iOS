@@ -10,12 +10,7 @@ import ProjectDescription
 let project = Project(
     name: "HGDGDS-iOS",
     packages: [],
-    settings: .settings(
-        configurations: [
-            .debug(name: .debug),
-            .release(name: .release)
-        ]
-    ),
+    settings: .defaultSettings,
     targets: [
         .makeAppTarget(
             name: "HGDGDS-iOS",
@@ -28,23 +23,7 @@ let project = Project(
                 DependencyContainer.HGLogger,
                 DependencyContainer.HGCommon,
             ],
-            settings: .settings(
-                base: [
-                    "DEVELOPMENT_TEAM": "V2YNV9QV27",
-                    "CODE_SIGN_STYLE": "Manual",
-                    "PROVISIONING_PROFILE_SPECIFIER": "match Development HGDGDS.HGDGDS-iOS"
-                ],
-                configurations: [
-                    .debug(
-                        name: .debug,
-                        xcconfig: "../Configs/Debug.xcconfig"
-                    ),
-                    .release(
-                        name: .release,
-                        xcconfig: "../Configs/Release.xcconfig"
-                    )
-                ]
-            )
+            settings: .defaultSettings
         ),
         .target(
             name: "HGDGDS-iOSTests",
@@ -54,7 +33,8 @@ let project = Project(
             infoPlist: .default,
             sources: ["Tests/**"],
             resources: [],
-            dependencies: [.target(name: "HGDGDS-iOS")]
+            dependencies: [.target(name: "HGDGDS-iOS")],
+            settings: .defaultSettings
         ),
     ]
 )

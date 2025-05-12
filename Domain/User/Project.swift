@@ -10,6 +10,7 @@ import ProjectDescriptionHelpers
 
 let project = Project(
     name: "UserDomain",
+    settings: .defaultSettings,
     targets: [
         .makeDynamicFrameworkTarget(
             name: "UserDomain",

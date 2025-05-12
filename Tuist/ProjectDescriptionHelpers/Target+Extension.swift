@@ -54,7 +54,8 @@ public extension Target {
             bundleId: bundleId,
             deploymentTargets: .iOS(deploymentTargetsVersion),
             sources: ["Sources/**"],
-            dependencies: dependencies
+            dependencies: dependencies,
+            settings: .defaultSettings
         )
         
         return target
@@ -80,7 +81,8 @@ public extension Target {
             infoPlist: .default,
             sources: ["Sources/**"],
             resources: hasResources ? ["Resources/**"] : nil,
-            dependencies: dependencies
+            dependencies: dependencies,
+            settings: .defaultSettings
         )
         
         return appTaget

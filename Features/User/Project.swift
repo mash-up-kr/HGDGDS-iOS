@@ -10,6 +10,7 @@ import ProjectDescriptionHelpers
 
 let project = Project(
     name: "UserFeature",
+    settings: .defaultSettings,
     targets: [
         .makeDynamicFrameworkTarget(
             name: "UserFeature",
