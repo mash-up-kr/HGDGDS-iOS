@@ -1,0 +1,19 @@
+//
+//  {{ name }}RepositoryImpl.swift
+//  {{ name }}
+//
+//  Created by {{ autor }} on {{ date }}.
+//
+
+import Foundation
+import {{ name }}Domain
+import HGNetwork
+
+final class {{ name }}RepositoryImpl: {{ name }}Repository {
+    private let network: any Networkable
+    // TODO: private let localDBManager: LocalDB프로토콜
+    
+    public init(network: any Networkable) {
+        self.network = network
+    }
+}

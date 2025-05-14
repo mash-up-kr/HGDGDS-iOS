@@ -1,0 +1,9 @@
+//
+//  {{ name }}View.swift
+//  {{ name }}
+//
+//  Created by {{ autor }} on {{ date }}.
+//
+
+import SwifUI
+import {{ name }}Domain

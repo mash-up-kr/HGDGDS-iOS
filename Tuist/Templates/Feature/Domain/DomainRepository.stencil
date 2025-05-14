@@ -1,0 +1,12 @@
+//
+//  {{ name }}Repository.swift
+//  {{ name }}
+//
+//  Created by {{ autor }} on {{ date }}.
+//
+
+import Foundation
+
+public protocol {{ name }}Repository {
+
+}
