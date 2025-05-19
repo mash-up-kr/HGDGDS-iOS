@@ -59,35 +59,41 @@ public extension DependencyContainer {
     static let HGDesignSystem: TargetDependency = .uiProject(with: .hgDesignSystem)
 }
 
-
 // MARK: - Convenience Method
 private extension TargetDependency {    
     static func featureProject(with dependecyName: DependencyName) -> TargetDependency {
         .project(
             target: "\(dependecyName.rawValue)Feature",
-            path: .relativeToRoot("Features/\(dependecyName.rawValue)")
+            path: .relativeToRoot(Constants.projectBasePath + "Features/\(dependecyName.rawValue)")
         )
     }
     
     static func domainProject(with dependecyName: DependencyName) -> TargetDependency {
         .project(
             target: "\(dependecyName.rawValue)Domain",
-            path: .relativeToRoot("Domain/\(dependecyName.rawValue)")
+            path: .relativeToRoot(Constants.projectBasePath + "Domain/\(dependecyName.rawValue)")
         )
     }
     
     static func dataProject(with dependecyName: DependencyName) -> TargetDependency {
         .project(
             target: "\(dependecyName.rawValue)Data",
-            path: .relativeToRoot("Data/\(dependecyName)")
+            path: .relativeToRoot(Constants.projectBasePath + "Data/\(dependecyName)")
         )
     }
     
     static func coreProject(with dependecyName: DependencyName) -> TargetDependency {
-        .project(target: dependecyName.rawValue, path: .relativeToRoot("Core/\(dependecyName.rawValue)"))
+        .project(
+            target: dependecyName.rawValue,
+            path: .relativeToRoot(Constants.projectBasePath + "Core/\(dependecyName.rawValue)")
+        )
     }
     
     static func uiProject(with dependecyName: DependencyName) -> TargetDependency {
-        .project(target: dependecyName.rawValue, path: .relativeToRoot("UI/\(dependecyName.rawValue)"))
+        .project(
+            target: dependecyName.rawValue,
+            path: .relativeToRoot(Constants.projectBasePath + "UI/\(dependecyName.rawValue)")
+        )
     }
 }
+

@@ -6,6 +6,7 @@
 //
 
 import ProjectDescription
+import ProjectDescriptionHelpers
 import Foundation
 
 fileprivate let name: Template.Attribute = .required("name")
@@ -34,14 +35,14 @@ let featureTemplate = Template(
 
 extension String {
     static var featureBasePath: Self {
-        return "Features/\(name)/"
+        return Constants.projectBasePath + "Features/\(name)/"
     }
     
     static var domainBasePath: Self {
-        return "Domain/\(name)/"
+        return Constants.projectBasePath + "Domain/\(name)/"
     }
     
     static var dataBasePath: Self {
-        return "Data/\(name)/"
+        return Constants.projectBasePath + "Data/\(name)/"
     }
 }
