@@ -9,6 +9,6 @@ import Foundation
 import HGNetwork
 import UserDomain
 
-struct UserAPI: EndPointable {
+struct UserAPI {
 
 }
