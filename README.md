@@ -55,7 +55,7 @@
   </tr>
   <tr>
     <td>Swinject</td>
-    <td>버전</td>
+    <td>2.9.1</td>
   </tr>
 </table>
 
