@@ -55,7 +55,7 @@
   </tr>
   <tr>
     <td>Swinject</td>
-    <td>2.9.1</td>
+    <td>v2.9.1</td>
   </tr>
 </table>
 
