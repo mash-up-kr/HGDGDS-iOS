@@ -75,7 +75,7 @@ public extension Target {
             product: .framework,
             bundleId: "\(Constants.organizationName).\(name)",
             deploymentTargets: .iOS(deploymentTargetsVersion),
-            infoPlist: .default,
+            infoPlist: .extendingDefault(with: infoPlist),
             sources: ["Sources/**"],
             resources: hasResources ? ["Resources/**"] : nil,
             dependencies: dependencies,
