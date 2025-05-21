@@ -15,7 +15,7 @@ let project = Project(
         .makeAppTarget(
             name: "HGDGDS-iOS",
             deploymentTargetsVersion: Constants.targetVersion,
-            infoPlist: [:],
+            infoPlist: defaultPlist,
             entitlements: "Configs/HGDGDS.entitlements",
             scripts: [],
             dependencies: [

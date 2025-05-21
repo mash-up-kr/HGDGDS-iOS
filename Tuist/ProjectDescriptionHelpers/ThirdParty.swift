@@ -15,4 +15,5 @@ public extension ThirdParty {
 //    static let Lottie = TargetDependency.external(name: "Lottie")
     static let Nuke = TargetDependency.external(name: "Nuke")
     static let firebase = TargetDependency.external(name: "Firebase")
+    static let swinject = TargetDependency.external(name: "Swinject")
 }

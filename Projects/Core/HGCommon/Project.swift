@@ -9,7 +9,9 @@ let project = Project(
         .makeDynamicFrameworkTarget(
             name: "HGCommon",
             deploymentTargetsVersion: Constants.targetVersion,
-            dependencies: [],
+            dependencies: [
+                ThirdParty.swinject
+            ],
             hasResources: false
         )
     ]
