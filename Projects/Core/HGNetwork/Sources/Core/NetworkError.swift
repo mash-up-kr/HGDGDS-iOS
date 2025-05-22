@@ -13,7 +13,7 @@ public enum NetworkError: Error, LocalizedError {
     case noInternet                                     // 인터넷 연결 없음
     case timeout                                        // 요청 타임아웃
     case decodingFailed(any Error)                      // 디코딩 실패
-    case requestFailed(statusCode: Int, data: Data?)    // 기타 서버 에러
+    case requestFailed(statusCode: Int)                 // 기타 서버 에러
     case underlying(any Error)                          // Alamofire, 시스템 등 기타 에러
 
     public var errorDescription: String? {
@@ -26,9 +26,9 @@ public enum NetworkError: Error, LocalizedError {
             return "인터넷 연결을 확인해주세요."
         case .timeout:
             return "요청 시간이 초과되었습니다. 잠시 후 다시 시도해주세요."
-        case .decodingFailed:
-            return "디코딩 실패했습니다."
-        case .requestFailed(let code, _):
+        case .decodingFailed(let error):
+            return "디코딩 실패했습니다.\n\(error)"
+        case .requestFailed(let code):
             return "요청이 실패했습니다. (code: \(code))"
         case .underlying(let error):
             return error.localizedDescription

@@ -9,12 +9,7 @@ import Foundation
 
 import Alamofire
 
-public protocol MultipartRequestable {
-    associatedtype Response: Decodable & Sendable
-    var path: String { get }
-    var method: HGHTTPMethod { get }
-    var headers: HGHTTPHeaders? { get }
-    var parameters: [String: String]? { get }
+public protocol MultipartRequestable: EndPointable {
     var files: [MultipartFile] { get }
 }
 

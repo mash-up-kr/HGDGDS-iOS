@@ -11,33 +11,33 @@ import Alamofire
 
 public struct NetworkClient: Networkable {
     private let session: Session
-    private let baseURL: URL
     private let commonHeaders: HTTPHeaders
     private let dynamicHeadersProvider: () -> HTTPHeaders
 
     public init(
-        baseURL: URL,
         commonHeaders: HTTPHeaders = [:],
         headersProvider: @escaping () -> HTTPHeaders = { [] },
         session: Session = .default
     ) {
-        self.baseURL = baseURL
         self.commonHeaders = commonHeaders
         self.dynamicHeadersProvider = headersProvider
         self.session = session
     }
 
-    public func send<T: EndPointable & Sendable>(_ request: T) async throws -> T.Response {
-        let url = baseURL.appendingPathComponent(request.path)
-        let headers = mergedHeaders(request.headers?.toAFHeaders)
+    public func send<T: EndPointable & Sendable>(_ request: T) async throws(NetworkError) -> T.Response {
+        guard let url = request.url else {
+            throw .invalidURL
+        }
+        
+        let headers = mergedHeaders(request.headers)
         
         do {
             return try await session
                 .request(
                     url,
-                    method: request.method.toAFMethod,
+                    method: request.method,
                     parameters: request.parameters,
-                    encoding: request.encoding.toAFEndcoding,
+                    encoding: request.encoding,
                     headers: headers
                 )
                 .serializingDecodable(T.Response.self)
@@ -47,9 +47,12 @@ public struct NetworkClient: Networkable {
         }
     }
 
-    public func upload<T: MultipartRequestable>(_ request: T) async throws -> T.Response {
-        let url = baseURL.appendingPathComponent(request.path)
-        let headers = mergedHeaders(request.headers?.toAFHeaders)
+    public func upload<T: MultipartRequestable>(_ request: T) async throws(NetworkError) -> T.Response {
+        guard let url = request.url else {
+            throw .invalidURL
+        }
+        
+        let headers = mergedHeaders(request.headers)
         
         do {
             return try await session
@@ -64,11 +67,13 @@ public struct NetworkClient: Networkable {
                             )
                         }
                         request.parameters?.forEach { key, value in
-                            multipart.append(Data(value.utf8), withName: key)
+                            if let stringValue = value as? String {
+                                multipart.append(Data(stringValue.utf8), withName: key)
+                            }
                         }
                     },
                     to: url,
-                    method: request.method.toAFMethod,
+                    method: request.method,
                     headers: headers
                 )
                 .serializingDecodable(T.Response.self)
@@ -90,31 +95,33 @@ public struct NetworkClient: Networkable {
      }
     
     private func mapToNetworkError(_ error: Error) -> NetworkError {
-        // URLError 분기
-        if let urlError = error as? URLError {
-            switch urlError.code {
-            case .notConnectedToInternet:
-                return .noInternet
-            case .timedOut:
-                return .timeout
-            default:
-                return .underlying(urlError)
-            }
-        }
-        
-        // Alamofire error
         if let afError = error as? AFError {
             switch afError {
+            case .sessionTaskFailed(let underlyingError):
+                if let urlError = underlyingError as? URLError {
+                    switch urlError.code {
+                    case .notConnectedToInternet:
+                        return .noInternet
+                    case .timedOut:
+                        return .timeout
+                    default:
+                        return .underlying(urlError)
+                    }
+                }
+                return .underlying(underlyingError)
+
             case .responseValidationFailed(let reason):
                 switch reason {
                 case .unacceptableStatusCode(let code):
                     if code == 401 {
                         return .unauthorized
+                    } else {
+                        return .requestFailed(statusCode: code)
                     }
-                    return .requestFailed(statusCode: code, data: nil)
                 default:
                     return .underlying(afError)
                 }
+
             case .responseSerializationFailed(let reason):
                 switch reason {
                 case .decodingFailed(let decodeError):
@@ -122,17 +129,12 @@ public struct NetworkClient: Networkable {
                 default:
                     return .decodingFailed(afError)
                 }
+
             default:
                 return .underlying(afError)
             }
         }
         
-        // 디코딩 에러
-        if let decodingError = error as? DecodingError {
-            return .decodingFailed(decodingError)
-        }
-        
-        // 기타
         return .underlying(error)
     }
 }
