@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: "ko-KR"
+early_access: false
+reviews:
+  instructions: # 팀컨벤션 정의
+  
+  profile: "chill"
+  request_changes_workflow: false # 리뷰 끝나면 PR승인 옵션
+  high_level_summary: true # 마지막에 전체요약 코멘트 여부
+  poem: false # 리뷰에 재미요소
+  review_status: true # 리뷰 좋음/개선필요 등 상태뱃지 표시
+  collapse_walkthrough: false
+  auto_review:
+    enabled: true
+    drafts: false # draft PR에도 리뷰 여부
+    base_branches:
+      - "feature/*"
+chat:
+  auto_reply: true
