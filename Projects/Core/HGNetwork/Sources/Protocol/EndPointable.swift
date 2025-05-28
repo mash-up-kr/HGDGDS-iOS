@@ -11,7 +11,7 @@ import Alamofire
 
 public protocol EndPointable {
     associatedtype Response: Decodable & Sendable
-    var baseURL: String { get }
+    var baseURL: BaseURL { get }
     var path: String { get }
     var method: HGHTTPMethod { get }
     var parameters: HGParameters? { get }
@@ -21,12 +21,12 @@ public protocol EndPointable {
 
 public extension EndPointable {
     var encoding: HGParameterEncoding {
-        method == .get ? URLEncoding.default : JSONEncoding.default
+        method == .get ? .urlEncoding : .jsonEncoding
     }
 }
 
 extension EndPointable {
     var url: URL? {
-        try? (baseURL + path).asURL()
+        try? ("https://" + baseURL.rawValue + path).asURL()
     }
 }

@@ -16,11 +16,11 @@ public struct NetworkClient: Networkable {
 
     public init(
         commonHeaders: HTTPHeaders = [:],
-        headersProvider: @escaping () -> HTTPHeaders = { [] },
+        dynamicHeadersProvider: @escaping () -> HTTPHeaders = { [] },
         session: Session = .default
     ) {
         self.commonHeaders = commonHeaders
-        self.dynamicHeadersProvider = headersProvider
+        self.dynamicHeadersProvider = dynamicHeadersProvider
         self.session = session
     }
 
@@ -29,15 +29,15 @@ public struct NetworkClient: Networkable {
             throw .invalidURL
         }
         
-        let headers = mergedHeaders(request.headers)
+        let headers = mergedHeaders(request.headers?.toAFHeaders)
         
         do {
             return try await session
                 .request(
                     url,
-                    method: request.method,
+                    method: request.method.toAFMethod,
                     parameters: request.parameters,
-                    encoding: request.encoding,
+                    encoding: request.encoding.toAFEndcoding,
                     headers: headers
                 )
                 .serializingDecodable(T.Response.self)
@@ -52,7 +52,7 @@ public struct NetworkClient: Networkable {
             throw .invalidURL
         }
         
-        let headers = mergedHeaders(request.headers)
+        let headers = mergedHeaders(request.headers?.toAFHeaders)
         
         do {
             return try await session
@@ -73,7 +73,7 @@ public struct NetworkClient: Networkable {
                         }
                     },
                     to: url,
-                    method: request.method,
+                    method: request.method.toAFMethod,
                     headers: headers
                 )
                 .serializingDecodable(T.Response.self)
