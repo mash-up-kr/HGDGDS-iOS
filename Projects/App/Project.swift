@@ -21,6 +21,8 @@ let project = Project(
             dependencies: [
                 DependencyContainer.HGLogger,
                 DependencyContainer.HGCommon,
+                DependencyContainer.ChatFeature,
+                DependencyContainer.BookingFeature,
             ],
             settings: .defaultSettings
         ),
