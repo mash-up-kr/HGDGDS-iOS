@@ -9,7 +9,7 @@ import Foundation
 
 import Alamofire
 
-public struct NetworkClient: Networkable {
+struct NetworkClient: Networkable {
     private let session: Session
     private let commonHeaders: HTTPHeaders
     private let dynamicHeadersProvider: () -> HTTPHeaders
@@ -24,7 +24,7 @@ public struct NetworkClient: Networkable {
         self.session = session
     }
 
-    public func send<T: EndPointable & Sendable>(_ request: T) async throws(NetworkError) -> T.Response {
+     func send<T: EndPointable & Sendable>(_ request: T) async throws(NetworkError) -> T.Response {
         guard let url = request.url else {
             throw .invalidURL
         }
@@ -47,7 +47,7 @@ public struct NetworkClient: Networkable {
         }
     }
 
-    public func upload<T: MultipartRequestable>(_ request: T) async throws(NetworkError) -> T.Response {
+    func upload<T: MultipartRequestable>(_ request: T) async throws(NetworkError) -> T.Response {
         guard let url = request.url else {
             throw .invalidURL
         }
