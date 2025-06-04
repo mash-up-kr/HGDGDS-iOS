@@ -37,7 +37,9 @@ public final class ChatCoordinator: Coordinatorable {
         path = NavigationPath()
     }
     
+    /// - Warning: present dismiss사용은 기본타입사용 해야합니다
     public func pop() {
+        guard !path.isEmpty else { return }
         path.removeLast()
     }
 }
@@ -45,7 +47,7 @@ public final class ChatCoordinator: Coordinatorable {
 public struct ChatCoordinatorView: CoordinatorViewable {
     @State public var baseCoordinator: ChatCoordinator
     
-    public init(parentCoordinator: any Coordinatorable) {
+    public init(parentCoordinator: (any Coordinatorable)?) {
         self._baseCoordinator = State(
             initialValue: ChatCoordinator(parentCoordinator: parentCoordinator)
         )
