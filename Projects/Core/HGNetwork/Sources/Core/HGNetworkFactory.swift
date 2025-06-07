@@ -12,12 +12,10 @@ import Alamofire
 public enum HGNetworkFactory {
     public static func makeNetworkClient(
         commonHeaders: HTTPHeaders = [:],
-        dynamicHeadersProvider: @escaping () -> HTTPHeaders = { [] },
         session: Session = .default
     ) -> Networkable {
         return NetworkClient(
             commonHeaders: commonHeaders,
-            dynamicHeadersProvider: dynamicHeadersProvider,
             session: session
         )
     }
