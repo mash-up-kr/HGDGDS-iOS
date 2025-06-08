@@ -19,10 +19,10 @@ public enum DateFormatHelper {
         locale: Locale = .init(identifier: "ko_KR")
     ) -> DateFormatter {
         let key = dateFormat + locale.identifier
-        if let cachedFormatter = DateFormatManager.cachedFormatters[key] { return cachedFormatter }
+        if let cachedFormatter = DateFormatHelper.cachedFormatters[key] { return cachedFormatter }
 
         let formatter = makeFormatter(withDateFormat: dateFormat, locale: locale)
-        DateFormatManager.cachedFormatters[key] = formatter
+        DateFormatHelper.cachedFormatters[key] = formatter
         return formatter
     }
     

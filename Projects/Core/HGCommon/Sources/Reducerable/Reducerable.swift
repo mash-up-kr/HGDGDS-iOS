@@ -14,7 +14,7 @@ public protocol Reducerable {
     
     var state: State { get }
     
-    func reduce(action: Action)
+    func reduce(_ action: Action)
 }
 
 public extension Reducerable {

@@ -19,6 +19,12 @@ public enum DateFormat: String {
 
     /// 한국어 년월일 (yyyy년 M월 d일)
     case yyyyMdKorean = "yyyy년 M월 d일"
+    
+    /// 한국어 년월일 | 오전/오후 시분 (yyyy년 MM월 dd일 | 오후 HH시 mm분)
+    case yyyyMMddHHmmKorean = "yyyy년 MM월 dd일 | a HH시 mm분"
+    
+    /// 한국어 년월일 | 오전/오후 시 (yyyy년 MM월 dd일 | 오후 HH시)
+    case yyyyMMddHHKorean = "yyyy년 MM월 dd일 | a HH시"
 
     /// 한국어 월일 (MM월 dd일)
     case MMddKorean = "MM월 dd일"
