@@ -7,6 +7,7 @@
 
 import Foundation
 
+@preconcurrency
 public enum DateFormatHelper {
     private static var cachedFormatters: [String: DateFormatter] = [:]
     
@@ -14,7 +15,7 @@ public enum DateFormatHelper {
     // MARK: - Private Method
 
     /// DateFormatter 꺼내오기
-    static func formatter(
+    public static func formatter(
         dateFormat: String,
         locale: Locale = .init(identifier: "ko_KR")
     ) -> DateFormatter {

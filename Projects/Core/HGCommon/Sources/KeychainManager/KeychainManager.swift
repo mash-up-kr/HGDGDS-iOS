@@ -20,7 +20,10 @@ public actor KeychainManager: KeychainManagerable {
     
     /// 키체인 추가
     public func addKeychain(key: KeychainKey, value: String) async throws {
-        let data = value.data(using: String.Encoding.utf8)!
+        guard let data = value.data(using: String.Encoding.utf8) else {
+            throw KeychainError.invalidData
+        }
+        
         let query: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
             kSecAttrService: serviceKey,
@@ -41,13 +44,25 @@ public actor KeychainManager: KeychainManagerable {
     
     /// 키체인 업데이트
     public func updateKeychain(key: KeychainKey, value: String) async throws {
-        do {
-            try await deleteKeychain(key: key)
-            try await addKeychain(key: key, value: value)
-            print("📣 Success in updating key: \(key.rawValue), value: \(value)") // TODO: Log로 변경
-        } catch {
+        guard let data = value.data(using: .utf8) else {
+            throw KeychainError.invalidData
+        }
+        
+        let query: [CFString: Any] = [
+            kSecClass: kSecClassGenericPassword,
+            kSecAttrService: serviceKey,
+            kSecAttrAccount: key.rawValue
+        ]
+        
+        let attributes: [CFString: Any] = [kSecValueData: data]
+        
+        let status = SecItemUpdate(query as CFDictionary, attributes as CFDictionary)
+        
+        if status != errSecSuccess {
             throw KeychainError.updateKeychainError
         }
+        
+        print("📣 Success in updating key: \(key.rawValue), value: \(value)") // TODO: Log로 변경
     }
     
     /// 키체인 읽기

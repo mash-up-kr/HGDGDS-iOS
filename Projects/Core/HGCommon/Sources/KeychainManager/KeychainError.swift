@@ -8,6 +8,7 @@
 import Foundation
 
 public enum KeychainError: Error {
+    case invalidData
     case itemNotFound
     case deleteKeychainError
     case updateKeychainError

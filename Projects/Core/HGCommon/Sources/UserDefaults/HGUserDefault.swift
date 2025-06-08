@@ -6,23 +6,22 @@
 //
 
 import Foundation
-import Swinject
 
 /**
  UserDefaultsProtocol 주입 필수 
  */
 @propertyWrapper
-struct HGUserDefault<T> {
+public struct HGUserDefault<T> {
     let key: String
     let defaultValue: T
     @Dependency var userDefaults: UserDefaultsProtocol
     
-    init(key: String, defaultValue: T) {
+    public init(key: String, defaultValue: T) {
         self.key = key
         self.defaultValue = defaultValue
     }
     
-    var wrappedValue: T {
+    public var wrappedValue: T {
         get {
             return userDefaults.object(forKey: key) as? T ?? defaultValue
         }
