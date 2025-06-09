@@ -23,32 +23,65 @@ final class NetworkClient: Networkable {
         self.session = session
     }
     
-    func send<T: EndPointable & Sendable>(_ request: T) async throws(NetworkError) -> T.Response? {
-        let response = await _send(request)
-        
+    func send<T: EndPointable & Sendable>(
+        _ request: T
+    ) async throws(NetworkError) -> T.Response? {
+        let response = try await _send(request)
+        return try handleResponse(response)
+    }
+
+    func upload<T:MultipartRequestable & Sendable>(
+        _ request: T
+    ) async throws(NetworkError) -> T.Response? {
+        let response = try await _upload(request)
+        return try handleResponse(response)
+    }
+}
+
+private extension NetworkClient {
+    func handleResponse<T>(_ response: DataResponse<T, AFError>) throws(NetworkError) -> T? {
         switch response.result {
         case let .success(model):
             return model
         case let .failure(error):
             guard let statusCode = response.response?.statusCode else {
-                return nil
-            }
-            guard (200...299).contains(statusCode) else {
-                if let errorData = response.data,
-                   let errorModel = try? jsonDecoder.decode(HGErrorResponse.self, from: errorData) {
-                    print(errorModel)
-                    // TODO: 에러 로깅
-                }
-                
                 throw mapToNetworkError(error)
             }
-            
-            return nil
+            if !(200...299).contains(statusCode),
+               let errorData = response.data,
+               let errorModel = try? jsonDecoder.decode(HGErrorResponse.self, from: errorData) {
+                print(errorModel)
+                // TODO: 에러 로깅
+            }
+            throw mapToNetworkError(error)
         }
     }
     
-    func upload<T: MultipartRequestable>(_ request: T) async -> DataResponse<T.Response, AFError> {
-        await session
+    func _send<T: EndPointable>(_ request: T) async throws(NetworkError) -> DataResponse<T.Response, AFError> {
+        guard let url = request.url else {
+            throw .invalidURL
+        }
+        
+        return await session
+            .request(
+                url,
+                method: request.method.toAFMethod,
+                parameters: request.parameters,
+                encoding: request.encoding.toAFEndcoding,
+                headers: commonHeaders,
+                interceptor: interceptor
+            )
+            .validate()
+            .serializingDecodable(T.Response.self)
+            .response
+    }
+    
+    func _upload<T: MultipartRequestable>(_ request: T) async throws(NetworkError) -> DataResponse<T.Response, AFError> {
+        guard let url = request.url else {
+            throw .invalidURL
+        }
+        
+        return await session
             .upload(
                 multipartFormData: { multipart in
                     request.files.forEach { file in
@@ -60,21 +93,18 @@ final class NetworkClient: Networkable {
                         )
                     }
                     request.parameters?.forEach { key, value in
-                        if let stringValue = value as? String {
-                            multipart.append(Data(stringValue.utf8), withName: key)
-                        }
+                        let stringValue = String(describing: value)
+                        multipart.append(Data(stringValue.utf8), withName: key)
                     }
                 },
-                to: request.url!,
+                to: url,
                 method: request.method.toAFMethod,
                 headers: commonHeaders
             )
             .serializingDecodable(T.Response.self)
             .response
     }
-}
-
-private extension NetworkClient {
+    
     func mapToNetworkError(_ error: Error) -> NetworkError {
         
         if let afError = error as? AFError {
@@ -118,20 +148,5 @@ private extension NetworkClient {
         }
         
         return .underlying(error)
-    }
-    
-    func _send<T: EndPointable & Sendable>(_ request: T) async -> DataResponse<T.Response, AFError> {
-        await session
-            .request(
-                request.url!,
-                method: request.method.toAFMethod,
-                parameters: request.parameters,
-                encoding: request.encoding.toAFEndcoding,
-                headers: commonHeaders,
-                interceptor: interceptor
-            )
-            .validate()
-            .serializingDecodable(T.Response.self)
-            .response
     }
 }

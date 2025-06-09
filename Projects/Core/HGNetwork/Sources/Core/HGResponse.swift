@@ -16,7 +16,6 @@ public struct HGResponse<T: Decodable & Sendable>: Decodable, Sendable {
 
 // 실패했을때 기본 응답 구조
 public struct HGErrorResponse: Decodable, Sendable {
-    
     public let code: Int
     public let message: String
 }
