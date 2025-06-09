@@ -28,7 +28,10 @@ public enum DateFormatHelper {
     }
     
     /// DateFormatter 생성
-    private static func makeFormatter(withDateFormat dateFormat: String, locale: Locale) -> DateFormatter {
+    private static func makeFormatter(
+        withDateFormat dateFormat: String,
+        locale: Locale
+    ) -> DateFormatter {
         let formatter = DateFormatter()
         formatter.dateFormat = dateFormat
         formatter.locale = locale

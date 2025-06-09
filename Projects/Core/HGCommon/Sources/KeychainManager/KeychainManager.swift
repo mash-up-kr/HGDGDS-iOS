@@ -36,7 +36,7 @@ public actor KeychainManager: KeychainManagerable {
         if status == errSecSuccess {
             print("📣 Success in saving key: \(key.rawValue), value: \(value)") // TODO: Log로 변경
         } else if status == errSecDuplicateItem {
-            _ = try await updateKeychain(key: key, value: value)
+            try await updateKeychain(key: key, value: value)
         } else {
             throw KeychainError.itemNotFound
         }
@@ -85,20 +85,22 @@ public actor KeychainManager: KeychainManagerable {
         
         guard let existingItem = item as? [String: Any],
               let data = existingItem[kSecValueData as String] as? Data,
-              let keyChain = String(data: data, encoding: .utf8) else {
+              let keychain = String(data: data, encoding: .utf8) else {
             throw KeychainError.itemNotFound
         }
         
-        print("📣 Success in reading key: \(key.rawValue), value: \(keyChain)") // TODO: Log로 변경
+        print("📣 Success in reading key: \(key.rawValue), value: \(keychain)") // TODO: Log로 변경
         
-        return keyChain
+        return keychain
     }
     
     /// 키체인 삭제
     public func deleteKeychain(key: KeychainKey) async throws {
-        let deleteQuery: [CFString: Any] = [kSecClass: kSecClassGenericPassword,
-                                      kSecAttrService: serviceKey,
-                                      kSecAttrAccount: key.rawValue]
+        let deleteQuery: [CFString: Any] = [
+            kSecClass: kSecClassGenericPassword,
+            kSecAttrService: serviceKey,
+            kSecAttrAccount: key.rawValue
+        ]
         let status = SecItemDelete(deleteQuery as CFDictionary)
         if status != errSecSuccess {
             throw KeychainError.deleteKeychainError

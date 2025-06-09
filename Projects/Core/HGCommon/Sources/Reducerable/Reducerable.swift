@@ -19,6 +19,6 @@ public protocol Reducerable {
 
 public extension Reducerable {
     subscript<T>(dynamicMember keyPath: KeyPath<State, T>) -> T {
-           self.state[keyPath: keyPath]
-       }
+        self.state[keyPath: keyPath]
+    }
 }
