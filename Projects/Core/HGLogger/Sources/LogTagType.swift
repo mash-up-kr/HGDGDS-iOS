@@ -7,11 +7,15 @@
 
 import Foundation
 
-public enum LogTagType: String {
+public enum LogTagType: String, Sendable {
     case view
     case viewModel
     case repository
     case network
     case auth
     case user
+    
+    var categoryName: String {
+        rawValue.capitalized
+    }
 }

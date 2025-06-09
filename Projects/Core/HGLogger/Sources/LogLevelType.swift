@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import os.log
+import OSLog
 
 public enum LogLevelType: String, Comparable, Sendable {
     case debug

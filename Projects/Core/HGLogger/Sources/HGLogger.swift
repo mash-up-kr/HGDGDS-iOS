@@ -8,19 +8,14 @@
 import Foundation
 import OSLog
 
-public struct HGLogger: Sendable {
-    private let subsystem: String
+struct HGLogger: Sendable {
     private let minLevel: LogLevelType
     
-    public init(
-        subsystem: String = Bundle.main.bundleIdentifier ?? "default",
-        minLevel: LogLevelType = .debug
-    ) {
-        self.subsystem = subsystem
+    init(minLevel: LogLevelType = .debug) {
         self.minLevel = minLevel
     }
     
-    public func log<T>(
+    func log<T>(
         _ object: @autoclosure () -> T,
         level: LogLevelType = .debug,
         tag: LogTagType? = nil,
@@ -40,7 +35,7 @@ public struct HGLogger: Sendable {
         )
     }
     
-    public func log(
+    func log(
         _ message: String,
         level: LogLevelType = .debug,
         tag: LogTagType? = nil,
@@ -54,8 +49,7 @@ public struct HGLogger: Sendable {
         }
         
         let filename = (file as NSString).lastPathComponent
-        let category = (tag?.rawValue.capitalized) ?? "Default"
-        let logger = Logger(subsystem: subsystem, category: category)
+        let logger = LoggerCache.shared.logger(for: tag)
         
         logger.log(
             level: level.osLogType,
