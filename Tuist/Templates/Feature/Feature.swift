@@ -9,9 +9,16 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 import Foundation
 
-fileprivate let name: Template.Attribute = .required("name")
-fileprivate let author: Template.Attribute = .required("author")
-fileprivate let date: Template.Attribute = .optional("date", default: .string(DateFormatter().string(from: .now)))
+private let name: Template.Attribute = .required("name")
+private let author: Template.Attribute = .required("author")
+
+private let dateFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yy/MM/dd"
+    return formatter
+}()
+private let dateString = dateFormatter.string(from: .now)
+private let date: Template.Attribute = .optional("date", default: .string(dateString))
 
 let featureTemplate = Template(
     description: "Feature template with Project.swift",

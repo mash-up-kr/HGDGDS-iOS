@@ -2,7 +2,7 @@
 //  {{ name }}Repository.swift
 //  {{ name }}
 //
-//  Created by {{ autor }} on {{ date }}.
+//  Created by {{ author }} on {{ date }}.
 //
 
 import Foundation

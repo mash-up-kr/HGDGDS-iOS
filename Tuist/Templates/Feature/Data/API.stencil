@@ -2,12 +2,11 @@
 //  {{ name }}API.swift
 //  {{ name }}
 //
-//  Created by {{ autor }} on {{ date }}.
+//  Created by {{ author }} on {{ date }}.
 //
 
 import Foundation
 import HGNetwork
-import {{ name }}Domain
 
 struct {{ name }}API: EndPointable {
 
