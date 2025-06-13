@@ -19,8 +19,8 @@ let project = Project(
             entitlements: "Configs/HGDGDS.entitlements",
             scripts: [],
             dependencies: [
-                DependencyContainer.HGLogger,
-                DependencyContainer.HGCommon,
+                .coreProject(with: .hgLogger),
+                .coreProject(with: .hgCommon)
             ],
             settings: .defaultSettings
         ),
