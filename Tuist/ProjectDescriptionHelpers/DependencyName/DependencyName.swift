@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import ProjectDescription
 
 public enum DependencyName: String {
     case onboarding = "Onboarding"
@@ -15,12 +14,4 @@ public enum DependencyName: String {
     case reservationHistory = "ReservationHistory"
     case createReservation = "CreateReservation"
     case myPage = "MyPage"
-    
-    case hgNetwork = "HGNetwork"
-    case hgDatabase = "HGDataBase"
-    case hgLogger = "HGLogger"
-    case hgCommon = "HGCommon"
-    case hgThridParty = "HGThridParty"
-    
-    case hgDesignSystem = "HGDesignSystem"
 }

@@ -16,8 +16,8 @@ let project = Project(
             name: "{{ name }}Data",
             deploymentTargetsVersion: "\(Constants.targetVersion)",
             dependencies: [
-                DependencyContainer.{{ name }}Domain,
-                DependencyContainer.HGNetwork
+                .domainProject(with: .{{ name|lowerFirstWord }}),
+                .coreProject(with: .hgNetwork)
             ],
             hasResources: false
         )

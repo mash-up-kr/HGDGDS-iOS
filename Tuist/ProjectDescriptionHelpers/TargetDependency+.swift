@@ -29,14 +29,14 @@ public extension TargetDependency {
         )
     }
     
-    static func coreProject(with dependecyName: DependencyName) -> TargetDependency {
+    static func coreProject(with dependecyName: DependencyName.Core) -> TargetDependency {
         .project(
             target: dependecyName.rawValue,
             path: .relativeToRoot(Constants.projectBasePath + "Core/\(dependecyName.rawValue)")
         )
     }
     
-    static func uiProject(with dependecyName: DependencyName) -> TargetDependency {
+    static func uiProject(with dependecyName: DependencyName.Design) -> TargetDependency {
         .project(
             target: dependecyName.rawValue,
             path: .relativeToRoot(Constants.projectBasePath + "UI/\(dependecyName.rawValue)")
