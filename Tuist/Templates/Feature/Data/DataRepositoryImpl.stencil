@@ -9,7 +9,7 @@ import Foundation
 import {{ name }}Domain
 import HGNetwork
 
-final class {{ name }}RepositoryImpl: {{ name }}Repository {
+public final class {{ name }}RepositoryImpl: {{ name }}Repository {
     private let network: any Networkable
     
     public init(network: any Networkable) {

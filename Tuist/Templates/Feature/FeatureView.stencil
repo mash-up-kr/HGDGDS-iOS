@@ -14,5 +14,5 @@ struct {{ name }}View: View {
 }
 
 #Preview {
-    {{ name }}View
+    {{ name }}View()
 }
