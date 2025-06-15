@@ -1,12 +1,9 @@
 import SwiftUI
 
-import OnboardingFeature
-import HomeFeature
-import MyPageFeature
-
 struct ContentView: View {
     
     @State private var routeState: ContentView.RouteType = .onboarding
+    private let coordinatorFactory: CoordinatorFactory = CoordinatorFactory()
     
     init() {}
     
@@ -25,16 +22,16 @@ struct ContentView: View {
     private var contentView: some View {
         switch routeState {
         case .onboarding:
-            OnboardingCoordinatorView()
+            coordinatorFactory.onboardingCoordinatorRootView
         case .mainTab:
             TabView {
                 Tab {
-                    HomeCoordinatorView()
+                    coordinatorFactory.homeCoordinatorRootView
                 } label: {
                     Text("홈")
                 }
                 Tab {
-                    MyPageCoordinatorView()
+                    coordinatorFactory.myPageCoordinatorRootView
                 } label: {
                     Text("마이페이지")
                 }
