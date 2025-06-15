@@ -7,10 +7,18 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
+let interface = Target.makeDynamicFrameworkTarget(
+    name: "ReservationFeatureInterface",
+    sources: ["Interface/**"],
+    dependencies: [],
+    hasResources: false
+)
+
 let project = Project(
     name: "ReservationFeature",
     settings: .defaultSettings,
     targets: [
+        interface,
         .makeDynamicFrameworkTarget(
             name: "ReservationFeature",
             dependencies: [
