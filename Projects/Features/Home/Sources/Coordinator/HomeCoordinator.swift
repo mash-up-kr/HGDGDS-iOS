@@ -27,7 +27,7 @@ public final class HomeCoordinator: Coordinatorable {
     }
     
     @ViewBuilder
-    public func build(_ screen: Screen) -> some View {
+    public func view(_ screen: Screen) -> some View {
         switch screen {
         case .main: HomeView()
         case .alarmHistory: Color.blue
@@ -41,7 +41,7 @@ public final class HomeCoordinator: Coordinatorable {
     @ViewBuilder
     public func present(_ sheet: Sheet) -> some View {
         switch sheet {
-        case .photoDetail: EmptyView()
+        case .photoDetail: Color.red
         }
     }
     
@@ -51,3 +51,4 @@ public final class HomeCoordinator: Coordinatorable {
     }
     
 }
+

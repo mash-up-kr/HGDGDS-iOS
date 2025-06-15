@@ -22,7 +22,7 @@ public final class MyPageCoordinator: Coordinatorable {
     public var fullScreenCover: FullScreen?
     
     @ViewBuilder
-    public func build(_ screen: Screen) -> some View {
+    public func view(_ screen: Screen) -> some View {
         switch screen {
         case .main: MyPageView()
         }

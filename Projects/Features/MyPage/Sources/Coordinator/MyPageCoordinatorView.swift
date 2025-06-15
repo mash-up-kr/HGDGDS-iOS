@@ -14,9 +14,9 @@ public struct MyPageCoordinatorView: View {
     
     public var body: some View {
         NavigationStack(path: $coordinator.path) {
-            coordinator.build(.main)
+            coordinator.view(.main)
                 .navigationDestination(for: MyPageRouter.Screen.self) {
-                    coordinator.build($0)
+                    coordinator.view($0)
                 }
                 .sheet(item: $coordinator.sheet) {
                     coordinator.present($0)

@@ -14,9 +14,9 @@ public struct OnboardingCoordinatorView: View {
     
     public var body: some View {
         NavigationStack(path: $coordinator.path) {
-            coordinator.build(.onboarding)
+            coordinator.view(.onboarding)
                 .navigationDestination(for: OnboardingCoordinator.Screen.self) {
-                    coordinator.build($0)
+                    coordinator.view($0)
                 }
                 .sheet(item: $coordinator.sheet) {
                     coordinator.present($0)

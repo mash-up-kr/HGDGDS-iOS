@@ -22,7 +22,7 @@ public protocol Coordinatorable: AnyObject {
     var fullScreenCover: FullScreen? { get set }
     
     @ViewBuilder
-    func build(_ screen: Screen) -> PushView
+    func view(_ screen: Screen) -> PushView
     @ViewBuilder
     func present(_ sheet: SheetScreen) -> SheetView
     @ViewBuilder
@@ -30,8 +30,8 @@ public protocol Coordinatorable: AnyObject {
 }
 
 public extension Coordinatorable {
-    func push(_ page: Screen) {
-        path.append(page)
+    func push(_ page: Screen...) {
+        page.forEach { path.append($0) }
     }
     
     func pop() {
