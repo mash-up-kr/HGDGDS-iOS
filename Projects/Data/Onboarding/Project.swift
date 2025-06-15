@@ -1,22 +1,22 @@
 //
-//  {{ name }}DataProject.swift
-//  {{ name }}
+//  OnboardingDataProject.swift
+//  Onboarding
 //
-//  Created by {{ author }} on {{ date }}.
+//  Created by 김남수 on 25/06/14.
 //
 
 import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project(
-    name: "{{ name }}Data",
+    name: "OnboardingData",
     settings: .defaultSettings,
     targets: [
         .makeDynamicFrameworkTarget(
-            name: "{{ name }}Data",
+            name: "OnboardingData",
             deploymentTargetsVersion: "\(Constants.targetVersion)",
             dependencies: [
-                .domainProject(with: .{{ name|lowerFirstWord }}),
+                .domainProject(with: .onboarding),
                 .coreProject(with: .hgNetwork)
             ],
             hasResources: false

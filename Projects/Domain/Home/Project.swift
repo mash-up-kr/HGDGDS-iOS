@@ -1,25 +1,25 @@
 //
-//  {{ name }}DataProject.swift
-//  {{ name }}
+//  HomeDomain.swift
+//  Home
 //
-//  Created by {{ author }} on {{ date }}.
+//  Created by 김남수 on 25/06/14.
 //
 
 import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project(
-    name: "{{ name }}Data",
+    name: "HomeDomain",
     settings: .defaultSettings,
     targets: [
         .makeDynamicFrameworkTarget(
-            name: "{{ name }}Data",
+            name: "HomeDomain",
             deploymentTargetsVersion: "\(Constants.targetVersion)",
             dependencies: [
-                .domainProject(with: .{{ name|lowerFirstWord }}),
-                .coreProject(with: .hgNetwork)
+
             ],
             hasResources: false
         )
     ]
 )
+

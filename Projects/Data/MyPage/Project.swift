@@ -1,22 +1,22 @@
 //
-//  {{ name }}DataProject.swift
-//  {{ name }}
+//  MyPageDataProject.swift
+//  MyPage
 //
-//  Created by {{ author }} on {{ date }}.
+//  Created by 김남수 on 25/06/14.
 //
 
 import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project(
-    name: "{{ name }}Data",
+    name: "MyPageData",
     settings: .defaultSettings,
     targets: [
         .makeDynamicFrameworkTarget(
-            name: "{{ name }}Data",
+            name: "MyPageData",
             deploymentTargetsVersion: "\(Constants.targetVersion)",
             dependencies: [
-                .domainProject(with: .{{ name|lowerFirstWord }}),
+                .domainProject(with: .myPage),
                 .coreProject(with: .hgNetwork)
             ],
             hasResources: false

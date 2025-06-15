@@ -2,8 +2,17 @@
 //  {{ name }}View.swift
 //  {{ name }}
 //
-//  Created by {{ autor }} on {{ date }}.
+//  Created by {{ author }} on {{ date }}.
 //
 
-import SwifUI
-import {{ name }}Domain
+import SwiftUI
+
+struct {{ name }}View: View {
+    var body: some View {
+        Text("Hello 허거덩거덩스")
+    }
+}
+
+#Preview {
+    {{ name }}View()
+}

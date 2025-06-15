@@ -1,21 +1,21 @@
 //
 //  Project.stencil
 //
-//  Created by {{ author }} on {{ date }}.
+//  Created by 김남수 on 25/06/14.
 //
 
 import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project(
-    name: "{{ name }}Feature",
+    name: "ReservationFeature",
     settings: .defaultSettings,
     targets: [
         .makeDynamicFrameworkTarget(
-            name: "{{ name }}Feature",
+            name: "ReservationFeature",
             deploymentTargetsVersion: "\(Constants.targetVersion)",
             dependencies: [
-                .domainProject(with: .{{ name|lowerFirstWord }}),
+                .domainProject(with: .reservation),
                 .coreProject(with: .hgCommon),
                 .coreProject(with: .hgLogger),
                 .uiProject(with: .hgDesignSystem)

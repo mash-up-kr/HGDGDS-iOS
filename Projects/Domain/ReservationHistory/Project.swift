@@ -1,19 +1,19 @@
 //
-//  {{ name }}Domain.swift
-//  {{ name }}
+//  ReservationHistoryDomain.swift
+//  ReservationHistory
 //
-//  Created by {{ author }} on {{ date }}.
+//  Created by 김남수 on 25/06/14.
 //
 
 import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project(
-    name: "{{ name }}Domain",
+    name: "ReservationHistoryDomain",
     settings: .defaultSettings,
     targets: [
         .makeDynamicFrameworkTarget(
-            name: "{{ name }}Domain",
+            name: "ReservationHistoryDomain",
             deploymentTargetsVersion: "\(Constants.targetVersion)",
             dependencies: [ ],
             hasResources: false

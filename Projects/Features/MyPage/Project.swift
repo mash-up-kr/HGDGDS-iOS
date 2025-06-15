@@ -1,23 +1,24 @@
 //
-//  {{ name }}DataProject.swift
-//  {{ name }}
+//  Project.stencil
 //
-//  Created by {{ author }} on {{ date }}.
+//  Created by 김남수 on 25/06/14.
 //
 
 import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project(
-    name: "{{ name }}Data",
+    name: "MyPageFeature",
     settings: .defaultSettings,
     targets: [
         .makeDynamicFrameworkTarget(
-            name: "{{ name }}Data",
+            name: "MyPageFeature",
             deploymentTargetsVersion: "\(Constants.targetVersion)",
             dependencies: [
-                .domainProject(with: .{{ name|lowerFirstWord }}),
-                .coreProject(with: .hgNetwork)
+                .domainProject(with: .myPage),
+                .coreProject(with: .hgCommon),
+                .coreProject(with: .hgLogger),
+                .uiProject(with: .hgDesignSystem)
             ],
             hasResources: false
         )

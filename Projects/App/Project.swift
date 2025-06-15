@@ -19,8 +19,14 @@ let project = Project(
             entitlements: "Configs/HGDGDS.entitlements",
             scripts: [],
             dependencies: [
-                DependencyContainer.HGLogger,
-                DependencyContainer.HGCommon,
+                .featureProject(with: .onboarding),
+                .featureProject(with: .home),
+                .featureProject(with: .createReservation),
+                .featureProject(with: .reservation),
+                .featureProject(with: .reservationHistory),
+                .featureProject(with: .myPage),
+                .coreProject(with: .hgLogger),
+                .coreProject(with: .hgCommon)
             ],
             settings: .defaultSettings
         ),

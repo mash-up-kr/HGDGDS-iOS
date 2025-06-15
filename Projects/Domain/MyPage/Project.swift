@@ -1,19 +1,19 @@
 //
-//  {{ name }}Domain.swift
-//  {{ name }}
+//  MyPageDomain.swift
+//  MyPage
 //
-//  Created by {{ author }} on {{ date }}.
+//  Created by 김남수 on 25/06/14.
 //
 
 import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project(
-    name: "{{ name }}Domain",
+    name: "MyPageDomain",
     settings: .defaultSettings,
     targets: [
         .makeDynamicFrameworkTarget(
-            name: "{{ name }}Domain",
+            name: "MyPageDomain",
             deploymentTargetsVersion: "\(Constants.targetVersion)",
             dependencies: [ ],
             hasResources: false
