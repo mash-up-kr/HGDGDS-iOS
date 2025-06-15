@@ -7,9 +7,19 @@
 
 import SwiftUI
 
+import HGCommon
+
 struct HomeView: View {
+    @Environment(HomeCoordinator.self) var coordinator
+    
     var body: some View {
-        Text("Hello 허거덩거덩스")
+        Text("Hello Home 허거덩거덩스")
+        Button {
+            print("tap")
+            coordinator.push(.alarmHistory)
+        } label: {
+            Text("온보딩푸시하기")
+        }
     }
 }
 
