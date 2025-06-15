@@ -62,40 +62,34 @@ public extension Typography {
         switch self {
             
             /// Display
-        case .display_32_bold: return 32
+        case .display_32_bold:
+            return 32
             
             /// Heading
-        case .heading_24_bold: fallthrough
-        case .heading_24_medium: fallthrough
-        case .heading_24_regular: return 24
+        case .heading_24_bold, .heading_24_medium, .heading_24_regular:
+            return 24
             
             /// title
-        case .title_20_bold: fallthrough
-        case .title_20_medium: fallthrough
-        case .title_20_regular: return 20
+        case .title_20_bold, .title_20_medium, .title_20_regular:
+            return 20
             
             /// subtitle
-        case .subTitle_18_bold: fallthrough
-        case .subTitle_18_medium: fallthrough
-        case .subTitle_18_regular: return 18
+        case .subTitle_18_bold, .subTitle_18_medium, .subTitle_18_regular:
+            return 18
             
             /// body
-        case .body_16_bold: fallthrough
-        case .body_16_medium: fallthrough
-        case .body_16_regular: return 16
+        case .body_16_bold, .body_16_medium, .body_16_regular:
+            return 16
             
-        case .body_14_bold: fallthrough
-        case .body_14_medium: fallthrough
-        case .body_14_regular: return 14
+        case .body_14_bold, .body_14_medium, .body_14_regular:
+            return 14
             
             /// caption
-        case .caption_12_bold: fallthrough
-        case .caption_12_medium: fallthrough
-        case .caption_12_regular: return 12
+        case .caption_12_bold, .caption_12_medium, .caption_12_regular:
+            return 12
             
-        case .caption_11_bold: fallthrough
-        case .caption_11_medium: fallthrough
-        case .caption_11_regular: return 11
+        case .caption_11_bold, .caption_11_medium, .caption_11_regular:
+            return 11
         }
     }
     
@@ -177,7 +171,13 @@ public extension View {
      ```
      */
     func setTypo(_ typo: Typography) -> some View {
-        self.modifier(LineHeightModifier(font: typo.uiFont, lineHeight: typo.lineHeight))
+        let font = typo.uiFont
+        let lineHeight = typo.lineHeight
+        
+        return self
+            .font(typo.font)
+            .lineSpacing(lineHeight - font.lineHeight)
+            .padding(.vertical, (lineHeight - font.lineHeight) / 2)
             .tracking(typo.letterSpacing)
     }
 }

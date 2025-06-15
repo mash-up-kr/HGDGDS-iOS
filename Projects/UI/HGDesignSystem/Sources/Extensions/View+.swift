@@ -30,23 +30,38 @@ public extension View {
         )
     }
     
-    /// Set rounded border
-    @ViewBuilder func roundedBorder(
+    /// Set inner border
+    @ViewBuilder func strokeBorder(
         _ color: Color,
-        radius: CGFloat = 8,
+        radius: CGFloat = .zero,
         linewidth: CGFloat = 1
     ) -> some View {
         self
-            .clipShape(RoundedRectangle(cornerRadius: radius))
+            .setRadius(radius)
             .overlay {
                 RoundedRectangle(cornerRadius: radius)
-                    .stroke(color, lineWidth: linewidth)
+                    .strokeBorder(color, lineWidth: linewidth)
             }
     }
     
-    /// Horizontal infinity width
-    func hSpacing(_ alignment: Alignment = .leading) -> some View {
+    /// Set Infinity Size
+    func fillMaxSize(_ alignment: Alignment = .topLeading) -> some View {
+        self.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: alignment)
+    }
+    
+    /// Set Infinity Width
+    func fillMaxWidth(_ alignment: Alignment = .leading) -> some View {
         self.frame(maxWidth: .infinity, alignment: alignment)
+    }
+    
+    /// Set Infinity Height
+    func fillMaxHeight(_ alignment: Alignment = .top) -> some View {
+        self.frame(maxHeight: .infinity, alignment: alignment)
+    }
+    
+    /// Set Square
+    func frame(_ length: CGFloat) -> some View  {
+        self.frame(width: length, height: length)
     }
     
     /// 기본 프로그래스 로딩뷰
