@@ -14,7 +14,6 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "{{ name }}Data",
-            deploymentTargetsVersion: "\(Constants.targetVersion)",
             dependencies: [
                 .domainProject(with: .{{ name|lowerFirstWord }}),
                 .coreProject(with: .hgNetwork)

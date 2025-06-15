@@ -13,7 +13,6 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "CreateReservationFeature",
-            deploymentTargetsVersion: "\(Constants.targetVersion)",
             dependencies: [
                 .domainProject(with: .createReservation),
                 .coreProject(with: .hgCommon),

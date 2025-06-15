@@ -15,7 +15,6 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "HGDesignSystem",
-            deploymentTargetsVersion: Constants.targetVersion,
             dependencies: [
                 ThirdParty.Nuke
             ]

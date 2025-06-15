@@ -13,7 +13,6 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "MyPageFeature",
-            deploymentTargetsVersion: "\(Constants.targetVersion)",
             dependencies: [
                 .domainProject(with: .myPage),
                 .coreProject(with: .hgCommon),

@@ -13,7 +13,6 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "HomeFeature",
-            deploymentTargetsVersion: "\(Constants.targetVersion)",
             dependencies: [
                 .domainProject(with: .home),
                 .coreProject(with: .hgCommon),

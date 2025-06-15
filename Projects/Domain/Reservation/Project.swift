@@ -14,7 +14,6 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "ReservationDomain",
-            deploymentTargetsVersion: "\(Constants.targetVersion)",
             dependencies: [ ],
             hasResources: false
         )
