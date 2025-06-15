@@ -46,7 +46,7 @@ public extension TargetDependency {
     static func interfaceProject(with dependecyName: DependencyName) -> TargetDependency {
         .project(
             target: "\(dependecyName.rawValue)FeatureInterface",
-            path: .relativeToRoot(Constants.projectBasePath + "Features/\(dependecyName.rawValue)/Interface")
+            path: .relativeToRoot(Constants.projectBasePath + "Features/\(dependecyName.rawValue)Interface")
         )
     }
 }
