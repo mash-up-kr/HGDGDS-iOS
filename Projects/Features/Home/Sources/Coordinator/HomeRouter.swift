@@ -20,7 +20,6 @@ public enum HomeRouter {
         case pastReservationDetail
         case inputReservationResult
         case modifyReservationInfo
-        case testOnboarding
     }
 
     public enum FullScreen: String, Identifiable {

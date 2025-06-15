@@ -8,11 +8,11 @@
 import SwiftUI
 
 public struct HomeCoordinatorView: View {
-    @State private var coordinator: HomeCoordinator = .init()
-
+    @Environment(HomeCoordinator.self) var coordinator
     public init() { }
     
     public var body: some View {
+        @Bindable var coordinator = coordinator
         NavigationStack(path: $coordinator.path) {
             coordinator.build(.main)
                 .navigationDestination(for: HomeRouter.Screen.self) {
