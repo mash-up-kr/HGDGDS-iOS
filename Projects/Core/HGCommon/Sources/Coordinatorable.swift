@@ -7,6 +7,14 @@
 
 import SwiftUI
 
+/**
+ ``` swift
+ func push(_ page: Screen...)
+ func sheet(_ sheet: SheetScreen)
+ func fullCover(_ cover: FullScreen)
+ ```
+ 3개 함수를 이용해서 화면이동 합니다.
+ */
 @MainActor
 public protocol Coordinatorable: AnyObject {
     associatedtype Screen: Hashable
@@ -24,14 +32,22 @@ public protocol Coordinatorable: AnyObject {
     @ViewBuilder
     func view(_ screen: Screen) -> PushView
     @ViewBuilder
-    func present(_ sheet: SheetScreen) -> SheetView
+    func presentView(_ sheet: SheetScreen) -> SheetView
     @ViewBuilder
-    func fullCover(_ cover: FullScreen) -> FullView
+    func fullCoverView(_ cover: FullScreen) -> FullView
 }
 
 public extension Coordinatorable {
     func push(_ page: Screen...) {
         page.forEach { path.append($0) }
+    }
+    
+    func sheet(_ sheet: SheetScreen) {
+        self.sheet = sheet
+    }
+    
+    func fullCover(_ cover: FullScreen) {
+        self.fullScreenCover = cover
     }
     
     func pop() {

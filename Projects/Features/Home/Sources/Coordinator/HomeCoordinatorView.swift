@@ -19,10 +19,10 @@ public struct HomeCoordinatorView: View {
                     coordinator.view($0)
                 }
                 .sheet(item: $coordinator.sheet) {
-                    coordinator.present($0)
+                    coordinator.presentView($0)
                 }
                 .fullScreenCover(item: $coordinator.fullScreenCover) {
-                    coordinator.fullCover($0)
+                    coordinator.fullCoverView($0)
                 }
         }
         .environment(coordinator)

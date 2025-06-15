@@ -39,16 +39,15 @@ public final class HomeCoordinator: Coordinatorable {
     }
     
     @ViewBuilder
-    public func present(_ sheet: Sheet) -> some View {
+    public func presentView(_ sheet: Sheet) -> some View {
         switch sheet {
         case .photoDetail: Color.red
         }
     }
     
     @ViewBuilder
-    public func fullCover(_ cover: FullScreen) -> some View {
+    public func fullCoverView(_ cover: FullScreen) -> some View {
         EmptyView()
     }
-    
 }
 
