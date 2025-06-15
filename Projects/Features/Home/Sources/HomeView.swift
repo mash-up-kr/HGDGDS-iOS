@@ -15,7 +15,7 @@ struct HomeView: View {
     var body: some View {
         Text("Hello Home 허거덩거덩스")
         Button {
-            coordinator.push(.soonReservationDetail)
+            coordinator.push(.soonReservationDetail, .soonReservationDetail)
         } label: {
             Text("온보딩푸시하기")
         }
