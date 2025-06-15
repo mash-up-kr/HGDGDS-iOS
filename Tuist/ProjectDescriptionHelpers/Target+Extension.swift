@@ -66,6 +66,7 @@ public extension Target {
         name: String,
         deploymentTargetsVersion: String,
         infoPlist: [String : Plist.Value] = [:],
+        sources: SourceFilesList = ["Sources/**"],
         dependencies: [TargetDependency],
         hasResources: Bool = true
     ) -> Target {
@@ -76,7 +77,7 @@ public extension Target {
             bundleId: "\(Constants.organizationName).\(name)",
             deploymentTargets: .iOS(deploymentTargetsVersion),
             infoPlist: .extendingDefault(with: infoPlist),
-            sources: ["Sources/**"],
+            sources: sources,
             resources: hasResources ? ["Resources/**"] : nil,
             dependencies: dependencies,
             settings: .defaultSettings
