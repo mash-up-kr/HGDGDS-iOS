@@ -16,7 +16,7 @@ public enum HomeRouter {
     public enum Screen: Hashable {
         case main
         case alarmHistory
-        case soonReservationDetail
+        case upcomingReservationDetail
         case pastReservationDetail
         case inputReservationResult
         case modifyReservationInfo
