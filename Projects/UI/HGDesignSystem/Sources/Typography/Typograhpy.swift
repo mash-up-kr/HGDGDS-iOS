@@ -10,7 +10,8 @@ import SwiftUI
 public enum Typography {
     
     /// Display
-    case display_32_bold
+    case display_32_extraBold
+    case display_40_extraBold
     
     /// Heading
     case heading_24_bold
@@ -62,7 +63,10 @@ public extension Typography {
         switch self {
             
             /// Display
-        case .display_32_bold:
+        case .display_40_extraBold:
+            return 40
+            
+        case .display_32_extraBold:
             return 32
             
             /// Heading
@@ -98,7 +102,7 @@ public extension Typography {
         switch self {
             
             /// Display
-        case .display_32_bold:
+        case .display_32_extraBold, .display_40_extraBold:
                 .suit(type: .extraBold, size: size)
             
             /// Heading

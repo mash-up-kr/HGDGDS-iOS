@@ -8,6 +8,7 @@
 import SwiftUI
 
 public enum HGGradient {
+    // MARK: - Orange
     public static let orangeMain: LinearGradient = .init(
         colors: [.init(hex: "FF710C"), .init(hex: "FEB66E")],
         startPoint: .top,
@@ -17,6 +18,12 @@ public enum HGGradient {
         colors: [.init(hex: "FEB66E"), .init(hex: "FF710C")],
         startPoint: .top,
         endPoint: .bottom
+    )
+    
+    public static let orangeMainWidth: LinearGradient = .init(
+        colors: [.init(hex: "FF710C"), .init(hex: "FEB66E")],
+        startPoint: .leading,
+        endPoint: .trailing
     )
     
     public static let orangeLight: LinearGradient = .init(
@@ -40,10 +47,17 @@ public enum HGGradient {
         endPoint: .bottom
     )
     
+    // MARK: - Purple
     public static let purpleMain: LinearGradient = .init(
         colors: [.init(hex: "7C5BFF"), .init(hex: "89A7F9")],
         startPoint: .top,
         endPoint: .bottom
+    )
+    
+    public static let purpleMainWidth: LinearGradient = .init(
+        colors: [.init(hex: "7C5BFF"), .init(hex: "89A7F9")],
+        startPoint: .leading,
+        endPoint: .trailing
     )
     
     public static let purpleLight: LinearGradient = .init(
@@ -67,10 +81,17 @@ public enum HGGradient {
         endPoint: .bottom
     )
 
+    // MARK: - Green
     public static let greenMain: LinearGradient = .init(
         colors: [.init(hex: "0FC24D"), .init(hex: "C9E86C")],
         startPoint: .top,
         endPoint: .bottom
+    )
+    
+    public static let greenMainWidth: LinearGradient = .init(
+        colors: [.init(hex: "0FC24D"), .init(hex: "C9E86C")],
+        startPoint: .leading,
+        endPoint: .trailing
     )
     
     public static let greenLight: LinearGradient = .init(
@@ -94,10 +115,17 @@ public enum HGGradient {
         endPoint: .bottom
     )
     
+    // MARK: - Blue
     public static let blueMain: LinearGradient = .init(
         colors: [.init(hex: "2B8BFF"), .init(hex: "57DFE2")],
         startPoint: .top,
         endPoint: .bottom
+    )
+    
+    public static let blueMainWidth: LinearGradient = .init(
+        colors: [.init(hex: "2B8BFF"), .init(hex: "57DFE2")],
+        startPoint: .leading,
+        endPoint: .trailing
     )
     
     public static let blueLight: LinearGradient = .init(
@@ -121,10 +149,17 @@ public enum HGGradient {
         endPoint: .bottom
     )
 
+    // MARK: - Pink
     public static let pinkMain: LinearGradient = .init(
         colors: [.init(hex: "FC4F92"), .init(hex: "FF86AE")],
         startPoint: .top,
         endPoint: .bottom
+    )
+    
+    public static let pinkMainWidth: LinearGradient = .init(
+        colors: [.init(hex: "FC4F92"), .init(hex: "FF86AE")],
+        startPoint: .leading,
+        endPoint: .trailing
     )
 
     public static let pinkLight: LinearGradient = .init(
@@ -166,30 +201,35 @@ public enum HGGradient {
                 GridRow {
                     HGGradient.orangeMain
                     HGGradient.orangeMain2
+                    HGGradient.orangeMainWidth
                     HGGradient.orangeLight
                     HGGradient.orangeSub
                 }
                 
                 GridRow {
                     HGGradient.purpleMain
+                    HGGradient.purpleMainWidth
                     HGGradient.purpleLight
                     HGGradient.purpleSub
                 }
                 
                 GridRow {
                     HGGradient.greenMain
+                    HGGradient.greenMainWidth
                     HGGradient.greenLight
                     HGGradient.greenSub
                 }
                 
                 GridRow {
                     HGGradient.blueMain
+                    HGGradient.blueMainWidth
                     HGGradient.blueLight
                     HGGradient.blueSub
                 }
                 
                 GridRow {
                     HGGradient.pinkMain
+                    HGGradient.pinkMainWidth
                     HGGradient.pinkLight
                     HGGradient.pinkSub
                 }
