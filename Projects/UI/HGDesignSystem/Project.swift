@@ -16,7 +16,7 @@ let project = Project(
         .makeDynamicFrameworkTarget(
             name: "HGDesignSystem",
             dependencies: [
-                ThirdParty.Nuke
+                .external(.nukeUI)
             ]
         )
     ],

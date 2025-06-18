@@ -9,7 +9,7 @@ let project = Project(
         .makeDynamicFrameworkTarget(
             name: "HGCommon",
             dependencies: [
-                ThirdParty.swinject
+                .external(.swinject)
             ],
             hasResources: false
         )

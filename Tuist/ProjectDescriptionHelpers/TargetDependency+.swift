@@ -49,5 +49,8 @@ public extension TargetDependency {
             path: .relativeToRoot(Constants.projectBasePath + "Features/\(dependecyName.rawValue)")
         )
     }
+    
+    static func external(_ type: DependencyName.ThirdParty) -> TargetDependency {
+        return external(name: type.rawValue)
+    }
 }
-
