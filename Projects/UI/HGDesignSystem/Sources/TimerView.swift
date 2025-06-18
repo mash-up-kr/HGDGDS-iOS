@@ -28,16 +28,14 @@ public struct TimerView: View {
     }
     
     public var body: some View {
-        ZStack {
-            VStack {
-                Text(time)
-                    .shadow(color: .black.opacity(0.6), radius: 4, x: 0, y: 2)
-                    .foregroundStyle(.white)
-                    .contentTransition(.numericText(countsDown: true))
-                    .animation(.bouncy, value: time)
-                Text(description)
-                    .foregroundStyle(.white.opacity(0.6))
-            }
+        VStack {
+            Text(time)
+                .shadow(color: .black.opacity(0.6), radius: 4, x: 0, y: 2)
+                .foregroundStyle(.white)
+                .contentTransition(.numericText(countsDown: true))
+                .animation(.bouncy, value: time)
+            Text(description)
+                .foregroundStyle(.white.opacity(0.6))
         }
         .frame(width: 78, height: 96)
         .background {
