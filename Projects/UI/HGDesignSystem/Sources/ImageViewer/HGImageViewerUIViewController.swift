@@ -54,6 +54,7 @@ final class HGImageViewerUIViewController: UIViewController {
     }
     private let tapIndex: Int
     private var imageViewerDelegate: (any ImageViewerDelegate)?
+    private let backgroundColor: UIColor = .black
     
     init(showIndex: Int, images: [UIImage]) {
         self.images = images
@@ -69,12 +70,13 @@ final class HGImageViewerUIViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupCollectionViewLayout()
+        self.view.backgroundColor = self.backgroundColor
+        self.setupCollectionView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        scrollToTapImage()
+        self.scrollToTapImage()
     }
     
     func setImageViewerDelegate(_ delegate: (any ImageViewerDelegate)?) {
@@ -82,16 +84,19 @@ final class HGImageViewerUIViewController: UIViewController {
     }
     
     private func scrollToTapImage() {
-        collectionView.scrollToItem(
+        self.collectionView.scrollToItem(
             at: IndexPath(item: tapIndex, section: 0),
             at: .centeredHorizontally,
             animated: false
         )
+        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.2, delay: 0) {
+            self.collectionView.alpha = 1
+        }
     }
     
-    private func setupCollectionViewLayout() {
+    private func setupCollectionView() {
         self.view.addSubview(self.collectionView)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             self.collectionView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
             self.collectionView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
@@ -101,7 +106,8 @@ final class HGImageViewerUIViewController: UIViewController {
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
         self.collectionView.bouncesVertically = false
-        self.collectionView.backgroundColor = .black
+        self.collectionView.backgroundColor = self.backgroundColor
+        self.collectionView.alpha = 0
     }
 }
 
