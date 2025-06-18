@@ -17,9 +17,9 @@ public struct HGButton: View {
     
     public init(
         title: String,
-        size: HGButtonSize,
-        variant: HGButtonVariant,
-        isMaxWidth: Bool,
+        size: HGButtonSize = .large,
+        variant: HGButtonVariant = .primary,
+        isMaxWidth: Bool = false,
         onTap: (() -> Void)?
     ) {
         self.title = title

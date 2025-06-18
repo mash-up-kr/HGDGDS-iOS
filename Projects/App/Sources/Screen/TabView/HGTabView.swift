@@ -8,9 +8,21 @@
 import SwiftUI
 import HGDesignSystem
 
+@Observable
+class HGTabViewManager {
+    fileprivate var hidenTabbar: Bool = false
+    
+    func setTabBarHidden(_ hidden: Bool) {
+        hidenTabbar = hidden
+    }
+    
+    fileprivate init() { }
+}
+
 struct HGTabView: View {
     @State private var selectedItem: TabItem = .home
     @State private var hidenTabbar: Bool = false
+    @State var tabViewManager = HGTabViewManager()
     
     var body: some View {
         VStack(spacing: .zero) {
@@ -19,10 +31,9 @@ struct HGTabView: View {
                     switch selectedItem {
                     case .home:
                         // TODO: Home View
-//
-//                        Color.blue
-//                            .ignoresSafeArea()
-                        HGButton(title: "테스트", size: .large, variant: .primary, isMaxWidth: false, onTap: { })
+                        Color.white
+                            .ignoresSafeArea()
+                        
                     case .add:
                         EmptyView()
                     case .profile:
@@ -32,9 +43,10 @@ struct HGTabView: View {
                     }
                 }
             }
+            .environment(tabViewManager)
         }
         .overlay(alignment: .bottom) {
-            if !hidenTabbar {
+            if !tabViewManager.hidenTabbar {
                 tabBar
             }
         }
