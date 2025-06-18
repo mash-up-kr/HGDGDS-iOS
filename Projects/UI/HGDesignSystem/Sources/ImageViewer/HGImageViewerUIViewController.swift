@@ -48,6 +48,7 @@ final class HGImageViewerUIViewController: UIViewController {
     
     init(showIndex: Int, images: [UIImage]) {
         self.images = images
+        let showIndex = min(max(0, showIndex), images.count - 1)
         self.currentIndex = showIndex
         self.tapIndex = showIndex
         super.init(nibName: nil, bundle: nil)
