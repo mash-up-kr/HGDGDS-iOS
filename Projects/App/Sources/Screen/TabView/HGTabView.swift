@@ -19,8 +19,10 @@ struct HGTabView: View {
                     switch selectedItem {
                     case .home:
                         // TODO: Home View
-                        Color.blue
-                            .ignoresSafeArea()
+//
+//                        Color.blue
+//                            .ignoresSafeArea()
+                        HGButton(title: "테스트", size: .large, variant: .primary, isMaxWidth: false, onTap: { })
                     case .add:
                         EmptyView()
                     case .profile:
