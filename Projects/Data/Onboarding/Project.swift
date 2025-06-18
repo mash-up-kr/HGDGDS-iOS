@@ -14,7 +14,6 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "OnboardingData",
-            deploymentTargetsVersion: "\(Constants.targetVersion)",
             dependencies: [
                 .domainProject(with: .onboarding),
                 .coreProject(with: .hgNetwork)

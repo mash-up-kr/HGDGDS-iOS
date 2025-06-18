@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ReservationView: View {
     var body: some View {
-        Text("Hello 허거덩거덩스")
+        Text("Hello reservation 허거덩거덩스")
     }
 }
 

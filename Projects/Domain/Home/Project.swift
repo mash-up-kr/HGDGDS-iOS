@@ -14,7 +14,6 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "HomeDomain",
-            deploymentTargetsVersion: "\(Constants.targetVersion)",
             dependencies: [
 
             ],

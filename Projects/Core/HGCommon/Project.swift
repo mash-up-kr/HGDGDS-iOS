@@ -8,7 +8,6 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "HGCommon",
-            deploymentTargetsVersion: Constants.targetVersion,
             dependencies: [
                 ThirdParty.swinject
             ],
