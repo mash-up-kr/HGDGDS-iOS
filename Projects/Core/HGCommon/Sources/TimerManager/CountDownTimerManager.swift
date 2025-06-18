@@ -42,7 +42,7 @@ public final class CountDownTimerManager {
         timer.start(interval: 1)
     }
     
-    private func stop() {
+    public func stop() {
         timer.stop()
     }
     
