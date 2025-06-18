@@ -26,7 +26,8 @@ let project = Project(
                 .featureProject(with: .reservationHistory),
                 .featureProject(with: .myPage),
                 .coreProject(with: .hgLogger),
-                .coreProject(with: .hgCommon)
+                .coreProject(with: .hgCommon),
+                .uiProject(with: .hgDesignSystem)
             ],
             settings: .defaultSettings
         ),
@@ -41,5 +42,6 @@ let project = Project(
             dependencies: [.target(name: "HGDGDS-iOS")],
             settings: .defaultSettings
         ),
-    ]
+    ],
+    resourceSynthesizers: []
 )
