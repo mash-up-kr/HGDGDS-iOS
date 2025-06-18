@@ -20,7 +20,7 @@ public extension UIFont {
         
         var errorRef: Unmanaged<CFError>? = nil
         
-        guard let fontURL = Bundle.module.url(forResource: fontName, withExtension: "ttf") else {
+        guard let fontURL = bundle.url(forResource: fontName, withExtension: "ttf") else {
             print("Failed to register font - invalid FontName")
             return
         }

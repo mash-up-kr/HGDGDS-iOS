@@ -56,15 +56,15 @@ fileprivate struct HGButtonStyle: ButtonStyle {
         
         configuration.label
             .setTypo(size.font)
-            .foregroundStyle(foregroundColor(state: state, varient: variant))
+            .foregroundStyle(foregroundColor(state: state, variant: variant))
             .padding(.horizontal, size.hPadding)
             .frame(height: size.height)
-            .background(backgroundColor(state: state, varient: variant))
+            .background(backgroundColor(state: state, variant: variant))
             .clipShape(.capsule)
             .strokeBorder(
-                strokeBorderColor(state: state, varient: variant),
+                strokeBorderColor(state: state, variant: variant),
                 radius: size.height/2,
-                linewidth: strokeBorderWidth(varient: variant)
+                linewidth: strokeBorderWidth(variant: variant)
             )
             .scaleEffect(state == .pressed ? 0.95 : 1)
             .animation(.spring(response: 0.35), value: configuration.isPressed)
@@ -81,8 +81,8 @@ fileprivate struct HGButtonStyle: ButtonStyle {
         }
     }
     
-    private func backgroundColor(state: HGButtonState, varient: HGButtonVariant) -> Color {
-        switch (state, varient) {
+    private func backgroundColor(state: HGButtonState, variant: HGButtonVariant) -> Color {
+        switch (state, variant) {
         case (.default, .primary):
             return HGColors.orange500Main.color
         case (.disabled, .primary):
@@ -98,8 +98,8 @@ fileprivate struct HGButtonStyle: ButtonStyle {
         }
     }
     
-    private func foregroundColor(state: HGButtonState, varient: HGButtonVariant) -> Color {
-        switch (state, varient) {
+    private func foregroundColor(state: HGButtonState, variant: HGButtonVariant) -> Color {
+        switch (state, variant) {
         case (_, .primary):
             return HGColors.gray0White.color
         case (.default, .subtle):
@@ -111,8 +111,8 @@ fileprivate struct HGButtonStyle: ButtonStyle {
         }
     }
     
-    private func strokeBorderColor(state: HGButtonState, varient: HGButtonVariant) -> Color {
-        switch (state, varient) {
+    private func strokeBorderColor(state: HGButtonState, variant: HGButtonVariant) -> Color {
+        switch (state, variant) {
         case (_, .primary):
             return .clear
         case (.default, .subtle):
@@ -124,8 +124,8 @@ fileprivate struct HGButtonStyle: ButtonStyle {
         }
     }
     
-    private func strokeBorderWidth(varient: HGButtonVariant) -> CGFloat {
-        switch varient {
+    private func strokeBorderWidth(variant: HGButtonVariant) -> CGFloat {
+        switch variant {
         case .primary: 0
         case .subtle: 1
         }

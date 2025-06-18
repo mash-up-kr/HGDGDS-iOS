@@ -10,10 +10,10 @@ import HGDesignSystem
 
 @Observable
 class HGTabViewManager {
-    fileprivate var hidenTabbar: Bool = false
+    fileprivate var hiddenTabbar: Bool = false
     
     func setTabBarHidden(_ hidden: Bool) {
-        hidenTabbar = hidden
+        hiddenTabbar = hidden
     }
     
     fileprivate init() { }
@@ -21,18 +21,18 @@ class HGTabViewManager {
 
 struct HGTabView: View {
     @State private var selectedItem: TabItem = .home
-    @State private var hidenTabbar: Bool = false
     @State var tabViewManager = HGTabViewManager()
     
     var body: some View {
         VStack(spacing: .zero) {
             TabView(selection: $selectedItem) {
                 ForEach(TabItem.allCases, id: \.self) { tabItem in
-                    switch selectedItem {
+                    switch tabItem {
                     case .home:
                         // TODO: Home View
                         Color.white
                             .ignoresSafeArea()
+                            .tag(tabItem)
                         
                     case .add:
                         EmptyView()
@@ -40,13 +40,14 @@ struct HGTabView: View {
                         // TODO: Profile(MyPage) View
                         Color.green
                             .ignoresSafeArea()
+                            .tag(tabItem)
                     }
                 }
             }
             .environment(tabViewManager)
         }
         .overlay(alignment: .bottom) {
-            if !tabViewManager.hidenTabbar {
+            if !tabViewManager.hiddenTabbar {
                 tabBar
             }
         }

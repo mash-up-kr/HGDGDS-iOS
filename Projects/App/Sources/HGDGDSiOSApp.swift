@@ -1,4 +1,5 @@
 import SwiftUI
+import HGDesignSystem
 
 @main
 struct HGDGDSiOSApp: App {
