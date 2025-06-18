@@ -83,11 +83,12 @@ final class HGImageViewerUIViewController: UIViewController {
             self.collectionView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
             self.collectionView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
             self.collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            self.collectionView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.collectionView.topAnchor.constraint(equalTo: self.view.topAnchor),
         ])
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
         self.collectionView.bouncesVertically = false
+        self.collectionView.backgroundColor = .black
     }
 }
 
