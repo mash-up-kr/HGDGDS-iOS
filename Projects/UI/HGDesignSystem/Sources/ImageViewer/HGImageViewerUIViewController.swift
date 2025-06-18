@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+protocol ImageViewerDelegate {
+    func willDisplay(index: Int)
+}
+
 final class HGImageViewerUIViewController: UIViewController {
     typealias ImageCell = UICollectionView.CellRegistration<UICollectionViewCell, UIImage>
     
@@ -43,8 +47,13 @@ final class HGImageViewerUIViewController: UIViewController {
         .margins(.all, 0)
     }
     private let images: [UIImage]
-    private var currentIndex: Int
+    private var currentIndex: Int {
+        didSet {
+            imageViewerDelegate?.willDisplay(index: currentIndex)
+        }
+    }
     private let tapIndex: Int
+    private var imageViewerDelegate: (any ImageViewerDelegate)?
     
     init(showIndex: Int, images: [UIImage]) {
         self.images = images
@@ -66,6 +75,10 @@ final class HGImageViewerUIViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         scrollToTapImage()
+    }
+    
+    func setImageViewerDelegate(_ delegate: (any ImageViewerDelegate)?) {
+        self.imageViewerDelegate = delegate
     }
     
     private func scrollToTapImage() {
