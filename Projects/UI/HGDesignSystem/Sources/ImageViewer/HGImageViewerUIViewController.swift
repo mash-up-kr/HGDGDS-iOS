@@ -14,7 +14,7 @@ protocol ImageViewerDelegate {
 final class HGImageViewerUIViewController: UIViewController {
     typealias ImageCell = UICollectionView.CellRegistration<UICollectionViewCell, UIImage>
     
-    private let compositionalLayout: UICollectionViewCompositionalLayout = {
+    private lazy var compositionalLayout: UICollectionViewCompositionalLayout = {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
             heightDimension: .fractionalHeight(1)
@@ -34,6 +34,20 @@ final class HGImageViewerUIViewController: UIViewController {
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .groupPaging
         section.contentInsets = .zero
+        
+        section.visibleItemsInvalidationHandler = { [weak self] (visibleItems, offset, env) in
+            guard let self else { return }
+            let offsetX: CGFloat = offset.x
+            let collectionViewHalf: CGFloat = self.collectionView.bounds.width / 2.0
+            let centerXPoint = CGPoint(x: offsetX + collectionViewHalf, y: 0)
+            visibleItems.forEach { item in
+                guard let cell = self.collectionView.cellForItem(at: item.indexPath) else { return }
+                if item.frame.contains(centerXPoint) {
+                    self.currentIndex = item.indexPath.item
+                }
+            }
+          }
+
         return UICollectionViewCompositionalLayout(section: section)
     }()
     private lazy var collectionView: UICollectionView = .init(
@@ -55,6 +69,7 @@ final class HGImageViewerUIViewController: UIViewController {
     private let tapIndex: Int
     private var imageViewerDelegate: (any ImageViewerDelegate)?
     private let backgroundColor: UIColor = .black
+    private var isOnceExecuteFlag: Bool = false
     
     init(showIndex: Int, images: [UIImage]) {
         self.images = images
@@ -74,9 +89,12 @@ final class HGImageViewerUIViewController: UIViewController {
         self.setupCollectionView()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.scrollToTapImage()
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if !self.isOnceExecuteFlag {
+            self.isOnceExecuteFlag = true
+            self.scrollToTapImage()
+        }
     }
     
     func setImageViewerDelegate(_ delegate: (any ImageViewerDelegate)?) {
@@ -89,9 +107,7 @@ final class HGImageViewerUIViewController: UIViewController {
             at: .centeredHorizontally,
             animated: false
         )
-        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.2, delay: 0) {
-            self.collectionView.alpha = 1
-        }
+        self.collectionView.performBatchUpdates(nil)
     }
     
     private func setupCollectionView() {
@@ -104,10 +120,8 @@ final class HGImageViewerUIViewController: UIViewController {
             self.collectionView.topAnchor.constraint(equalTo: self.view.topAnchor),
         ])
         self.collectionView.dataSource = self
-        self.collectionView.delegate = self
         self.collectionView.bouncesVertically = false
         self.collectionView.backgroundColor = self.backgroundColor
-        self.collectionView.alpha = 0
     }
 }
 
@@ -131,17 +145,5 @@ extension HGImageViewerUIViewController: UICollectionViewDataSource {
             item: images[indexPath.item]
         )
         return cell
-    }
-}
-
-// MARK: - Delegate
-
-extension HGImageViewerUIViewController: UICollectionViewDelegate {
-    func collectionView(
-        _ collectionView: UICollectionView,
-        willDisplay cell: UICollectionViewCell,
-        forItemAt indexPath: IndexPath
-    ) {
-        currentIndex = indexPath.item
     }
 }
