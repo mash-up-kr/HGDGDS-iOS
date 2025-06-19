@@ -1,5 +1,5 @@
 //
-//  Typograhpy.swift
+//  Typography.swift
 //  HGDesignSystem
 //
 //  Created by iOS신상우 on 6/10/25.
