@@ -20,5 +20,7 @@ let project = Project(
             ]
         )
     ],
-    resourceSynthesizers: .default
+    resourceSynthesizers: [
+        .custom(name: "Assets", parser: .assets, extensions: ["xcassets"])
+    ]
 )
