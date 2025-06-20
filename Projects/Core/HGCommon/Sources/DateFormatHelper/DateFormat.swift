@@ -71,7 +71,8 @@ public enum DateFormat: String {
     /// 서버 날짜, 시간 (년-월-일 시:분:초)
     case serverDateTime = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
     
-    case iso08601 = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+    case iso8601ms = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+    case iso8601 = "yyyy-MM-dd'T'HH:mm:ssZ"
     
     /// 월-일 시:분
     case MMddaHHmm = "MM.dd a HH:mm"
