@@ -12,7 +12,7 @@ public enum HGButtonSize: String, CaseIterable {
     case large
     case medium
     case small
-    case xsmall
+    case xSmall
 }
 
 public extension HGButtonSize {
@@ -22,7 +22,7 @@ public extension HGButtonSize {
             return .body_16_bold
         case .medium, .small:
             return .body_14_bold
-        case .xsmall:
+        case .xSmall:
             return .caption_12_medium
         }
     }
@@ -37,7 +37,7 @@ public extension HGButtonSize {
             20
         case .small:
             10
-        case .xsmall:
+        case .xSmall:
             10
         }
     }
@@ -52,7 +52,7 @@ public extension HGButtonSize {
             41
         case .small:
             31
-        case .xsmall:
+        case .xSmall:
             28
         }
     }

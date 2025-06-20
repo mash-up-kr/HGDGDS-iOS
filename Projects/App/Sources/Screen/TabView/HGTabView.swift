@@ -8,44 +8,30 @@
 import SwiftUI
 import HGDesignSystem
 
-@Observable
-class HGTabViewManager {
-    fileprivate var hiddenTabbar: Bool = false
-    
-    func setTabBarHidden(_ hidden: Bool) {
-        hiddenTabbar = hidden
-    }
-    
-    fileprivate init() { }
-}
-
 struct HGTabView: View {
     @State private var selectedItem: TabItem = .home
     @State var tabViewManager = HGTabViewManager()
     
+    private let tabbarHeight: CGFloat = 90
+    
     var body: some View {
-        VStack(spacing: .zero) {
-            TabView(selection: $selectedItem) {
-                ForEach(TabItem.allCases, id: \.self) { tabItem in
-                    switch tabItem {
-                    case .home:
-                        // TODO: Home View
-                        Color.white
-                            .ignoresSafeArea()
-                            .tag(tabItem)
-                        
-                    case .add:
-                        EmptyView()
-                    case .profile:
-                        // TODO: Profile(MyPage) View
-                        Color.green
-                            .ignoresSafeArea()
-                            .tag(tabItem)
-                    }
+        TabView(selection: $selectedItem) {
+            ForEach(TabItem.allCases, id: \.self) { tabItem in
+                switch tabItem {
+                case .home:
+                    // TODO: Home View
+                    Color.white
+                        .ignoresSafeArea()
+                        .tag(tabItem)
+                case .profile:
+                    // TODO: Profile(MyPage) View
+                    Color.green
+                        .ignoresSafeArea()
+                        .tag(tabItem)
                 }
             }
-            .environment(tabViewManager)
         }
+        .environment(tabViewManager)
         .overlay(alignment: .bottom) {
             if !tabViewManager.hiddenTabbar {
                 tabBar
@@ -56,23 +42,19 @@ struct HGTabView: View {
     
     // MARK: - 탭바
     private var tabBar: some View {
-        HStack(spacing: .zero) {
+        HStack(spacing: 52) {
             ForEach(TabItem.allCases, id: \.rawValue) { item in
-                if item == .add {
-                    Color.clear.frame(52)
-                } else {
-                    tabItemView(with: item)
-                        .sensoryFeedback(.impact(weight: .light), trigger: selectedItem == item)
-                }
+                tabItemView(with: item)
+                    .sensoryFeedback(.impact(weight: .light), trigger: selectedItem == item)
             }
         }
-        .padding(.bottom, 21)
-        .frame(height: 102)
+        .padding(.top, 8)
+        .frame(height: tabbarHeight, alignment: .top)
         .background(.gray0White)
         .setRadius(30, corners: [.topLeft, .topRight])
-        .padding(.top, 7)
+        .padding(.top, 7) // 중앙 버튼 오버레이 공간 확보
         .overlay {
-            centerButtonView(with: .add)
+            centerButtonView()
         }
         .compositingGroup()
         .shadow(
@@ -104,19 +86,17 @@ struct HGTabView: View {
     }
     
     // MARK: - 중앙 추가 버튼
-    private func centerButtonView(with item: TabItem) -> some View {
+    private func centerButtonView() -> some View {
         Button {
             // TODO: 추가 플로우 이동
         } label: {
-            if let icon = item.icon {
-                icon.image
-                    .resizable()
-                    .frame(24)
-                    .foregroundStyle(.gray0White)
-                    .padding(14)
-                    .background(HGGradient.orangeMain2)
-                    .clipShape(.circle)
-            }
+            HGIcons.plusThick.image
+                .resizable()
+                .frame(24)
+                .foregroundStyle(.gray0White)
+                .padding(14)
+                .background(HGGradient.orangeMain2)
+                .clipShape(.circle)
         }
         .padding(7)
         .background(HGColors.gray0White.color.frame(66))

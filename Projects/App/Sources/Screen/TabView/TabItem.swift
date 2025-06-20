@@ -10,15 +10,12 @@ import HGDesignSystem
 
 public enum TabItem: String, CaseIterable, Equatable {
     case home
-    case add
     case profile
     
     public var title: String {
         switch self {
         case .home:
             "홈"
-        case .add:
-            ""
         case .profile:
             "프로필"
         }
@@ -28,8 +25,6 @@ public enum TabItem: String, CaseIterable, Equatable {
         switch self {
         case .home:
             return .home
-        case .add:
-            return .plusThick
         case .profile:
             return .profile
         }
