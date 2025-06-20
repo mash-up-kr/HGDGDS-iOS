@@ -9,18 +9,17 @@ import SwiftUI
 
 public struct ImageSwipeView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var currentIndex: Int = 0
-    private let showIndex: Int
+    @State private var currentIndex: Int
     private let images: [UIImage]
     
     public init(showIndex: Int, images: [UIImage]) {
-        self.showIndex = showIndex
+        self._currentIndex = State(initialValue: showIndex)
         self.images = images
     }
     
     public var body: some View {
         ZStack {
-            HGImageViewer(currentIndex: $currentIndex, showIndex: showIndex, images: images)
+            HGImageViewer(currentIndex: $currentIndex, images: images)
                 .ignoresSafeArea()
             VStack {
                 HStack {
