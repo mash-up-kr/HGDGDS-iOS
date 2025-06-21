@@ -36,7 +36,7 @@ struct SuccessRateView: View {
                 Spacer()
                 divider
                 Spacer()
-                reservationDescriptionView(title: "전체예약", num: successCount)
+                reservationDescriptionView(title: "성공예약", num: successCount)
                 Spacer()
             }
             .frame(height: 88)
