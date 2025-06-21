@@ -25,7 +25,7 @@ public struct ImageSwipeView: View {
                     Button {
                         dismiss()
                     } label: {
-                        UIAsset.Icons.close.image
+                        HGIcons.close.image
                             .foregroundStyle(.gray0White)
                             .frame(width: 24, height: 24)
                     }
