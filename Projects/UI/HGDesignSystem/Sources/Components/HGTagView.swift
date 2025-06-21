@@ -13,7 +13,7 @@ public struct HGTagView: View {
         case small
     }
     
-    public init(style: HGTagView.Style, title: String, textColor: UIAsset.Colors, backgroundColor: UIAsset.Colors) {
+    public init(style: HGTagView.Style, title: String, textColor: HGColors, backgroundColor: HGColors) {
         self.style = style
         self.title = title
         self.textColor = textColor.color
