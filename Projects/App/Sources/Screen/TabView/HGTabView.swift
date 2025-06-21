@@ -7,13 +7,14 @@
 
 import SwiftUI
 import HGDesignSystem
+import HGCommon
 
 struct HGTabView: View {
     @State private var selectedItem: TabItem = .home
     @State var tabViewManager = HGTabViewManager()
     private let coordinatorFactory: CoordinatorFactory = CoordinatorFactory()
     
-    private let tabbarHeight: CGFloat = 90
+    private let tabbarHeight: CGFloat = Constant.tabbarHeight
     
     var body: some View {
         TabView(selection: $selectedItem) {
@@ -21,14 +22,13 @@ struct HGTabView: View {
                 switch tabItem {
                 case .home:
                     coordinatorFactory.homeCoordinatorRootView
-                        .ignoresSafeArea()
                         .tag(tabItem)
                 case .myPage:
                     coordinatorFactory.myPageCoordinatorRootView
-                        .ignoresSafeArea()
                         .tag(tabItem)
                 }
             }
+            .toolbarVisibility(.hidden, for: .tabBar)
         }
         .environment(tabViewManager)
         .overlay(alignment: .bottom) {
@@ -51,8 +51,7 @@ struct HGTabView: View {
         .frame(height: tabbarHeight, alignment: .top)
         .background(.gray0White)
         .setRadius(30, corners: [.topLeft, .topRight])
-        .padding(.top, 7) // 중앙 버튼 오버레이 공간 확보
-        .overlay {
+        .overlay(alignment: .top) {
             centerButtonView()
         }
         .compositingGroup()
@@ -100,7 +99,7 @@ struct HGTabView: View {
         .padding(7)
         .background(HGColors.gray0White.color.frame(66))
         .clipShape(.circle)
-        .offset(y: -34)
+        .offset(y: -19)
     }
 }
 
