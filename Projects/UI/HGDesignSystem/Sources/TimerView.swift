@@ -32,7 +32,7 @@ public struct TimerView: View {
                 .contentTransition(.numericText(countsDown: true))
                 .animation(.bouncy, value: time)
             Text(description)
-                .setTypo(.body_14_medium)
+                .setTypo(.body_14_bold)
                 .foregroundStyle(.white.opacity(0.6))
         }
         .frame(width: 78, height: 96)
