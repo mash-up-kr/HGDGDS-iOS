@@ -11,6 +11,7 @@ import HGDesignSystem
 struct HGTabView: View {
     @State private var selectedItem: TabItem = .home
     @State var tabViewManager = HGTabViewManager()
+    private let coordinatorFactory: CoordinatorFactory = CoordinatorFactory()
     
     private let tabbarHeight: CGFloat = 90
     
@@ -19,13 +20,11 @@ struct HGTabView: View {
             ForEach(TabItem.allCases, id: \.self) { tabItem in
                 switch tabItem {
                 case .home:
-                    // TODO: Home View
-                    Color.white
+                    coordinatorFactory.homeCoordinatorRootView
                         .ignoresSafeArea()
                         .tag(tabItem)
-                case .profile:
-                    // TODO: Profile(MyPage) View
-                    Color.green
+                case .myPage:
+                    coordinatorFactory.myPageCoordinatorRootView
                         .ignoresSafeArea()
                         .tag(tabItem)
                 }

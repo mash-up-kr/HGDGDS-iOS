@@ -11,7 +11,7 @@ struct HGDGDSiOSApp: App {
     
     var body: some Scene {
         WindowGroup {
-            HGTabView()
+            ContentView()
         }
     }
 }
