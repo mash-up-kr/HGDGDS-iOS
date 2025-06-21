@@ -20,14 +20,12 @@ struct SuccessRateView: View {
     var body: some View {
         VStack(spacing: 10) {
             VStack(spacing: 4) {
-                HStack {
-                    HGTagView(
-                        style: .medium,
-                        title: "나의 예약 성공률",
-                        textColor: tintColor,
-                        backgroundColor: backgroundColor
-                    )
-                }
+                HGTagView(
+                    style: .medium,
+                    title: "나의 예약 성공률",
+                    textColor: tintColor,
+                    backgroundColor: backgroundColor
+                )
                 Text("\(Int(successRate * 100))%")
                     .setTypo(.display_40_extraBold)
                 sliderView
@@ -82,6 +80,7 @@ struct SuccessRateView: View {
                 }
             }
             .frame(height: 10)
+            .animation(.spring, value: successCount)
             HStack {
                 Text("0%")
                 Spacer()
