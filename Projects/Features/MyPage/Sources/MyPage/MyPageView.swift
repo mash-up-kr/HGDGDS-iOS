@@ -25,8 +25,8 @@ struct MyPageView: View {
                     backgroundColor: .purpleLight
                 )
                 .padding(.horizontal, 16)
-                Spacer().frame(height: 26)
             }
+            .applyTabbarHeight(padding: 38)
             .fillMaxSize(.top)
             .overlay(alignment: .topTrailing) { settingButton }
         }

@@ -7,14 +7,13 @@
 
 import SwiftUI
 import HGDesignSystem
-import HGCommon
 
 struct HGTabView: View {
     @State private var selectedItem: TabItem = .home
     @State var tabViewManager = HGTabViewManager()
     private let coordinatorFactory: CoordinatorFactory = CoordinatorFactory()
     
-    private let tabbarHeight: CGFloat = Constant.tabbarHeight
+    private let tabbarHeight: CGFloat = UIConstant.tabBarHeight
     
     var body: some View {
         TabView(selection: $selectedItem) {
@@ -32,7 +31,7 @@ struct HGTabView: View {
         }
         .environment(tabViewManager)
         .overlay(alignment: .bottom) {
-            if !tabViewManager.hiddenTabbar {
+            if !tabViewManager.hiddenTabBar {
                 tabBar
             }
         }
