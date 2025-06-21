@@ -9,6 +9,7 @@ import SwiftUI
 import HGDesignSystem
 
 struct OnboardingSlidesView: View {
+    @Environment(OnboardingCoordinator.self) var coordinator
     @State var currentTab: OnboardingType = .first
     
     var body: some View {
@@ -18,6 +19,7 @@ struct OnboardingSlidesView: View {
             bottomArea
         }
         .fillMaxSize()
+        .background(.white)
         .ignoresSafeArea(.container, edges: [.bottom])
     }
     
@@ -68,7 +70,7 @@ struct OnboardingSlidesView: View {
             isMaxWidth: true)
         {
             if currentTab == .thrid {
-                // TODO: 프로필
+                coordinator.push(.enterNickname)
             } else {
                 withAnimation {
                     currentTab = OnboardingType(rawValue: currentTab.rawValue+1) ?? .thrid

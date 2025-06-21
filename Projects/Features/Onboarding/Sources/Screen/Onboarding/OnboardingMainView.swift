@@ -18,6 +18,7 @@ struct OnboardingMainView: View {
             bottomArea
         }
         .fillMaxSize(.center)
+        .background(.white)
         .ignoresSafeArea()
     }
     
