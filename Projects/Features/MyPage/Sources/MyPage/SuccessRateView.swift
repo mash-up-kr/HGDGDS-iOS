@@ -15,7 +15,10 @@ struct SuccessRateView: View {
     let sliderGradient: LinearGradient
     let backgroundColor: HGColors
     
-    var successRate: Double { Double(successCount) / Double(allCount) }
+    var successRate: Double {
+        guard allCount > 0 else { return 0.0 }
+        return min(Double(successCount) / Double(allCount), 1.0)
+    }
     
     var body: some View {
         VStack(spacing: 10) {
