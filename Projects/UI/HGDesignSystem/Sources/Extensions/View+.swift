@@ -34,15 +34,13 @@ public extension View {
     @ViewBuilder func strokeBorder<S: ShapeStyle>(
         _ color: S,
         radius: CGFloat = .zero,
-        linewidth: CGFloat = 1,
-        opacity: Double = 1
+        linewidth: CGFloat = 1
     ) -> some View {
         self
             .setRadius(radius)
             .overlay {
                 RoundedRectangle(cornerRadius: radius)
                     .strokeBorder(color, lineWidth: linewidth)
-                    .opacity(opacity)
             }
     }
     
