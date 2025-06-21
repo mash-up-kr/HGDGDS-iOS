@@ -9,11 +9,12 @@ import SwiftUI
 
 @Observable
 final public class HGTabViewManager {
-    public private(set) var hiddenTabbar: Bool = false
+    public private(set) var hiddenTabBar: Bool = false
     
     public func setTabBarHidden(_ hidden: Bool) {
-        hiddenTabbar = hidden
+        hiddenTabBar = hidden
     }
     
     public init() { }
 }
+
