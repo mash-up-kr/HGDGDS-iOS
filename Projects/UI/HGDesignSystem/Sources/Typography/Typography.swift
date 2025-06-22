@@ -10,8 +10,8 @@ import SwiftUI
 public enum Typography {
     
     /// Display
-    case display_32_extraBold
     case display_40_extraBold
+    case display_32_extraBold
     
     /// Heading
     case heading_24_bold
@@ -51,7 +51,33 @@ public extension Typography {
     
     // 행높이
     fileprivate var lineHeight: CGFloat {
-        size*1.35
+        switch self {
+        case .display_40_extraBold,
+             .display_32_extraBold,
+             .heading_24_bold,
+             .heading_24_medium,
+             .heading_24_regular,
+             .title_20_bold,
+             .title_20_medium,
+             .title_20_regular,
+             .subTitle_18_bold,
+             .subTitle_18_medium,
+             .subTitle_18_regular:
+            return size * 1.35
+        case .body_16_bold,
+             .body_16_medium,
+             .body_16_regular,
+             .body_14_bold,
+             .body_14_medium,
+             .body_14_regular,
+             .caption_12_bold,
+             .caption_12_medium,
+             .caption_12_regular,
+             .caption_11_bold,
+             .caption_11_medium,
+             .caption_11_regular:
+            return size * 1.5
+        }
     }
     
     /// 자간

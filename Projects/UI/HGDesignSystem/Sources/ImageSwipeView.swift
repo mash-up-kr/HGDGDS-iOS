@@ -18,26 +18,25 @@ public struct ImageSwipeView: View {
     }
     
     public var body: some View {
-        ZStack {
-            HGImageViewer(currentIndex: $currentIndex, images: images)
-                .ignoresSafeArea()
-            VStack {
+        HGImageViewer(currentIndex: $currentIndex, images: images)
+            .ignoresSafeArea()
+            .overlay(alignment: .top) {
                 HStack {
                     Button {
                         dismiss()
                     } label: {
-                        // TODO: 닫기아이콘이 들어가야합니다
-                        Text("닫기")
+                        HGIcons.close.image
+                            .foregroundStyle(.gray0White)
+                            .frame(width: 24, height: 24)
                     }
                     Spacer()
                     Text("\(currentIndex + 1)/\(images.count)")
-                        .foregroundStyle(.blue) // TODO: 디자인컬러 해야함 
+                        .setTypo(.body_16_bold)
+                        .foregroundStyle(.gray30)
                 }
                 .padding(.horizontal, 16)
                 .frame(height: 56)
-                Spacer()
             }
-        }
     }
 }
 

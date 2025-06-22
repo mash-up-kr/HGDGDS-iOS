@@ -31,8 +31,8 @@ public extension View {
     }
     
     /// Set inner border
-    @ViewBuilder func strokeBorder(
-        _ color: Color,
+    @ViewBuilder func strokeBorder<S: ShapeStyle>(
+        _ color: S,
         radius: CGFloat = .zero,
         linewidth: CGFloat = 1
     ) -> some View {
@@ -43,6 +43,7 @@ public extension View {
                     .strokeBorder(color, lineWidth: linewidth)
             }
     }
+    
     
     /// Set Infinity Size
     func fillMaxSize(_ alignment: Alignment = .topLeading) -> some View {
