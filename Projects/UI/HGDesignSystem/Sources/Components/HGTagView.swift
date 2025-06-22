@@ -8,19 +8,19 @@
 import SwiftUI
 
 public struct HGTagView: View {
-    public enum Style {
+    public enum Size {
         case medium
         case small
     }
     
-    public init(style: HGTagView.Style, title: String, textColor: HGColors, backgroundColor: HGColors) {
+    public init(style: HGTagView.Size, title: String, textColor: HGColors, backgroundColor: HGColors) {
         self.style = style
         self.title = title
         self.textColor = textColor.color
         self.backgroundColor = backgroundColor.color
     }
     
-    private let style: HGTagView.Style
+    private let style: HGTagView.Size
     private let title: String
     private let textColor: Color
     private let backgroundColor: Color
