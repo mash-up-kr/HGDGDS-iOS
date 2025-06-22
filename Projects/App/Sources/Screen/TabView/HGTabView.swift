@@ -11,29 +11,27 @@ import HGDesignSystem
 struct HGTabView: View {
     @State private var selectedItem: TabItem = .home
     @State var tabViewManager = HGTabViewManager()
+    private let coordinatorFactory: CoordinatorFactory = CoordinatorFactory()
     
-    private let tabbarHeight: CGFloat = 90
+    private let tabbarHeight: CGFloat = UIConstant.tabBarHeight
     
     var body: some View {
         TabView(selection: $selectedItem) {
             ForEach(TabItem.allCases, id: \.self) { tabItem in
                 switch tabItem {
                 case .home:
-                    // TODO: Home View
-                    Color.white
-                        .ignoresSafeArea()
+                    coordinatorFactory.homeCoordinatorRootView
                         .tag(tabItem)
-                case .profile:
-                    // TODO: Profile(MyPage) View
-                    Color.green
-                        .ignoresSafeArea()
+                case .myPage:
+                    coordinatorFactory.myPageCoordinatorRootView
                         .tag(tabItem)
                 }
             }
+            .toolbarVisibility(.hidden, for: .tabBar)
         }
         .environment(tabViewManager)
         .overlay(alignment: .bottom) {
-            if !tabViewManager.hiddenTabbar {
+            if !tabViewManager.hiddenTabBar {
                 tabBar
             }
         }
@@ -52,8 +50,7 @@ struct HGTabView: View {
         .frame(height: tabbarHeight, alignment: .top)
         .background(.gray0White)
         .setRadius(30, corners: [.topLeft, .topRight])
-        .padding(.top, 7) // 중앙 버튼 오버레이 공간 확보
-        .overlay {
+        .overlay(alignment: .top) {
             centerButtonView()
         }
         .compositingGroup()
@@ -101,7 +98,7 @@ struct HGTabView: View {
         .padding(7)
         .background(HGColors.gray0White.color.frame(66))
         .clipShape(.circle)
-        .offset(y: -34)
+        .offset(y: -19)
     }
 }
 

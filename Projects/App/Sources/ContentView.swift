@@ -12,7 +12,7 @@ struct ContentView: View {
             Button {
                 routeState = routeState == .mainTab ? .onboarding : .mainTab
             } label: {
-                Text("토글을 합시다")
+                Text("탭뷰로 이동하는 토글버튼")
             }
             contentView
         }
@@ -24,18 +24,7 @@ struct ContentView: View {
         case .onboarding:
             coordinatorFactory.onboardingCoordinatorRootView
         case .mainTab:
-            TabView {
-                Tab {
-                    coordinatorFactory.homeCoordinatorRootView
-                } label: {
-                    Text("홈")
-                }
-                Tab {
-                    coordinatorFactory.myPageCoordinatorRootView
-                } label: {
-                    Text("마이페이지")
-                }
-            }
+            HGTabView()
         }
     }
 }
