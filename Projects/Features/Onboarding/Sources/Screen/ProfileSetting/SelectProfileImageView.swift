@@ -18,7 +18,7 @@ struct SelectProfileImageView: View {
                 Text(viewModel.viewTitle)
                     .setTypo(.heading_24_bold)
                     .foregroundStyle(.gray95)
-                    .fillMaxWidth().foregroundStyle(.gray50)
+                    .fillMaxWidth()
                     .multilineTextAlignment(.leading)
                     .padding(.bottom, 34)
                     .padding(.top, 26)

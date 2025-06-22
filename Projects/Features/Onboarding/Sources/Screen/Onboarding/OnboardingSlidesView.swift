@@ -70,11 +70,11 @@ struct OnboardingSlidesView: View {
             variant: .primary,
             isMaxWidth: true)
         {
-            if currentTab == .thrid {
+            if currentTab == .third {
                 coordinator.push(.enterNickname)
             } else {
                 withAnimation {
-                    currentTab = OnboardingType(rawValue: currentTab.rawValue+1) ?? .thrid
+                    currentTab = OnboardingType(rawValue: currentTab.rawValue+1) ?? .third
                 }
             }
         }
@@ -86,7 +86,7 @@ struct OnboardingSlidesView: View {
     enum OnboardingType: Int, CaseIterable {
         case first
         case second
-        case thrid
+        case third
         
         var title: String {
             switch self {
@@ -94,7 +94,7 @@ struct OnboardingSlidesView: View {
                 return "흩어진 예약 정보\n한눈에 정리"
             case .second:
                 return "예약 30분 전\n잊지 않도록 알림"
-            case .thrid:
+            case .third:
                 return "친구들에게\n놓치지 말라고 콕!"
             }
         }
@@ -105,7 +105,7 @@ struct OnboardingSlidesView: View {
                 return "날짜부터 링크, 위치까지\n예약 정보를 보기 좋에 모아드려요"
             case .second:
                 return "푸시와 진동 알림으로\n놓치지 않도록 미리 챙겨드려요"
-            case .thrid:
+            case .third:
                 return "친구들에게 예약을 잊지 말라고\n콕 찔러 알림을 보내보세요"
             }
         }
@@ -114,7 +114,7 @@ struct OnboardingSlidesView: View {
             switch self {
             case .first, .second:
                 return "다음"
-            case .thrid:
+            case .third:
                 return "콕콕 시작하기"
             }
         }

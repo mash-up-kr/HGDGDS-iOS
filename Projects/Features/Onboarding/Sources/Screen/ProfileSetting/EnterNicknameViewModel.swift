@@ -40,8 +40,8 @@ final class EnterNicknameViewModel: Reducerable {
             state.nickname = newNickname
         case .didTapNextButton:
             Task {
-                await validateNickname(nickname: self.nickname)
-                await coordinator.push(.selectProfileImage(nickname: self.nickname))
+                await validateNickname(nickname: self.state.nickname)
+                await coordinator.push(.selectProfileImage(nickname: self.state.nickname))
             }
         }
     }

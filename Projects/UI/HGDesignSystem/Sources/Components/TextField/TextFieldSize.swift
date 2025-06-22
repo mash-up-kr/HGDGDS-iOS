@@ -1,5 +1,5 @@
 //
-//  TextFieldState.swift
+//  TextFieldSize.swift
 //  HGDesignSystem
 //
 //  Created by iOS신상우 on 6/21/25.
