@@ -41,7 +41,7 @@ public struct ProfileImagePicker<Item: ProfileImagePickable & Equatable>: View {
                 HStack(spacing: 7) {
                     ForEach(itemList, id: \.id) { item in
                         Button {
-                            withAnimation(.linear) { selectedItem = item }
+                            withAnimation(.spring(duration: 0.35)) { selectedItem = item }
                         } label: {
                             item.image
                                 .resizable()

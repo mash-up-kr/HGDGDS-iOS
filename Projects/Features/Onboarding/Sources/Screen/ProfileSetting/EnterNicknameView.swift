@@ -13,9 +13,6 @@ struct EnterNicknameView: View {
     
     var body: some View {
         VStack(spacing: .zero) {
-            Color.black.frame(height: 56) // 네비게이션 영역
-                .padding(.bottom, 26)
-            
             Group {
                 Text(viewModel.viewTitle)
                     .setTypo(.heading_24_bold)
@@ -48,7 +45,8 @@ struct EnterNicknameView: View {
             }
             .padding(.horizontal, 16)
         }
-        .fillMaxSize()
+        .padding(.top, 26)
+        .applyNavigationBar(title: "")
         .background(.gray0White)
     }
 }

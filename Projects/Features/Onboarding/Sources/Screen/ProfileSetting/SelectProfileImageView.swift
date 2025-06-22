@@ -14,16 +14,14 @@ struct SelectProfileImageView: View {
     
     var body: some View {
         VStack(spacing: .zero) {
-            Color.black.frame(height: 56) // 네비게이션 영역
-                .padding(.bottom, 26)
-            
             Group {
                 Text(viewModel.viewTitle)
                     .setTypo(.heading_24_bold)
                     .foregroundStyle(.gray95)
-                    .fillMaxWidth()
+                    .fillMaxWidth().foregroundStyle(.gray50)
                     .multilineTextAlignment(.leading)
                     .padding(.bottom, 34)
+                    .padding(.top, 26)
                 
                 ProfileImagePicker(
                     itemList: viewModel.imageList,
@@ -49,7 +47,7 @@ struct SelectProfileImageView: View {
             }
             .padding(.horizontal, 16)
         }
-        .fillMaxSize()
+        .applyNavigationBar(title: "")
         .background(.gray0White)
     }
 }

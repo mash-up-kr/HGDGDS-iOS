@@ -41,6 +41,7 @@ struct OnboardingSlidesView: View {
                     Text(tab.title)
                         .multilineTextAlignment(.center)
                         .setTypo(.display_32_extraBold)
+                        .foregroundStyle(.gray95)
                         .padding(.bottom, 6)
                     Text(tab.content)
                         .setTypo(.body_16_medium)
@@ -118,9 +119,4 @@ struct OnboardingSlidesView: View {
             }
         }
     }
-}
-
-#Preview {
-    UIFont.registerAllFont()
-    return OnboardingSlidesView()
 }

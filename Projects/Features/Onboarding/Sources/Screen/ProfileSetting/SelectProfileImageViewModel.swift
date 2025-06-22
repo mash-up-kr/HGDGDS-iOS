@@ -36,7 +36,7 @@ final class SelectProfileImageViewModel: Reducerable {
         var imageList: [ProfileImage] = [ // 추후 api통해 받아와야함
             .init(id: "1", image: HGImages.imageTemp.image),
             .init(id: "2", image: HGImages.kongjuRiceAppIcon.image),
-            .init(id: "3", image: HGImages.profileImage.image),
+            .init(id: "3", image: HGImages.profileImageTemp.image),
             .init(id: "4", image: HGIcons.bell.image),
             .init(id: "5", image: HGIcons.calendar.image),
         ]
