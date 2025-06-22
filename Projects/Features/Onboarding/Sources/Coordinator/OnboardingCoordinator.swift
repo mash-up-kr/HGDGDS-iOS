@@ -29,8 +29,9 @@ public final class OnboardingCoordinator: Coordinatorable {
         case .enterNickname:
             let viewModel = EnterNicknameViewModel(coordinator: self)
             EnterNicknameView(viewModel: viewModel)
-        case .selectProfileImage:
-            EmptyView()
+        case let .selectProfileImage(nickname):
+            let viewModel = SelectProfileImageViewModel(nickname: nickname, coordinator: self)
+            SelectProfileImageView(viewModel: viewModel)
         }
     }
     

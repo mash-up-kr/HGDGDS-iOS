@@ -16,7 +16,7 @@ public enum OnboardingRouter {
     public enum Screen: Hashable {
         case onboardingMain
         case enterNickname
-        case selectProfileImage
+        case selectProfileImage(nickname: String)
         case onboardingSlide
     }
     

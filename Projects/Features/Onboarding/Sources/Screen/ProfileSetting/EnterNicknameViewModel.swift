@@ -4,9 +4,9 @@
 //
 //  Created by iOS신상우 on 6/22/25.
 //
+import Foundation
 
 import HGCommon
-import Foundation
 
 @Observable
 final class EnterNicknameViewModel: Reducerable {
@@ -41,7 +41,7 @@ final class EnterNicknameViewModel: Reducerable {
         case .didTapNextButton:
             Task {
                 await validateNickname(nickname: self.nickname)
-                await coordinator.push(.selectProfileImage)
+                await coordinator.push(.selectProfileImage(nickname: self.nickname))
             }
         }
     }

@@ -1,15 +1,16 @@
 //
-//  EnterNicknameView.swift
+//  SelectProfileImageView.swift
 //  OnboardingFeature
 //
 //  Created by iOS신상우 on 6/22/25.
 //
 
 import SwiftUI
+
 import HGDesignSystem
 
-struct EnterNicknameView: View {
-    @Bindable var viewModel: EnterNicknameViewModel
+struct SelectProfileImageView: View {
+    var viewModel: SelectProfileImageViewModel
     
     var body: some View {
         VStack(spacing: .zero) {
@@ -22,19 +23,19 @@ struct EnterNicknameView: View {
                     .foregroundStyle(.gray95)
                     .fillMaxWidth()
                     .multilineTextAlignment(.leading)
-                    .padding(.bottom, 56)
+                    .padding(.bottom, 34)
                 
-                HGTextField(
-                    text: Binding(
-                        get: { viewModel.nickname },
-                        set: { viewModel.reduce(.editNickname($0)) }
-                    ),
-                    placeholder: viewModel.placeholder,
-                    maxCount: 6
+                ProfileImagePicker(
+                    itemList: viewModel.imageList,
+                    selectedItem: .init(
+                        get: { viewModel.selectedImage },
+                        set: {
+                            if let selectImage = $0 {
+                                viewModel.reduce(.selectImage(selectImage))
+                            }
+                        }
+                    )
                 )
-                .setTitle("닉네임", required: true)
-                .setErrorMessage(viewModel.errorMessage)
-                
                 Spacer()
                 
                 HGButton(
@@ -55,5 +56,5 @@ struct EnterNicknameView: View {
 
 #Preview {
     UIFont.registerAllFont()
-    return EnterNicknameView(viewModel: .init(coordinator: .init()))
+    return SelectProfileImageView(viewModel: .init(nickname: "123", coordinator: .init()))
 }
