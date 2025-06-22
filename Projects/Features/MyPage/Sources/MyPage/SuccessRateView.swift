@@ -53,7 +53,7 @@ struct SuccessRateView: View {
     }
     
     private func reservationDescriptionView(title: String, num: Int) -> some View {
-        VStack(spacing:1) {
+        VStack(spacing: 1) {
             Text(title)
                 .setTypo(.body_14_medium)
                 .foregroundStyle(.gray60)
