@@ -15,6 +15,7 @@ public enum MyPageRouter {
 
     public enum Screen: Hashable {
         case main
+        case setting
     }
 
     public enum FullScreen: String, Identifiable {
