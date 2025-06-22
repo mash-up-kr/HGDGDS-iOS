@@ -23,6 +23,7 @@ struct HGNavigationBarViewModifier<R: View>: ViewModifier {
             )
             content
                 .fillMaxSize()
+                .toolbarVisibility(.hidden, for: .navigationBar)
         }
     }
     
