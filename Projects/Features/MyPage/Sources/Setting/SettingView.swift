@@ -10,6 +10,7 @@ import HGDesignSystem
 
 struct SettingView: View {
     @State private var viewModel: SettingViewModel = .init()
+    @Environment(MyPageCoordinator.self) var coordinator
     
     var body: some View {
         VStack(spacing: 24) {
@@ -32,7 +33,7 @@ struct SettingView: View {
                 .foregroundStyle(.gray100Black)
             Spacer()
             HGButton(title: "프로필 편집", size: .xSmall, variant: .subtle, isMaxWidth: false) {
-                print("프로필 편집")
+                coordinator.push(.editProfile)
             }
         }
     }
