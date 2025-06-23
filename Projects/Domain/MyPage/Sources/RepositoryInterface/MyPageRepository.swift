@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol MyPageRepository {
-
+    func requestUserInfo() async throws -> UserInfo
 }
