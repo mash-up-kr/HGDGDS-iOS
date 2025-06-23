@@ -22,6 +22,7 @@ struct SettingView: View {
         .padding(.horizontal, 16)
         .padding(.top, 26)
         .applyNavigationBar(title: "설정")
+        .onAppear { viewModel.reduce(.setup) }
     }
     
     private var profileView: some View {
@@ -39,8 +40,8 @@ struct SettingView: View {
     private var alarmSettingView: some View {
         VStack(alignment: .leading, spacing: 24) {
             sectionTitleView("알림 설정")
-            alarmControlView(title: "예약 전 진동 알림", isOn: $viewModel.isOnReservationAlarm)
-            alarmControlView(title: "콕 찌르기 알림", isOn: $viewModel.isOnKokAlarm)
+            alarmControlView(title: "예약 전 진동 알림", isOn: $viewModel.state.isOnReservationAlarm)
+            alarmControlView(title: "콕 찌르기 알림", isOn: $viewModel.state.isOnKokAlarm)
         }
     }
     

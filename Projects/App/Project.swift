@@ -25,6 +25,7 @@ let project = Project(
                 .featureProject(with: .reservation),
                 .featureProject(with: .reservationHistory),
                 .featureProject(with: .myPage),
+                .dataProject(with: .myPage),
                 .coreProject(with: .hgLogger),
                 .coreProject(with: .hgCommon),
                 .uiProject(with: .hgDesignSystem)

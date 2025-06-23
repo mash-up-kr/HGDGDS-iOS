@@ -7,10 +7,15 @@
 
 import Foundation
 import HGCommon
+import MyPageDomain
+import HGLogger
 
 @Observable
 final class SettingViewModel: Reducerable {
     var state: State = .init()
+    
+    @ObservationIgnored
+    @Dependency var mypageUseCase: any MyPageUseCase
     
     enum Action {
         case setup
@@ -35,11 +40,14 @@ final class SettingViewModel: Reducerable {
     
     @MainActor
     private func setupUserInfo() async {
-        // TODO: 통신
-        state.nickname = ""
-        state.isOnKokAlarm = false
-        state.isOnReservationAlarm = false
-        
+        do {
+            let userInfo = try await mypageUseCase.requestUserInfo()
+            state.nickname = userInfo.nickname
+            state.isOnKokAlarm = userInfo.isKokAlarmSetting
+            state.isOnReservationAlarm = userInfo.isReservationAlarmSetting
+        } catch {
+            LoggerUtil.log(error)
+        }
     }
     
     private func setupVersion() {
