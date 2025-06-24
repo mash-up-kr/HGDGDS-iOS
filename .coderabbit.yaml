@@ -17,3 +17,4 @@ reviews:
       - "feature/*"
 chat:
   auto_reply: true
+
