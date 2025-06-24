@@ -28,7 +28,7 @@ struct SettingView: View {
     
     private var profileView: some View {
         HStack {
-            Text("날아라 병아리")
+            Text(viewModel.nickname)
                 .setTypo(.title_20_bold)
                 .foregroundStyle(.gray100Black)
             Spacer()
