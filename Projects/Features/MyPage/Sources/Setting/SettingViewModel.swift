@@ -43,7 +43,7 @@ final class SettingViewModel: Reducerable {
             Task {
                 await setupUserInfo()
             }
-            state.versionString = getVersion
+            state.versionString = "v " + getVersion
         case let .didTapReserveAlarmToggle(isOn):
             state.isOnReservationAlarm = isOn
             Task { [weak self] in
@@ -71,15 +71,27 @@ final class SettingViewModel: Reducerable {
             state.isOnReservationAlarm = userInfo.isReservationAlarmSetting
             state.isOnKokAlarm = userInfo.isKokAlarmSetting
         } catch {
-            LoggerUtil.log(error)
+            LoggerUtil.log(error, level: .error)
         }
     }
     
     @MainActor
     private func requestUpdateReserveAlarm(isOn: Bool) async {
+        do {
+            let isSuccess = try await myPageUseCase.requestUpdateUserInfo(isReservationAlarm: isOn)
+            LoggerUtil.log(isSuccess)
+        } catch {
+            LoggerUtil.log(error, level: .error)
+        }
     }
     
     @MainActor
     private func requestUpdateKokAlarm(isOn: Bool) async {
+        do {
+            let isSuccess = try await myPageUseCase.requestUpdateUserInfo(isKokAlarm: isOn)
+            LoggerUtil.log(isSuccess)
+        } catch {
+            LoggerUtil.log(error, level: .error)
+        }
     }
 }
