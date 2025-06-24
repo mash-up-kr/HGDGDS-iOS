@@ -41,8 +41,26 @@ struct SettingView: View {
     private var alarmSettingView: some View {
         VStack(alignment: .leading, spacing: 24) {
             sectionTitleView("알림 설정")
-            alarmControlView(title: "예약 전 진동 알림", isOn: $viewModel.state.isOnReservationAlarm)
-            alarmControlView(title: "콕 찌르기 알림", isOn: $viewModel.state.isOnKokAlarm)
+            alarmControlView(
+                title: "예약 전 진동 알림",
+                isOn: Binding(
+                    get: {
+                        viewModel.isOnReservationAlarm
+                    }, set: {
+                        viewModel.reduce(.didTapReserveAlarmToggle($0))
+                    }
+                )
+            )
+            alarmControlView(
+                title: "콕 찌르기 알림",
+                isOn: Binding(
+                    get: {
+                        viewModel.isOnKokAlarm
+                    }, set: {
+                        viewModel.reduce(.didTapKokAlarmToggle($0))
+                    }
+                )
+            )
         }
     }
     
