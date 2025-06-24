@@ -11,7 +11,7 @@ reviews:
   review_status: true # 리뷰 좋음/개선필요 등 상태뱃지 표시
   collapse_walkthrough: false # 긴리뷰 접어서 표시
   changed_files_summary: false
-  sequence_diagrams: false
+  sequence_diagrams: true
   auto_review:
     enabled: true
     drafts: false # draft PR에도 리뷰 여부
