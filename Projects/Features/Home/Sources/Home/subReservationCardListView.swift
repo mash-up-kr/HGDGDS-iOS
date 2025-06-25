@@ -1,5 +1,5 @@
 //
-//  SubReservationCardList.swift
+//  subReservationCardListView.swift
 //  HomeFeature
 //
 //  Created by 박병호 on 6/23/25.
@@ -10,11 +10,13 @@ import SwiftUI
 import HGDesignSystem
 import NukeUI
 
-struct subReservationCardList: View {
+struct subReservationCardListView: View {
+    let title: String
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 4) {
-                Text("예정된 예약")
+                Text(title)
                     .setTypo(.subTitle_18_bold)
                     .foregroundStyle(.gray80)
                 
@@ -23,10 +25,11 @@ struct subReservationCardList: View {
                     .foregroundStyle(.orange500Main)
             }
             
-            VStack(spacing: 12) {
-                ForEach(0..<4) { _ in
+            LazyVStack(spacing: 12) {
+                ForEach(0..<14) { _ in
                     subReservationCard(
                         category: .restaurant,
+                        mainImageURLString: "https://i.pravatar.cc/150?img=4",
                         title: "매쉬업 야구 직관 모임",
                         date: Date(),
                         userImageURLStrings: [
@@ -39,13 +42,13 @@ struct subReservationCardList: View {
                 }
             }
         }
-        .padding(.horizontal, 16)
+        .fillMaxHeight(.top)
     }
 }
 
 struct subReservationCard: View {
     let category: ReservationCategoryType
-    let mainImageURLString: String? = nil
+    let mainImageURLString: String?
     let title: String
     let date: Date
     let userImageURLStrings: [String]
@@ -124,7 +127,7 @@ struct subReservationCard: View {
                             .foregroundStyle(.gray40)
                         
                         Text(date.formatted(with: .yyyyMMddKorean))
-                            .setTypo(.body_14_bold)
+                            .setTypo(.body_14_medium)
                             .foregroundStyle(.gray50)
                     }
                     
@@ -133,7 +136,7 @@ struct subReservationCard: View {
                             .foregroundStyle(.gray40)
                         
                         Text(date.formatted(with: .ahhmm))
-                            .setTypo(.body_14_bold)
+                            .setTypo(.body_14_medium)
                             .foregroundStyle(.gray50)
                     }
                 }
@@ -143,5 +146,5 @@ struct subReservationCard: View {
 }
 
 #Preview(traits: .applyFont) {
-    subReservationCardList()
+    subReservationCardListView(title: "예정된 예약")
 }

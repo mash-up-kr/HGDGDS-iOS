@@ -11,95 +11,114 @@ import HGCommon
 import HGDesignSystem
 
 struct HomeView: View {
-    @State var selected: StatusTab = .scheduled
+    @State var selectedTab: StatusTab = .scheduled
     @State var category: ReservationCategoryType? = .restaurant
     let isShowSubReservationCardList: Bool = true
-    let withReservation: Bool = false
+    let withReservation: Bool = true
+    let isExistCompleteReservation: Bool = true
     
     private let contentMinHight: CGFloat = UIScreen.main.bounds.height - UIConstant.tabBarHeight
-    + UIWindow.safeAreaInsets.bottom - 38
-    
+    + UIWindow.safeAreaInsets.bottom
+
     var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                Spacer()
-                    .frame(height: UIWindow.safeAreaInsets.top)
-                
-                headerView
-                    .padding(.horizontal, 16)
-                
-                if withReservation {
-                    HomeViewWithReservation(
-                        isShowSubReservationCardList: isShowSubReservationCardList
-                    )
-                } else {
-                    HomeViewWithoutReservation()
+        ZStack(alignment: .top) {
+            HGColors.gray10.color
+            
+            ScrollView {
+                VStack(spacing: 0) {
+                    Spacer()
+                        .frame(height: UIWindow.safeAreaInsets.top + 52)
+                    
+                    TransitionTabSwitcherView(selectedTab: selectedTab) {
+                        scheduledReservationView
+                    } completedView: {
+                        completedReservationView
+                    }
+                    .padding(.bottom ,40)
+                }
+                .fillMaxSize(.top)
+                .background(alignment: .top) {
+                    backgorund
+                }
+                .overlay(alignment: .top) {
+                    header
+                        .padding(.top, UIWindow.safeAreaInsets.top)
+                        .padding(.horizontal, 16)
                 }
             }
-            .frame(minHeight: contentMinHight)
-            .background(alignment: .top) {
-                backgorund
-            }
+            .applyTabbarHeight(padding: 0)
+            .ignoresSafeArea()
         }
-        .applyTabbarHeight(padding: 38)
-        .ignoresSafeArea()
     }
     
-    var headerView: some View {
-        HStack(spacing: 0) {
-            //TODO: 무엇인가 추가될 예정
-            Spacer()
-                .frame(width: 24)
-            
-            Spacer()
-            
-            StatusToggle(selected: $selected)
-                .frame(width: 154, height: 40)
-            
-            Spacer()
-            
-            Button {
+    @ViewBuilder
+    var scheduledReservationView: some View {
+        if withReservation {
+            VStack(spacing: 0) {
+                HomeReservationView(
+                    isShowSubReservationCardList: isShowSubReservationCardList
+                )
                 
-            } label: {
-                HGIcons.bell.image
-                    .foregroundStyle(.opacityBlack30)
+                if isShowSubReservationCardList  {
+                    subReservationCardListView(title: "예정된 예약")
+                        .padding(.horizontal, 16)
+                }
             }
+        } else {
+            HomeEmptyReservationView()
         }
-        .padding(.vertical, 6)
+    }
+    
+    @ViewBuilder
+    var completedReservationView: some View {
+        if isExistCompleteReservation {
+            subReservationCardListView(title: "완료된 예약")
+                .padding(.top, 20)
+                .padding(.horizontal, 16)
+        } else {
+            NoCompletedReservationVIew()
+        }
     }
     
     var backgorund: some View {
         VStack(spacing: 0) {
-            backgroundGradient
-                .overlay(alignment: .top) {
-                    if withReservation {
-                        HGImages.restaurant.image
-                            .offset(y: UIScreen.main.bounds.height * 0.18)
+            if selectedTab == .scheduled {
+                backgroundGradient
+                    .overlay(alignment: .top) {
+                        if withReservation {
+                            HGImages.restaurant.image
+                                .offset(y: UIScreen.main.bounds.height * 0.18)
+                        }
                     }
-                }
+            }
             
             HGColors.gray10.color
-                .frame(maxHeight: .infinity)
         }
         .ignoresSafeArea()
+        .animation(.easeIn(duration: 0.4), value: selectedTab)
     }
     
+    var header: some View {
+        ReservationStatusToggle(selectedTab: $selectedTab)
+            .frame(width: 154, height: 40)
+            .padding(.vertical, 6)
+    }
+    
+    @ViewBuilder
     var backgroundGradient: some View {
-        Group {
-            if let category = category {
-                // ContentHeight - 40(하단 패딩) - 91(카드뷰 height 절반)
-                let height = contentMinHight - 40 - 91
-                category.gradient
-                    .frame(height: isShowSubReservationCardList ? 573 : height)
-            } else {
-                HGGradient.orangeSub
-                    .frame(height: 564)
-            }
+        if let category = category {
+            // ContentHeight - 40(하단 패딩) - 91(카드뷰 height 절반)
+            let height = contentMinHight - 40 - 91
+            category.gradient
+                .frame(height: isShowSubReservationCardList ? 573 : height)
+        } else {
+            HGGradient.orangeSub
+                .frame(height: 564)
         }
     }
 }
 
-private struct HomeViewWithoutReservation: View {
+private struct HomeEmptyReservationView: View {
     var body: some View {
         VStack(spacing: 0) {
             Spacer()
@@ -111,8 +130,48 @@ private struct HomeViewWithoutReservation: View {
     }
 }
 
-private struct HomeViewWithReservation: View {
+private struct HomeReservationView: View {
     @State var category: ReservationCategoryType? = .restaurant
+    @State var selectedTabIndex: Int = 0
+    let isShowSubReservationCardList: Bool
+    
+    private let tabbarHeight: CGFloat = UIConstant.tabBarHeight - UIWindow.safeAreaInsets.bottom + 38
+    private let herderHeight: CGFloat = UIWindow.safeAreaInsets.top + 52
+    
+    var body: some View {
+        TabView(selection: $selectedTabIndex) {
+            ForEach(0..<2) { index in
+                MainReservationView(
+                    category: .restaurant,
+                    isShowSubReservationCardList: true
+                )
+                .tag(index)
+            }
+        }
+        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+        .frame(height: isShowSubReservationCardList ? 477
+               : UIScreen.main.bounds.height - tabbarHeight - herderHeight)
+        .overlay(alignment: .bottom) {
+            indicator
+        }
+    }
+    
+    var indicator: some View {
+        HStack(spacing: 4) {
+            ForEach(0..<2, id: \.self) { index in
+                Circle()
+                    .foregroundStyle(
+                        index == selectedTabIndex ? HGColors.orange500Main : HGColors.gray20
+                    )
+                    .frame(6)
+            }
+        }
+        .frame(height: 40)
+    }
+}
+
+private struct MainReservationView: View {
+    let category: ReservationCategoryType
     let isShowSubReservationCardList: Bool
     
     var body: some View {
@@ -123,7 +182,7 @@ private struct HomeViewWithReservation: View {
             Text("가장 가까운 예약까지")
                 .setTypo(.title_20_bold)
                 .foregroundStyle(.gray0White)
-                .shadow(color: category?.darkColor ?? HGColors.orangeDark.color, radius: 20)
+                .shadow(color: category.darkColor, radius: 20)
             
             Spacer()
                 .frame(height: isShowSubReservationCardList ? 20 : 100)
@@ -134,43 +193,62 @@ private struct HomeViewWithReservation: View {
                 .frame(minHeight: 62)
             
             MainReservationCard(
-                category: category ?? .restaurant,
+                category: category,
                 title: "매쉬업 야구 직관 모임",
                 date: Date(),
-                images: []
+                userImageURLStrings: [
+                    // 임시 URL
+                    "https://i.pravatar.cc/150?img=4",
+                    "https://i.pravatar.cc/300",
+                    "https://i.pravatar.cc/150?img=3",
+                ]
             )
-            .padding(.horizontal, 16)
-            
-            Spacer()
-                .frame(height: 40)
-            
-            if isShowSubReservationCardList  {
-                subReservationCardList()
-            }
         }
-        .fillMaxHeight(.top)
+        .padding(.horizontal, 16)
+        .padding(.bottom, 40)
     }
 }
 
-enum StatusTab {
+enum StatusTab: Equatable {
     case scheduled
     case completed
 }
 
-private struct StatusToggle: View {
-    @Binding var selected: StatusTab
+struct TransitionTabSwitcherView<FirstView: View, SecondView: View>: View {
+    let selectedTab: StatusTab
+    let scheduledView: () -> FirstView
+    let completedView: () -> SecondView
+
+    var body: some View {
+        ZStack {
+            if selectedTab == .scheduled {
+                scheduledView()
+                    .transition(.move(edge: .leading).combined(with: .opacity))
+            }
+
+            if selectedTab == .completed {
+                completedView()
+                    .transition(.move(edge: .trailing).combined(with: .opacity))
+            }
+        }
+        .animation(.easeIn(duration: 0.45), value: selectedTab)
+    }
+}
+
+private struct ReservationStatusToggle: View {
+    @Binding var selectedTab: StatusTab
 
     var body: some View {
         HStack(spacing: 0) {
             Button {
-                selected = .scheduled
+                selectedTab = .scheduled
             } label: {
                 Text("예정")
                     .setTypo(.body_14_bold)
                     .foregroundStyle(.gray90)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .fillMaxSize(.center)
                     .background {
-                        if selected == .scheduled {
+                        if selectedTab == .scheduled {
                             Capsule()
                                 .foregroundStyle(HGColors.gray0White)
                                 .padding([.vertical, .leading], 4)
@@ -179,14 +257,14 @@ private struct StatusToggle: View {
             }
 
             Button {
-                selected = .completed
+                selectedTab = .completed
             } label: {
                 Text("완료")
                     .setTypo(.body_14_bold)
                     .foregroundStyle(.gray90)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .fillMaxSize(.center)
                     .background {
-                        if selected == .completed {
+                        if selectedTab == .completed {
                             Capsule()
                                 .foregroundStyle(HGColors.gray0White)
                                 .padding([.vertical, .trailing], 4)
@@ -194,6 +272,7 @@ private struct StatusToggle: View {
                     }
             }
         }
+        .animation(.easeInOut, value: selectedTab)
         .background(.opacityBlack10)
         .clipShape(Capsule())
     }

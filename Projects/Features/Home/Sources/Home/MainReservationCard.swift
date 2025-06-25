@@ -14,7 +14,7 @@ struct MainReservationCard: View {
     let category: ReservationCategoryType
     let title: String
     let date: Date
-    let images: [Image]
+    let userImageURLStrings: [String]
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -41,8 +41,12 @@ struct MainReservationCard: View {
     
     var header: some View {
         HStack(spacing: 0) {
-            Image(.imageTemp)
-                .setRadius(30)
+            OffsetImageStack(
+                imageURLStrings: userImageURLStrings,
+                imageLength: 28,
+                spacing: 20,
+                maxVisibleCount: 3
+            )
             
             Spacer()
                 .frame(width: 4)
@@ -76,7 +80,7 @@ struct MainReservationCard: View {
                         .foregroundStyle(.gray40)
                     
                     Text(date.formatted(with: .yyyyMMddKorean))
-                        .setTypo(.body_14_bold)
+                        .setTypo(.body_14_medium)
                         .foregroundStyle(.gray50)
                 }
                 
@@ -85,7 +89,7 @@ struct MainReservationCard: View {
                         .foregroundStyle(.gray40)
                     
                     Text(date.formatted(with: .ahhKorean))
-                        .setTypo(.body_14_bold)
+                        .setTypo(.body_14_medium)
                         .foregroundStyle(.gray50)
                 }
             }
@@ -99,6 +103,6 @@ struct MainReservationCard: View {
         category: .restaurant,
         title: "매쉬업 야구 직관 모임",
         date: Date(),
-        images: []
+        userImageURLStrings: []
     )
 }
