@@ -28,14 +28,15 @@ struct OffsetImageStack: View {
     
     var body: some View {
         ZStack(alignment: .leading) {
-            ForEach(Array(displayImageURLs.enumerated()), id: \.offset) { index, url in
+            ForEach(Array(displayImageURLs.enumerated().reversed()), id: \.offset) { index, url in
                 LazyImage(url: url) { state in
                     if let image = state.image {
-                        image // Displays the loaded image.
+                        image
+                            .resizable()
                     } else if state.error != nil {
-                        Color.gray // Indicates an error.
+                        Color.gray
                     } else {
-                        Color.gray // Acts as a placeholder.
+                        Color.gray
                     }
                 }
                 .frame(imageLength)

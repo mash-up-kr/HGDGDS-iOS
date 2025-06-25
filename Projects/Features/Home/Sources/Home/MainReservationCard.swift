@@ -18,37 +18,57 @@ struct MainReservationCard: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack(spacing: 0) {
-                Image(.imageTemp)
-                    .setRadius(30)
-                
-                Spacer()
-                    .frame(width: 4)
-                
-                Text("7명 참여중!")
-                    .setTypo(.body_14_bold)
-                    .foregroundStyle(.gray80)
-                
-                Spacer()
-                
-                HGTagView(
-                    style: .medium,
-                    title: category.name,
-                    textColor: category.mainColor,
-                    backgroundColor: category.lightColor
-                )
-            }
-            .padding(.leading, 4)
+            header
             
             Spacer()
                 .frame(height: 10)
             
-            Text("매쉬업 야구 직관 모임")
-                .setTypo(.title_20_bold)
-                .padding(.leading, 4)
+            content
             
             Spacer()
-                .frame(height: 2)
+                .frame(height: 16)
+            
+            HGButton(title: "자세히 보기", isMaxWidth: true) {
+                
+            }
+        }
+        .padding(12)
+        .background(.gray0White)
+        .setRadius(30)
+        .strokeBorder(HGColors.gray10.color, radius: 30, linewidth: 1)
+        .cardViewShadow()
+    }
+    
+    var header: some View {
+        HStack(spacing: 0) {
+            Image(.imageTemp)
+                .setRadius(30)
+            
+            Spacer()
+                .frame(width: 4)
+            
+            Text("7명 참여중!")
+                .setTypo(.body_14_bold)
+                .foregroundStyle(.gray80)
+            
+            Spacer()
+            
+            HGTagView(
+                style: .medium,
+                title: category.name,
+                textColor: category.mainColor,
+                backgroundColor: category.lightColor
+            )
+        }
+        .padding(.leading, 4)
+    }
+    
+    var content: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("매쉬업 야구 직관 모임")
+                .setTypo(.title_20_bold)
+                .foregroundStyle(.gray95)
+                .padding(.bottom, 2)
             
             HStack(spacing: 6) {
                 HStack(spacing: 2) {
@@ -69,20 +89,8 @@ struct MainReservationCard: View {
                         .foregroundStyle(.gray50)
                 }
             }
-            .padding(.leading, 4)
-            
-            Spacer()
-                .frame(height: 16)
-            
-            HGButton(title: "자세히 보기", isMaxWidth: true) {
-                
-            }
         }
-        .padding(12)
-        .background(.gray0White)
-        .setRadius(30)
-        .strokeBorder(HGColors.gray10.color, radius: 30, linewidth: 1)
-        .cardViewShadow()
+        .padding(.leading, 4)
     }
 }
 

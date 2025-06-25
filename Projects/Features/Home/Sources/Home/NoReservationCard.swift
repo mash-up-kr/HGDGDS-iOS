@@ -14,7 +14,9 @@ struct NoReservationCard: View {
             Spacer()
                 .frame(height: 28)
             
-            Spacer()
+            // 이미지 자리
+            Rectangle()
+                .foregroundStyle(.gray20)
                 .frame(250)
             
             Spacer()
