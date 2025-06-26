@@ -16,14 +16,16 @@ struct HGDialogViewModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .overlay {
-                ZStack {
-                    HGColors.opacityBlack30.color.ignoresSafeArea()
-                    HGDialogView(
-                        isPresent: $isPresent,
-                        title: title,
-                        description: description,
-                        okAction: okAction
-                    )
+                if isPresent {
+                    ZStack {
+                        HGColors.opacityBlack30.color.ignoresSafeArea()
+                        HGDialogView(
+                            isPresent: $isPresent,
+                            title: title,
+                            description: description,
+                            okAction: okAction
+                        )
+                    }
                 }
             }
     }
