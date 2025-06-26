@@ -14,7 +14,7 @@ import HGDesignSystem
 @Observable
 final class SelectProfileImageViewModel: Reducerable {
     
-    private let coordinator: OnboardingCoordinator
+    private weak var coordinator: OnboardingCoordinator?
     
     var state: State = .init()
     
@@ -25,7 +25,7 @@ final class SelectProfileImageViewModel: Reducerable {
     
     init(
         nickname: String,
-        coordinator: OnboardingCoordinator
+        coordinator: OnboardingCoordinator?
     ) {
         self.nickname = nickname
         self.coordinator = coordinator

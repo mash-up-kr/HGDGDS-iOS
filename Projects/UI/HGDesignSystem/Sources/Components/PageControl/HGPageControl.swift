@@ -38,15 +38,13 @@ public struct HGPageControl: View {
     
     public var body: some View {
         HStack(spacing: spacing) {
-            ForEach(Array(0..<numberOfPages), id: \.self) { index in
+            ForEach(0..<numberOfPages, id: \.self) { index in
                 Circle()
                     .fill(currentIndex == index ? selectedColor : unselectedColor)
                     .frame(circleSize)
-                    .id(index)
             }
         }
         .animation(.easeInOut(duration: 0.25), value: currentIndex)
-        
     }
 }
 

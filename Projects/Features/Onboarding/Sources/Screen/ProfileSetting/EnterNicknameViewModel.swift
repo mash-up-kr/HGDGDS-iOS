@@ -7,11 +7,12 @@
 import Foundation
 
 import HGCommon
+import OnboardingDomain
 
 @Observable
 final class EnterNicknameViewModel: Reducerable {
-    
-    private let coordinator: OnboardingCoordinator
+
+    private weak var coordinator: OnboardingCoordinator?
     
     var state: State = .init()
     
@@ -19,7 +20,7 @@ final class EnterNicknameViewModel: Reducerable {
     @ObservationIgnored let placeholder = "닉네임을 입력해주세요"
     @ObservationIgnored let viewTitle = "콕콕에서 사용할\n닉네임을 입력하세요"
     
-    init(coordinator: OnboardingCoordinator) {
+    init(coordinator: OnboardingCoordinator?) {
         self.coordinator = coordinator
     }
     
@@ -41,7 +42,7 @@ final class EnterNicknameViewModel: Reducerable {
         case .didTapNextButton:
             Task {
                 await validateNickname(nickname: self.state.nickname)
-                await coordinator.push(.selectProfileImage(nickname: self.state.nickname))
+                await coordinator?.push(.selectProfileImage(nickname: self.state.nickname))
             }
         }
     }

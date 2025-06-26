@@ -9,8 +9,8 @@ import SwiftUI
 import HGDesignSystem
 
 struct OnboardingSlidesView: View {
-    @Environment(OnboardingCoordinator.self) var coordinator
-    @State var currentTab: OnboardingType = .first
+    @Environment(OnboardingCoordinator.self) private var coordinator
+    @State private var currentTab: OnboardingType = .first
     
     var body: some View {
         VStack(spacing: .zero) {

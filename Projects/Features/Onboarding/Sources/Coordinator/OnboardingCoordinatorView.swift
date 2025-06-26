@@ -11,9 +11,7 @@ import HGDesignSystem
 public struct OnboardingCoordinatorView: View {
     @State private var coordinator: OnboardingCoordinator = .init()
 
-    public init() {
-        UIFont.registerAllFont()
-    }
+    public init() { }
     
     public var body: some View {
         NavigationStack(path: $coordinator.path) {
@@ -29,7 +27,6 @@ public struct OnboardingCoordinatorView: View {
                     coordinator.fullCoverView($0)
                 }
         }
-        
         .environment(coordinator)
     }
 }
