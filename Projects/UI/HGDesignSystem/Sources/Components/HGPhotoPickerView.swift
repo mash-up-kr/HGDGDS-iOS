@@ -49,7 +49,7 @@ public struct HGPhotoPickerView: View {
         for imageItem in imageItems {
             guard let imageData = try? await imageItem.loadTransferable(type: Data.self),
                   let uiImage = UIImage(data: imageData) else {
-                return
+                continue
             }
             tempImages.append(uiImage)
         }
