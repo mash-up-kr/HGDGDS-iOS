@@ -45,13 +45,9 @@ struct HGDialogView: View {
 }
 
 #Preview(traits: .applyFont) {
+    @Previewable @State var isPresent: Bool = true
     ZStack {
         Color.orange
-        HGDialogView(
-            isPresent: .constant(true),
-            title: "타이틀이길어집니다어디까지길어질까요2줄가나다라마바사아자차",
-            description: "내용내용내용내용가나다라마바사아자차카타차파하하하1234허허허허허허허허",
-            okAction: {}
-        )
     }
+    .dialog(isPresent: $isPresent, title: "12", description: "1234")
 }
