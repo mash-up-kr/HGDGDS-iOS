@@ -1,26 +1,34 @@
 //
-//  NoReservationCard.swift
+//  HomeEmptyReservationView.swift
 //  HomeFeature
 //
-//  Created by 박병호 on 6/22/25.
+//  Created by 박병호 on 6/28/25.
 //
 
 import SwiftUI
+
 import HGDesignSystem
 
-struct NoReservationCard: View {
+struct HomeEmptyReservationView: View {
     var body: some View {
         VStack(spacing: 0) {
-            Spacer()
-                .frame(height: 28)
+            Spacer().frame(height: 40)
             
-            // 이미지 자리
+            NoReservationCard()
+        }
+        .fillMaxHeight(.top)
+    }
+}
+
+private struct NoReservationCard: View {
+    var body: some View {
+        VStack(spacing: 0) {
+            //TODO: 이미지 자리
             Rectangle()
                 .foregroundStyle(.gray20)
                 .frame(250)
             
-            Spacer()
-                .frame(height: 36)
+            Spacer().frame(height: 36)
             
             VStack(spacing: 4) {
                 Text("아직은 예약이 없어요!")
@@ -33,8 +41,7 @@ struct NoReservationCard: View {
                     .multilineTextAlignment(.center)
             }
             
-            Spacer()
-                .frame(height: 24)
+            Spacer().frame(height: 24)
             
             HGButton(title: "예약 생성하기") {
                
@@ -48,6 +55,6 @@ struct NoReservationCard: View {
     }
 }
 
-#Preview(traits: .applyFont) {
-    NoReservationCard()
+#Preview {
+    HomeEmptyReservationView()
 }

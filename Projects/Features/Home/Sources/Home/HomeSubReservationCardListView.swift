@@ -10,7 +10,7 @@ import SwiftUI
 import HGDesignSystem
 import NukeUI
 
-struct subReservationCardListView: View {
+struct HomeSubReservationCardListView: View {
     let title: String
     
     var body: some View {
@@ -27,7 +27,7 @@ struct subReservationCardListView: View {
             
             LazyVStack(spacing: 12) {
                 ForEach(0..<4) { _ in
-                    subReservationCard(
+                    SubReservationCard(
                         category: .restaurant,
                         mainImageURLString: "https://i.pravatar.cc/150?img=4",
                         title: "매쉬업 야구 직관 모임",
@@ -46,7 +46,7 @@ struct subReservationCardListView: View {
     }
 }
 
-struct subReservationCard: View {
+struct SubReservationCard: View {
     let category: ReservationCategoryType
     let mainImageURLString: String?
     let title: String
@@ -74,8 +74,7 @@ struct subReservationCard: View {
                 maxVisibleCount: 3
             )
             
-            Spacer()
-                .frame(width: 4)
+            Spacer().frame(width: 4)
             
             Text(userImageURLStrings.count > 1 ? "\(userImageURLStrings.count)명 참여중!" : "혼자 참여중!")
                 .setTypo(.body_14_bold)
@@ -113,13 +112,10 @@ struct subReservationCard: View {
             .frame(width: 64, height: 64)
             .setRadius(16)
             
-            VStack(alignment: .leading, spacing: 0) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .setTypo(.title_20_bold)
                     .padding(.leading, 4)
-                
-                Spacer()
-                    .frame(height: 2)
                 
                 HStack(spacing: 6) {
                     HStack(spacing: 2) {
@@ -146,5 +142,5 @@ struct subReservationCard: View {
 }
 
 #Preview(traits: .applyFont) {
-    subReservationCardListView(title: "예정된 예약")
+    HomeSubReservationCardListView(title: "예정된 예약")
 }

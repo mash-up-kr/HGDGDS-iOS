@@ -20,13 +20,11 @@ struct MainReservationCard: View {
         VStack(alignment: .leading, spacing: 0) {
             header
             
-            Spacer()
-                .frame(height: 10)
+            Spacer().frame(height: 10)
             
             content
             
-            Spacer()
-                .frame(height: 16)
+            Spacer().frame(height: 16)
             
             HGButton(title: "자세히 보기", isMaxWidth: true) {
                 
@@ -48,10 +46,9 @@ struct MainReservationCard: View {
                 maxVisibleCount: 3
             )
             
-            Spacer()
-                .frame(width: 4)
+            Spacer().frame(width: 4)
             
-            Text("7명 참여중!")
+            Text(userImageURLStrings.count > 1 ? "\(userImageURLStrings.count)명 참여중!" : "혼자 참여중!")
                 .setTypo(.body_14_bold)
                 .foregroundStyle(.gray80)
             
@@ -69,7 +66,7 @@ struct MainReservationCard: View {
     
     var content: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("매쉬업 야구 직관 모임")
+            Text(title)
                 .setTypo(.title_20_bold)
                 .foregroundStyle(.gray95)
                 .padding(.bottom, 2)

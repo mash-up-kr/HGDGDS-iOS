@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+
+import HGDesignSystem
 import NukeUI
 
 struct OffsetImageStack: View {
@@ -34,9 +36,9 @@ struct OffsetImageStack: View {
                         image
                             .resizable()
                     } else if state.error != nil {
-                        Color.gray
+                        HGColors.opacityBlack10.color
                     } else {
-                        Color.gray
+                        HGColors.opacityBlack10.color
                     }
                 }
                 .frame(imageLength)
