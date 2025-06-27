@@ -14,8 +14,10 @@ public enum OnboardingRouter {
     }
     
     public enum Screen: Hashable {
-        case onboarding
-        case inputUserName
+        case onboardingMain
+        case enterNickname
+        case selectProfileImage(nickname: String)
+        case onboardingSlide
     }
     
     public enum FullScreen: String, Identifiable {

@@ -22,8 +22,14 @@ public final class OnboardingCoordinator: Coordinatorable {
     @ViewBuilder
     public func view(_ screen: Screen) -> some View {
         switch screen {
-        case .onboarding: OnboardingMainView()
-        case .inputUserName: Color.blue
+        case .onboardingMain:
+            OnboardingMainView()
+        case .onboardingSlide:
+            OnboardingSlidesView()
+        case .enterNickname:
+            EnterNicknameView(coordinator: self)
+        case let .selectProfileImage(nickname):
+            SelectProfileImageView(nickname: nickname, coordinator: self)
         }
     }
     
