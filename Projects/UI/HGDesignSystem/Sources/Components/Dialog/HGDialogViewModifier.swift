@@ -8,22 +8,28 @@
 import SwiftUI
 
 struct HGDialogViewModifier: ViewModifier {
-    @Binding var isPresent: Bool
+    @Binding var isPresented: Bool
     let title: String
     let description: String
+    let okTitle: String
     let okAction: (() -> Void)?
+    let cancelTitle: String?
+    let cancelAction: (() -> Void)?
     
     func body(content: Content) -> some View {
         content
             .overlay {
-                if isPresent {
+                if isPresented {
                     ZStack {
                         HGColors.opacityBlack30.color.ignoresSafeArea()
                         HGDialogView(
-                            isPresent: $isPresent,
+                            isPresented: $isPresented,
                             title: title,
                             description: description,
-                            okAction: okAction
+                            okTitle: okTitle,
+                            okAction: okAction,
+                            cancelTitle: cancelTitle,
+                            cancelAction: cancelAction
                         )
                     }
                 }
@@ -33,17 +39,23 @@ struct HGDialogViewModifier: ViewModifier {
 
 public extension View {
     func dialog(
-        isPresent: Binding<Bool>,
+        isPresented: Binding<Bool>,
         title: String = "",
         description: String = "",
-        okAction: (() -> Void)? = nil
+        okTitle: String,
+        okAction: (() -> Void)? = nil,
+        cancelTitle: String? = nil,
+        cancelAction: (() -> Void)? = nil
     ) -> some View {
         self.modifier(
             HGDialogViewModifier(
-                isPresent: isPresent,
+                isPresented: isPresented,
                 title: title,
                 description: description,
-                okAction: okAction
+                okTitle: okTitle,
+                okAction: okAction,
+                cancelTitle: cancelTitle,
+                cancelAction: cancelAction
             )
         )
     }

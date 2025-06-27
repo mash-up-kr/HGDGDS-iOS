@@ -8,10 +8,14 @@
 import SwiftUI
 
 struct HGDialogView: View {
-    @Binding var isPresent: Bool
+    @Binding var isPresented: Bool
     let title: String
     let description: String
+
+    let okTitle: String
     let okAction: (() -> Void)?
+    let cancelTitle: String?
+    let cancelAction: (() -> Void)?
     
     var body: some View {
         VStack(spacing: 0) {
@@ -26,12 +30,15 @@ struct HGDialogView: View {
                 .multilineTextAlignment(.center)
             Spacer().frame(height: 32)
             HStack {
-                HGButton(title: "취소", size: .large, variant: .subtle, isMaxWidth: true) {
-                    isPresent = false
+                if let cancelTitle {
+                    HGButton(title: cancelTitle, size: .large, variant: .subtle, isMaxWidth: true) {
+                        cancelAction?()
+                        isPresented = false
+                    }
                 }
-                HGButton(title: "네", size: .large, isMaxWidth: true) {
+                HGButton(title: okTitle, size: .large, isMaxWidth: true) {
                     okAction?()
-                    isPresent = false
+                    isPresented = false
                 }
             }
         }
@@ -49,5 +56,6 @@ struct HGDialogView: View {
     ZStack {
         Color.orange
     }
-    .dialog(isPresent: $isPresent, title: "12", description: "1234")
+    .dialog(isPresented: $isPresent, title: "12", description: "1234", okTitle: "넹")
+    .dialog(isPresented: $isPresent, title: "12", description: "1234", okTitle: "넹", cancelTitle: "취소")
 }
