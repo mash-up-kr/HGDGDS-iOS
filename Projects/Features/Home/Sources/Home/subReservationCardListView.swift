@@ -26,7 +26,7 @@ struct subReservationCardListView: View {
             }
             
             LazyVStack(spacing: 12) {
-                ForEach(0..<14) { _ in
+                ForEach(0..<4) { _ in
                     subReservationCard(
                         category: .restaurant,
                         mainImageURLString: "https://i.pravatar.cc/150?img=4",

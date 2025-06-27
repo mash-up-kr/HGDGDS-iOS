@@ -16,9 +16,6 @@ struct HomeView: View {
     let isShowSubReservationCardList: Bool = true
     let withReservation: Bool = true
     let isExistCompleteReservation: Bool = true
-    
-    private let contentMinHight: CGFloat = UIScreen.main.bounds.height - UIConstant.tabBarHeight
-    + UIWindow.safeAreaInsets.bottom
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -36,6 +33,7 @@ struct HomeView: View {
                     }
                     .padding(.bottom ,40)
                 }
+                .padding(.bottom, UIConstant.tabBarHeight)
                 .fillMaxSize(.top)
                 .background(alignment: .top) {
                     backgorund
@@ -46,7 +44,6 @@ struct HomeView: View {
                         .padding(.horizontal, 16)
                 }
             }
-            .applyTabbarHeight(padding: 0)
             .ignoresSafeArea()
         }
     }
@@ -91,8 +88,6 @@ struct HomeView: View {
                         }
                     }
             }
-            
-            HGColors.gray10.color
         }
         .ignoresSafeArea()
         .animation(.easeIn(duration: 0.4), value: selectedTab)
@@ -106,9 +101,11 @@ struct HomeView: View {
     
     @ViewBuilder
     var backgroundGradient: some View {
+        // ContentHeight - 40(하단 패딩) - 91(카드뷰 height 절반)
+        let contentMinHight: CGFloat = UIScreen.main.bounds.height - UIConstant.tabBarHeight
+        let height = contentMinHight - 40 - 91
+        
         if let category = category {
-            // ContentHeight - 40(하단 패딩) - 91(카드뷰 height 절반)
-            let height = contentMinHight - 40 - 91
             category.gradient
                 .frame(height: isShowSubReservationCardList ? 573 : height)
         } else {
@@ -135,7 +132,7 @@ private struct HomeReservationView: View {
     @State var selectedTabIndex: Int = 0
     let isShowSubReservationCardList: Bool
     
-    private let tabbarHeight: CGFloat = UIConstant.tabBarHeight - UIWindow.safeAreaInsets.bottom + 38
+    private let tabbarHeight: CGFloat = UIConstant.tabBarHeight
     private let herderHeight: CGFloat = UIWindow.safeAreaInsets.top + 52
     
     var body: some View {
@@ -166,7 +163,8 @@ private struct HomeReservationView: View {
                     .frame(6)
             }
         }
-        .frame(height: 40)
+        .padding(.top, 12)
+        .padding(.bottom, 22)
     }
 }
 
@@ -235,7 +233,7 @@ struct TransitionTabSwitcherView<FirstView: View, SecondView: View>: View {
     }
 }
 
-private struct ReservationStatusToggle: View {
+struct ReservationStatusToggle: View {
     @Binding var selectedTab: StatusTab
 
     var body: some View {
@@ -275,6 +273,8 @@ private struct ReservationStatusToggle: View {
         .animation(.easeInOut, value: selectedTab)
         .background(.opacityBlack10)
         .clipShape(Capsule())
+        .frame(width: 154, height: 40)
+        .padding(.vertical, 6)
     }
 }
 
