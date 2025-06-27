@@ -11,14 +11,18 @@ import HGCommon
 import HGDesignSystem
 
 struct HomeView: View {
-    @State var selectedTab: StatusTab = .scheduled
-    @State var category: ReservationCategoryType? = .restaurant
+    @State var selectedTab: ReservationStatusTab = .scheduled
+    @State var reservationInfos: [ReservationCategoryType] = [.restaurant, .sports, .activity, .concert,
+                                                              .etc]
+    
     let isShowSubReservationCardList: Bool = true
     let withReservation: Bool = true
-    let isExistCompleteReservation: Bool = true
+    let isExistCompleteReservation: Bool = false
+    
+    @State var selectedReservationIndex: Int = 0
 
     var body: some View {
-        ZStack(alignment: .top) {
+        ZStack {
             HGColors.gray10.color
             
             ScrollView {
@@ -53,6 +57,8 @@ struct HomeView: View {
         if withReservation {
             VStack(spacing: 0) {
                 HomeReservationView(
+                    selectedTabIndex: $selectedReservationIndex,
+                    reservationInfos: reservationInfos,
                     isShowSubReservationCardList: isShowSubReservationCardList
                 )
                 
@@ -83,7 +89,7 @@ struct HomeView: View {
                 backgroundGradient
                     .overlay(alignment: .top) {
                         if withReservation {
-                            HGImages.restaurant.image
+                            reservationInfos[selectedReservationIndex].image
                                 .offset(y: UIScreen.main.bounds.height * 0.18)
                         }
                     }
@@ -91,12 +97,7 @@ struct HomeView: View {
         }
         .ignoresSafeArea()
         .animation(.easeIn(duration: 0.4), value: selectedTab)
-    }
-    
-    var header: some View {
-        ReservationStatusToggle(selectedTab: $selectedTab)
-            .frame(width: 154, height: 40)
-            .padding(.vertical, 6)
+        .animation(.easeInOut(duration: 0.25), value: selectedReservationIndex)
     }
     
     @ViewBuilder
@@ -105,13 +106,20 @@ struct HomeView: View {
         let contentMinHight: CGFloat = UIScreen.main.bounds.height - UIConstant.tabBarHeight
         let height = contentMinHight - 40 - 91
         
-        if let category = category {
-            category.gradient
+        if withReservation {
+            reservationInfos[selectedReservationIndex].gradient
                 .frame(height: isShowSubReservationCardList ? 573 : height)
         } else {
             HGGradient.orangeSub
                 .frame(height: 564)
         }
+    }
+    
+    var header: some View {
+        ReservationStatusToggle(selectedTab: $selectedTab)
+            .frame(width: 154, height: 40)
+            .padding(.vertical, 6)
+        
     }
 }
 
@@ -128,8 +136,8 @@ private struct HomeEmptyReservationView: View {
 }
 
 private struct HomeReservationView: View {
-    @State var category: ReservationCategoryType? = .restaurant
-    @State var selectedTabIndex: Int = 0
+    @Binding var selectedTabIndex: Int
+    let reservationInfos: [ReservationCategoryType]
     let isShowSubReservationCardList: Bool
     
     private let tabbarHeight: CGFloat = UIConstant.tabBarHeight
@@ -137,10 +145,10 @@ private struct HomeReservationView: View {
     
     var body: some View {
         TabView(selection: $selectedTabIndex) {
-            ForEach(0..<2) { index in
+            ForEach(Array(reservationInfos.enumerated()), id: \.offset) { index, info in
                 MainReservationView(
-                    category: .restaurant,
-                    isShowSubReservationCardList: true
+                    category: info,
+                    isShowSubReservationCardList: isShowSubReservationCardList
                 )
                 .tag(index)
             }
@@ -149,13 +157,16 @@ private struct HomeReservationView: View {
         .frame(height: isShowSubReservationCardList ? 477
                : UIScreen.main.bounds.height - tabbarHeight - herderHeight)
         .overlay(alignment: .bottom) {
-            indicator
+            if reservationInfos.count > 1 {
+                indicator
+            }
         }
+        .animation(.easeInOut(duration: 0.25), value: selectedTabIndex)
     }
     
     var indicator: some View {
         HStack(spacing: 4) {
-            ForEach(0..<2, id: \.self) { index in
+            ForEach(0..<reservationInfos.count, id: \.self) { index in
                 Circle()
                     .foregroundStyle(
                         index == selectedTabIndex ? HGColors.orange500Main : HGColors.gray20
@@ -185,7 +196,7 @@ private struct MainReservationView: View {
             Spacer()
                 .frame(height: isShowSubReservationCardList ? 20 : 100)
             
-            ReservationTimerView(category: .restaurant)
+            ReservationTimerView(category: category)
             
             Spacer()
                 .frame(minHeight: 62)
@@ -207,13 +218,13 @@ private struct MainReservationView: View {
     }
 }
 
-enum StatusTab: Equatable {
+enum ReservationStatusTab: Equatable {
     case scheduled
     case completed
 }
 
 struct TransitionTabSwitcherView<FirstView: View, SecondView: View>: View {
-    let selectedTab: StatusTab
+    let selectedTab: ReservationStatusTab
     let scheduledView: () -> FirstView
     let completedView: () -> SecondView
 
@@ -229,12 +240,12 @@ struct TransitionTabSwitcherView<FirstView: View, SecondView: View>: View {
                     .transition(.move(edge: .trailing).combined(with: .opacity))
             }
         }
-        .animation(.easeIn(duration: 0.45), value: selectedTab)
+        .animation(.easeIn(duration: 0.35), value: selectedTab)
     }
 }
 
 struct ReservationStatusToggle: View {
-    @Binding var selectedTab: StatusTab
+    @Binding var selectedTab: ReservationStatusTab
 
     var body: some View {
         HStack(spacing: 0) {

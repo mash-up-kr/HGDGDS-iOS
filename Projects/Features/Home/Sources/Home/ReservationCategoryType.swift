@@ -30,6 +30,21 @@ enum ReservationCategoryType {
         }
     }
     
+    var image: Image {
+        switch self {
+        case .restaurant:
+            HGImages.categoryRestaurant.image
+        case .sports:
+            HGImages.categorySports.image
+        case .concert:
+            HGImages.categoryConcert.image
+        case .activity:
+            HGImages.categoyActivity.image
+        case .etc:
+            HGImages.categoryEtc.image
+        }
+    }
+    
     var gradient: LinearGradient {
         switch self {
         case .restaurant:
