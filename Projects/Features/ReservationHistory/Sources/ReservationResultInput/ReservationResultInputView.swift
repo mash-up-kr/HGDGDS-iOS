@@ -50,6 +50,7 @@ struct ReservationResultInputView: View {
                     get: { viewModel.successReservationDate ?? .now },
                     set: { viewModel.reduce(.didChangeDate($0)) }
                 ),
+                in: Date.now...,
                 displayedComponents: [.date]
             )
             .datePickerStyle(.wheel)
@@ -64,6 +65,7 @@ struct ReservationResultInputView: View {
                     get: { viewModel.successReservationTime ?? .now },
                     set: { viewModel.reduce(.didChangeTime($0)) }
                 ),
+                in: Date.now...,
                 displayedComponents: [.hourAndMinute]
             )
             .datePickerStyle(.wheel)
