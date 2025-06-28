@@ -12,7 +12,7 @@ import HomeDomain
 import HGDesignSystem
 
 struct HomeView: View {
-    @State private var viewModel: HomeViewModel = .init()
+    @Bindable private var viewModel: HomeViewModel = .init()
     
     private let screenHeight: CGFloat = UIScreen.main.bounds.height
     private var backgroundGradientHeight: CGFloat {
@@ -117,7 +117,7 @@ struct HomeView: View {
     var header: some View {
         ReservationStatusToggle(selectedTab: $viewModel.state.selectedStatusTab)
             .frame(width: 154, height: 40)
-            .padding(.vertical, 6)   
+            .padding(.vertical, 6)
     }
 }
 
@@ -131,7 +131,9 @@ struct TransitionTabSwitcherView<FirstView: View, SecondView: View>: View {
             if selectedTab == .scheduled {
                 scheduledView()
                     .transition(.move(edge: .leading).combined(with: .opacity))
-            } else if selectedTab == .completed {
+            }
+            
+            if selectedTab == .completed {
                 completedView()
                     .transition(.move(edge: .trailing).combined(with: .opacity))
             }

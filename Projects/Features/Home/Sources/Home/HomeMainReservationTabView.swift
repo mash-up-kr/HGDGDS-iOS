@@ -8,6 +8,7 @@
 import SwiftUI
 
 import HomeDomain
+import HGCommon
 import HGDesignSystem
 
 struct HomeMainReservationTabView: View {
@@ -59,6 +60,17 @@ private struct MainReservationView: View {
     let isShowSubReservationCardList: Bool
     let action: () -> Void
     
+    @State private var countDownTimer: CountDownTimerManager = .init()
+    
+    init(reservationInfo: ReservationInfo, isShowSubReservationCardList: Bool, action: @escaping () -> Void) {
+        self.reservationInfo = reservationInfo
+        self.isShowSubReservationCardList = isShowSubReservationCardList
+        self.action = action
+        
+        countDownTimer.setupTime(endDate: reservationInfo.reservationDatetime)
+        countDownTimer.start()
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             Spacer().frame(height: isShowSubReservationCardList ? 50 : 52)
@@ -67,7 +79,12 @@ private struct MainReservationView: View {
             
             Spacer().frame(height: isShowSubReservationCardList ? 20 : 100)
             
-            ReservationTimerView(category: reservationInfo.category)
+            ReservationTimerView(
+                category: reservationInfo.category,
+                hours: countDownTimer.hours,
+                minutes: countDownTimer.minutes,
+                seconds: countDownTimer.seconds
+            )
             
             Spacer().frame(minHeight: 62)
             
@@ -89,23 +106,26 @@ private struct MainReservationView: View {
 
 private struct ReservationTimerView: View {
     let category: ReservationCategoryType
+    var hours: String
+    var minutes: String
+    var seconds: String
     
     var body: some View {
         HStack(spacing: 18) {
             TimerView(
-                time: "10",
+                time: hours,
                 description: "시간",
                 backgroundColor: category.opcityColor.color
             )
             
             TimerView(
-                time: "30",
+                time: minutes,
                 description: "분",
                 backgroundColor: category.opcityColor.color
             )
             
             TimerView(
-                time: "15",
+                time: seconds,
                 description: "초",
                 backgroundColor: category.opcityColor.color
             )
