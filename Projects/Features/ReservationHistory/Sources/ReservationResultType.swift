@@ -15,9 +15,9 @@ enum ReservationResultType {
     
     var image: Image {
         switch self {
-        case .success: HGImages.categoryParty.image
-        case .ambiguousSuccess: HGImages.categoryThinking.image
-        case .fail: HGImages.categorySad.image
+        case .success: HGImages.categorySuccess.image
+        case .ambiguousSuccess: HGImages.categoryAmbiguous.image
+        case .fail: HGImages.categoryFail.image
         }
     }
     
