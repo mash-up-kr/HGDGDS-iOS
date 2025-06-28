@@ -1,5 +1,5 @@
 //
-//  SectionHeader.swift
+//  HGSectionHeader.swift
 //  HGDesignSystem
 //
 //  Created by iOS신상우 on 6/28/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct SectionHeader: View {
+public struct HGSectionHeader: View {
     private let title: String
     private let isRequired: Bool
     private let content: String?

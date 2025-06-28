@@ -118,7 +118,7 @@ struct CreateReservationView: View {
     
     private var categoryArea: some View {
         VStack(spacing: .zero) {
-            SectionHeader(
+            HGSectionHeader(
                 title: "카테고리",
                 isRequired: true,
                 content: "카테고리 이미지가 배경에 반영돼요"
@@ -235,7 +235,7 @@ struct CreateReservationView: View {
     
     private var photoArea: some View {
         VStack(alignment: .leading, spacing: 12) {
-            SectionHeader(
+            HGSectionHeader(
                 title: "사진",
                 isRequired: false,
                 content: "최대 3장까지 등록 가능해요"

@@ -65,7 +65,7 @@ public struct HGTextField: View {
     @ViewBuilder
     private var titleArea: some View {
         if let title {
-            SectionHeader(
+            HGSectionHeader(
                 title: title,
                 isRequired: required
             )
