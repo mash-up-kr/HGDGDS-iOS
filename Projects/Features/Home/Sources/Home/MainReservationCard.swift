@@ -7,14 +7,13 @@
 
 import SwiftUI
 
-import HGDesignSystem
+import HomeDomain
 import HGCommon
+import HGDesignSystem
 
 struct MainReservationCard: View {
-    let category: ReservationCategoryType
-    let title: String
-    let date: Date
-    let userImageURLStrings: [String]
+    let reservationInfo: ReservationInfo
+    var action: () -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -27,7 +26,7 @@ struct MainReservationCard: View {
             Spacer().frame(height: 16)
             
             HGButton(title: "자세히 보기", isMaxWidth: true) {
-                
+                action()
             }
         }
         .padding(12)
@@ -40,7 +39,7 @@ struct MainReservationCard: View {
     var header: some View {
         HStack(spacing: 0) {
             OffsetImageStack(
-                imageURLStrings: userImageURLStrings,
+                imageURLStrings: reservationInfo.images,
                 imageLength: 28,
                 spacing: 20,
                 maxVisibleCount: 3
@@ -48,7 +47,7 @@ struct MainReservationCard: View {
             
             Spacer().frame(width: 4)
             
-            Text(userImageURLStrings.count > 1 ? "\(userImageURLStrings.count)명 참여중!" : "혼자 참여중!")
+            Text(reservationInfo.participantCount > 1 ? "\(reservationInfo.participantCount)명 참여중!" : "혼자 참여중!")
                 .setTypo(.body_14_bold)
                 .foregroundStyle(.gray80)
             
@@ -56,9 +55,9 @@ struct MainReservationCard: View {
             
             HGTagView(
                 style: .medium,
-                title: category.name,
-                textColor: category.mainColor,
-                backgroundColor: category.lightColor
+                title: reservationInfo.category.name,
+                textColor: reservationInfo.category.mainColor,
+                backgroundColor: reservationInfo.category.lightColor
             )
         }
         .padding(.leading, 4)
@@ -66,7 +65,7 @@ struct MainReservationCard: View {
     
     var content: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text(title)
+            Text(reservationInfo.title)
                 .setTypo(.title_20_bold)
                 .foregroundStyle(.gray95)
                 .padding(.bottom, 2)
@@ -76,7 +75,7 @@ struct MainReservationCard: View {
                     HGIcons.calendar.image
                         .foregroundStyle(.gray40)
                     
-                    Text(date.formatted(with: .yyyyMMddKorean))
+                    Text(reservationInfo.reservationDatetime.formatted(with: .yyyyMMddKorean))
                         .setTypo(.body_14_medium)
                         .foregroundStyle(.gray50)
                 }
@@ -85,7 +84,7 @@ struct MainReservationCard: View {
                     HGIcons.timer.image
                         .foregroundStyle(.gray40)
                     
-                    Text(date.formatted(with: .ahhKorean))
+                    Text(reservationInfo.reservationDatetime.formatted(with: .ahhKorean))
                         .setTypo(.body_14_medium)
                         .foregroundStyle(.gray50)
                 }
@@ -96,10 +95,25 @@ struct MainReservationCard: View {
 }
 
 #Preview(traits: .applyFont) {
-    MainReservationCard(
-        category: .restaurant,
-        title: "매쉬업 야구 직관 모임",
-        date: Date(),
-        userImageURLStrings: []
+    MainReservationCard(reservationInfo:
+            .init(
+                reservationId: 0,
+                title: "남수와 함꼐하는 클라이밍",
+                category: .activity,
+                reservationDatetime: Date(),
+                participantCount: 4,
+                maxParticipants: 6,
+                hostId: 11,
+                hostNickname: "남수",
+                images: [
+                    "https://i.pravatar.cc/150?img=4",
+                    "https://i.pravatar.cc/300",
+                    "https://i.pravatar.cc/150?img=3",
+                ],
+                userStatus: "가자",
+                isHost: true
+            ), action: {
+                
+            }
     )
 }

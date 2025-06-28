@@ -7,38 +7,29 @@
 
 import SwiftUI
 
+import HomeDomain
 import HGDesignSystem
 import NukeUI
 
 struct HomeSubReservationCardListView: View {
-    let title: String
+    let statusTab: ReservationStatusTab
+    let reservations: [ReservationInfo]
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 4) {
-                Text(title)
+                Text(statusTab.title)
                     .setTypo(.subTitle_18_bold)
                     .foregroundStyle(.gray80)
                 
-                Text("4")
+                Text("\(reservations.count)")
                     .setTypo(.subTitle_18_bold)
                     .foregroundStyle(.orange500Main)
             }
             
             LazyVStack(spacing: 12) {
-                ForEach(0..<4) { _ in
-                    SubReservationCard(
-                        category: .restaurant,
-                        mainImageURLString: "https://i.pravatar.cc/150?img=4",
-                        title: "매쉬업 야구 직관 모임",
-                        date: Date(),
-                        userImageURLStrings: [
-                            // 임시 URL
-                            "https://i.pravatar.cc/150?img=4",
-                            "https://i.pravatar.cc/300",
-                            "https://i.pravatar.cc/150?img=3",
-                        ]
-                    )
+                ForEach(reservations, id: \.reservationId) { info in
+                    SubReservationCard(reservationInfo: info)
                 }
             }
         }
@@ -47,11 +38,7 @@ struct HomeSubReservationCardListView: View {
 }
 
 struct SubReservationCard: View {
-    let category: ReservationCategoryType
-    let mainImageURLString: String?
-    let title: String
-    let date: Date
-    let userImageURLStrings: [String]
+    let reservationInfo: ReservationInfo
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -68,7 +55,7 @@ struct SubReservationCard: View {
     var hedaer: some View {
         HStack(spacing: 0) {
             OffsetImageStack(
-                imageURLStrings: userImageURLStrings,
+                imageURLStrings: reservationInfo.images,
                 imageLength: 28,
                 spacing: 20,
                 maxVisibleCount: 3
@@ -76,7 +63,7 @@ struct SubReservationCard: View {
             
             Spacer().frame(width: 4)
             
-            Text(userImageURLStrings.count > 1 ? "\(userImageURLStrings.count)명 참여중!" : "혼자 참여중!")
+            Text(reservationInfo.participantCount > 1 ? "\(reservationInfo.participantCount)명 참여중!" : "혼자 참여중!")
                 .setTypo(.body_14_bold)
                 .foregroundStyle(.gray80)
             
@@ -84,9 +71,9 @@ struct SubReservationCard: View {
             
             HGTagView(
                 style: .small,
-                title: category.name,
-                textColor: category.mainColor,
-                backgroundColor: category.lightColor
+                title: reservationInfo.category.name,
+                textColor: reservationInfo.category.mainColor,
+                backgroundColor: reservationInfo.category.lightColor
             )
         }
     }
@@ -99,7 +86,7 @@ struct SubReservationCard: View {
     
     var content: some View {
         HStack(spacing: 12) {
-            LazyImage(url: URL(string: mainImageURLString ?? "")) { state in
+            LazyImage(url: URL(string: reservationInfo.images.first ?? "")) { state in
                 if let image = state.image {
                     image
                         .resizable()
@@ -113,7 +100,7 @@ struct SubReservationCard: View {
             .setRadius(16)
             
             VStack(alignment: .leading, spacing: 2) {
-                Text(title)
+                Text(reservationInfo.title)
                     .setTypo(.title_20_bold)
                     .padding(.leading, 4)
                 
@@ -122,7 +109,7 @@ struct SubReservationCard: View {
                         HGIcons.calendar.image
                             .foregroundStyle(.gray40)
                         
-                        Text(date.formatted(with: .yyyyMMddKorean))
+                        Text(reservationInfo.reservationDatetime.formatted(with: .yyyyMMddKorean))
                             .setTypo(.body_14_medium)
                             .foregroundStyle(.gray50)
                     }
@@ -131,7 +118,7 @@ struct SubReservationCard: View {
                         HGIcons.timer.image
                             .foregroundStyle(.gray40)
                         
-                        Text(date.formatted(with: .ahhmm))
+                        Text(reservationInfo.reservationDatetime.formatted(with: .ahhmm))
                             .setTypo(.body_14_medium)
                             .foregroundStyle(.gray50)
                     }
@@ -142,5 +129,10 @@ struct SubReservationCard: View {
 }
 
 #Preview(traits: .applyFont) {
-    HomeSubReservationCardListView(title: "예정된 예약")
+    HomeSubReservationCardListView(
+        statusTab: .scheduled,
+        reservations: [
+            
+        ]
+    )
 }

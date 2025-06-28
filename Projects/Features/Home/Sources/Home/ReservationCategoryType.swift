@@ -2,21 +2,16 @@
 //  ReservationCategoryType.swift
 //  HomeFeature
 //
-//  Created by 박병호 on 6/23/25.
+//  Created by 박병호 on 6/28/25.
 //
 
 import SwiftUI
 
 import HGDesignSystem
+import HomeDomain
 
-enum ReservationCategoryType {
-    case restaurant
-    case sports
-    case concert
-    case activity
-    case etc
-    
-    var name: String {
+extension ReservationCategoryType {
+    public var name: String {
         switch self {
         case .restaurant: "맛집"
         case .sports: "스포츠"
@@ -26,7 +21,7 @@ enum ReservationCategoryType {
         }
     }
     
-    var image: Image {
+    public var image: Image {
         switch self {
         case .restaurant: HGImages.categoryRestaurant.image
         case .sports: HGImages.categorySports.image
@@ -36,7 +31,7 @@ enum ReservationCategoryType {
         }
     }
     
-    var gradient: LinearGradient {
+    public  var gradient: LinearGradient {
         switch self {
         case .restaurant: HGGradient.pinkSub
         case .sports: HGGradient.orangeSub
@@ -46,7 +41,7 @@ enum ReservationCategoryType {
         }
     }
     
-    var darkColor: HGColors {
+    public var darkColor: HGColors {
         switch self {
         case .restaurant: HGColors.pinkDark
         case .sports: HGColors.orangeDark
@@ -56,7 +51,7 @@ enum ReservationCategoryType {
         }
     }
     
-    var mainColor: HGColors {
+    public var mainColor: HGColors {
         switch self {
         case .restaurant: HGColors.pinkMain
         case .sports: HGColors.orange500Main
@@ -66,7 +61,7 @@ enum ReservationCategoryType {
         }
     }
 
-    var lightColor: HGColors {
+    public var lightColor: HGColors {
         switch self {
         case .restaurant: HGColors.pinkLight
         case .sports: HGColors.orange100
@@ -76,7 +71,7 @@ enum ReservationCategoryType {
         }
     }
 
-    var opcityColor: HGColors {
+    public var opcityColor: HGColors {
         switch self {
         case .restaurant: HGColors.opacityPink4
         case .sports: HGColors.opacityOrange4

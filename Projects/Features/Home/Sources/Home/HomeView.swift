@@ -8,22 +8,17 @@
 import SwiftUI
 
 import HGCommon
+import HomeDomain
 import HGDesignSystem
 
 struct HomeView: View {
-    @State var selectedTab: ReservationStatusTab = .scheduled
-    @State var reservationInfos: [ReservationCategoryType] = [.restaurant, .sports, .activity, .concert, .etc]
-    @State var selectedReservationIndex: Int = 0
-    
-    let isShowSubReservationCardList: Bool = true
-    let withReservation: Bool = true
-    let isExistCompleteReservation: Bool = true
+    @State private var viewModel: HomeViewModel = .init()
     
     private let screenHeight: CGFloat = UIScreen.main.bounds.height
     private var backgroundGradientHeight: CGFloat {
         // ContentHeight - 40(하단 패딩) - 91(카드뷰 height 절반)
         let minHeight = screenHeight - UIConstant.tabBarHeight
-        return isShowSubReservationCardList ? 573 : minHeight - 40 - 91
+        return viewModel.isExistSchduledSubReservations ? 573 : minHeight - 40 - 91
     }
     
     var body: some View {
@@ -35,7 +30,7 @@ struct HomeView: View {
                 VStack(spacing: 0) {
                     Spacer().frame(height: UIWindow.safeAreaInsets.top + 52)
                     
-                    TransitionTabSwitcherView(selectedTab: selectedTab) {
+                    TransitionTabSwitcherView(selectedTab: viewModel.selectedStatusTab) {
                         scheduledReservationView
                     } completedView: {
                         completedReservationView
@@ -59,17 +54,16 @@ struct HomeView: View {
     
     @ViewBuilder
     var scheduledReservationView: some View {
-        if withReservation {
+        if viewModel.isExistScheduledReservation {
             VStack(spacing: 0) {
-                HomeMainReservationTabView(
-                    selectedTabIndex: $selectedReservationIndex,
-                    reservationInfos: reservationInfos,
-                    isShowSubReservationCardList: isShowSubReservationCardList
-                )
+                HomeMainReservationTabView(viewModel: viewModel)
                 
-                if isShowSubReservationCardList  {
-                    HomeSubReservationCardListView(title: "예정된 예약")
-                        .padding(.horizontal, 16)
+                if viewModel.isExistSchduledSubReservations  {
+                    HomeSubReservationCardListView(
+                        statusTab: .scheduled,
+                        reservations: viewModel.scheduledReservationInfos
+                    )
+                    .padding(.horizontal, 16)
                 }
             }
         } else {
@@ -79,10 +73,13 @@ struct HomeView: View {
     
     @ViewBuilder
     var completedReservationView: some View {
-        if isExistCompleteReservation {
-            HomeSubReservationCardListView(title: "완료된 예약")
-                .padding(.top, 20)
-                .padding(.horizontal, 16)
+        if viewModel.isExistCompleteReservation {
+            HomeSubReservationCardListView(
+                statusTab: .scheduled,
+                reservations: viewModel.completedReservationInfos
+            )
+            .padding(.top, 20)
+            .padding(.horizontal, 16)
         } else {
             NoCompletedReservationVIew()
         }
@@ -91,25 +88,25 @@ struct HomeView: View {
     @ViewBuilder
     var backgorund: some View {
         Group {
-            if selectedTab == .scheduled {
+            if viewModel.selectedStatusTab == .scheduled {
                 backgroundGradient
                     .overlay(alignment: .top) {
-                        if withReservation {
-                            reservationInfos[selectedReservationIndex].image
+                        if viewModel.isExistScheduledReservation {
+                            viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.category.image
                                 .offset(y: screenHeight * 0.18)
                         }
                     }
             }
         }
         .ignoresSafeArea()
-        .animation(.linear(duration: 0.35), value: selectedTab)
-        .animation(.easeInOut(duration: 0.25), value: selectedReservationIndex)
+        .animation(.linear(duration: 0.35), value: viewModel.selectedStatusTab)
+        .animation(.easeInOut(duration: 0.25), value: viewModel.selectedReservationIndex)
     }
     
     @ViewBuilder
     var backgroundGradient: some View {
-        if withReservation {
-            reservationInfos[selectedReservationIndex].gradient
+        if viewModel.isExistScheduledReservation {
+            viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.category.gradient
                 .frame(height: backgroundGradientHeight)
         } else {
             HGGradient.orangeSub
@@ -118,16 +115,10 @@ struct HomeView: View {
     }
     
     var header: some View {
-        ReservationStatusToggle(selectedTab: $selectedTab)
+        ReservationStatusToggle(selectedTab: $viewModel.state.selectedStatusTab)
             .frame(width: 154, height: 40)
-            .padding(.vertical, 6)
-        
+            .padding(.vertical, 6)   
     }
-}
-
-enum ReservationStatusTab: Equatable {
-    case scheduled
-    case completed
 }
 
 struct TransitionTabSwitcherView<FirstView: View, SecondView: View>: View {

@@ -7,44 +7,45 @@
 
 import SwiftUI
 
+import HomeDomain
 import HGDesignSystem
 
 struct HomeMainReservationTabView: View {
-    @Binding var selectedTabIndex: Int
-    let reservationInfos: [ReservationCategoryType]
-    let isShowSubReservationCardList: Bool
+    @Bindable var viewModel: HomeViewModel
     
     private let tabbarHeight: CGFloat = UIConstant.tabBarHeight
     private let headerHeight: CGFloat = UIWindow.safeAreaInsets.top + 52
     
     var body: some View {
-        TabView(selection: $selectedTabIndex) {
-            ForEach(Array(reservationInfos.enumerated()), id: \.offset) { index, info in
+        TabView(selection: $viewModel.state.selectedReservationIndex) {
+            ForEach(viewModel.mainReservationInfos, id: \.reservationId) { info in
                 MainReservationView(
-                    category: info,
-                    isShowSubReservationCardList: isShowSubReservationCardList
-                )
-                .tag(index)
+                    reservationInfo: info,
+                    isShowSubReservationCardList: viewModel.isExistSchduledSubReservations
+                ) {
+                    
+                }
+                .tag(info.reservationId)
             }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-        .frame(height: isShowSubReservationCardList ? 477
+        .frame(height: viewModel.isExistSchduledSubReservations ? 477
                : UIScreen.main.bounds.height - tabbarHeight - headerHeight)
         .overlay(alignment: .bottom) {
-            if reservationInfos.count > 1 {
+            if viewModel.mainReservationInfos.count > 1 {
                 indicator
             }
         }
-        .animation(.easeInOut(duration: 0.25), value: selectedTabIndex)
+        .animation(.easeInOut(duration: 0.25), value: viewModel.selectedReservationIndex)
     }
     
     var indicator: some View {
         HStack(spacing: 4) {
-            ForEach(0..<reservationInfos.count, id: \.self) { index in
+            ForEach(0..<viewModel.mainReservationInfos.count, id: \.self) { index in
                 Circle()
                     .frame(6)
                     .foregroundStyle(
-                        index == selectedTabIndex ? HGColors.orange500Main : HGColors.gray20
+                        index == viewModel.selectedReservationIndex ? HGColors.orange500Main : HGColors.gray20
                     )
             }
         }
@@ -54,8 +55,9 @@ struct HomeMainReservationTabView: View {
 }
 
 private struct MainReservationView: View {
-    let category: ReservationCategoryType
+    let reservationInfo: ReservationInfo
     let isShowSubReservationCardList: Bool
+    let action: () -> Void
     
     var body: some View {
         VStack(spacing: 0) {
@@ -65,21 +67,13 @@ private struct MainReservationView: View {
             
             Spacer().frame(height: isShowSubReservationCardList ? 20 : 100)
             
-            ReservationTimerView(category: category)
+            ReservationTimerView(category: reservationInfo.category)
             
             Spacer().frame(minHeight: 62)
             
-            MainReservationCard(
-                category: category,
-                title: "매쉬업 야구 직관 모임",
-                date: Date(),
-                userImageURLStrings: [
-                    // 임시 URL
-                    "https://i.pravatar.cc/150?img=4",
-                    "https://i.pravatar.cc/300",
-                    "https://i.pravatar.cc/150?img=3",
-                ]
-            )
+            MainReservationCard(reservationInfo: reservationInfo) {
+                action()
+            }
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 40)
@@ -89,7 +83,7 @@ private struct MainReservationView: View {
         Text("가장 가까운 예약까지")
             .setTypo(.title_20_bold)
             .foregroundStyle(.gray0White)
-            .shadow(color: category.darkColor.color, radius: 20)
+            .shadow(color: reservationInfo.category.darkColor.color, radius: 20)
     }
 }
 
@@ -120,11 +114,9 @@ private struct ReservationTimerView: View {
 }
 
 #Preview {
-    @Previewable @State var selectedIndex = 0
+    @Previewable @State var viewModel: HomeViewModel = .init()
     
     HomeMainReservationTabView(
-        selectedTabIndex: $selectedIndex,
-        reservationInfos: [.restaurant, .concert, .activity, .sports, .etc], // 예시 값
-        isShowSubReservationCardList: true
+        viewModel: viewModel
     )
 }
