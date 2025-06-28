@@ -159,39 +159,13 @@ private extension HGTextField {
     }
 }
 
-public extension HGTextField {
-    /// 텍스트필드 위에 텍스트필드 제목을 설정합니다.
-    /// - parameter title: 이 텍스트 필드의 제목
-    /// - parameter required: 이 텍스트 필드의 입력 필수 여부
-    func setTitle(_ title: String?, required: Bool? = nil) -> Self {
-        var copy = self
-        copy.title = title
-        if let required { copy.required = required }
-        
-        return copy
-    }
-    
-    /// 텍스트필드 클리어 버튼 숨김 여부
-    func hideClearButton(_ hidden: Bool) -> Self {
-        var copy = self
-        copy.hiddenClearButton = hidden
-        return copy
-    }
-    
-    /// 에러메시지
-    func setErrorMessage(_ message: String?) -> Self {
-        var copy = self
-        copy.errorMessage = message
-        return copy
-    }
-}
-
 #Preview {
     @Previewable @State var text: String = "123123"
     
     UIFont.registerAllFont()
     
     return HGTextField(
+        title: "제목",
         text: $text,
         placeholder: "닉네임을 입력해주세요",
         size: .default,
