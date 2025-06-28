@@ -57,17 +57,10 @@ public struct HGTextField: View {
     @ViewBuilder
     private var titleArea: some View {
         if let title {
-            HStack(spacing: 2) {
-                Text(title)
-                    .foregroundStyle(HGColors.gray80)
-                if required {
-                    Text("*")
-                        .foregroundStyle(HGColors.orange500Main)
-                }
-                
-                Spacer()
-            }
-            .setTypo(.caption_12_medium)
+            SectionHeader(
+                title: title,
+                isRequired: required
+            )
             .padding(.bottom, 8)
         }
     }
@@ -89,13 +82,13 @@ public struct HGTextField: View {
                     }
                 }
             
-            if !hiddenClearButton {
+            if !hiddenClearButton && isFocused {
                 Button {
                     withAnimation {
                         text.removeAll()
                     }
                 } label: {
-                    HGIcons.close.image // TODO: #34 병합 이후 다른 아이콘으로 변경 예정
+                    HGIcons.closeInbox.image
                         .resizable()
                         .frame(24)
                         .foregroundStyle(HGColors.gray40)
