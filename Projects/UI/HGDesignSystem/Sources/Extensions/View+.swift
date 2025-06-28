@@ -44,6 +44,20 @@ public extension View {
             }
     }
     
+    /// Set outter border
+    @ViewBuilder func strokeOutterBorder<S: ShapeStyle>(
+        _ color: S,
+        radius: CGFloat = .zero,
+        linewidth: CGFloat = 1
+    ) -> some View {
+        self
+            .overlay {
+                RoundedRectangle(cornerRadius: radius)
+                    .strokeBorder(color, lineWidth: linewidth)
+                    .padding(-2)
+            }
+    }
+    
     
     /// Set Infinity Size
     func fillMaxSize(_ alignment: Alignment = .topLeading) -> some View {

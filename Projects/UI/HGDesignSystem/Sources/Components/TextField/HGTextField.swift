@@ -27,15 +27,23 @@ public struct HGTextField: View {
     @Binding var text: String
     
     public init(
+        title: String? = nil,
         text: Binding<String>,
         placeholder: String,
         size: TextFieldSize = .default,
-        maxCount: Int? = nil
+        maxCount: Int? = nil,
+        hiddenClearButton: Bool = false,
+        errorMessage: String? = nil,
+        required: Bool = false
     ) {
+        self.title = title
         self.placeholder = placeholder
         self.size = size
         self.maxCount = maxCount
         self._text = text
+        self.hiddenClearButton = hiddenClearButton
+        self.errorMessage = errorMessage
+        self.required = required
     }
     
     public var body: some View {
@@ -57,17 +65,10 @@ public struct HGTextField: View {
     @ViewBuilder
     private var titleArea: some View {
         if let title {
-            HStack(spacing: 2) {
-                Text(title)
-                    .foregroundStyle(HGColors.gray80)
-                if required {
-                    Text("*")
-                        .foregroundStyle(HGColors.orange500Main)
-                }
-                
-                Spacer()
-            }
-            .setTypo(.caption_12_medium)
+            HGSectionHeader(
+                title: title,
+                isRequired: required
+            )
             .padding(.bottom, 8)
         }
     }
@@ -89,13 +90,13 @@ public struct HGTextField: View {
                     }
                 }
             
-            if !hiddenClearButton {
+            if !hiddenClearButton && isFocused {
                 Button {
                     withAnimation {
                         text.removeAll()
                     }
                 } label: {
-                    HGIcons.close.image // TODO: #34 병합 이후 다른 아이콘으로 변경 예정
+                    HGIcons.closeInbox.image
                         .resizable()
                         .frame(24)
                         .foregroundStyle(HGColors.gray40)
@@ -158,45 +159,17 @@ private extension HGTextField {
     }
 }
 
-public extension HGTextField {
-    /// 텍스트필드 위에 텍스트필드 제목을 설정합니다.
-    /// - parameter title: 이 텍스트 필드의 제목
-    /// - parameter required: 이 텍스트 필드의 입력 필수 여부
-    func setTitle(_ title: String?, required: Bool? = nil) -> Self {
-        var copy = self
-        copy.title = title
-        if let required { copy.required = required }
-        
-        return copy
-    }
-    
-    /// 텍스트필드 클리어 버튼 숨김 여부
-    func hideClearButton(_ hidden: Bool) -> Self {
-        var copy = self
-        copy.hiddenClearButton = hidden
-        return copy
-    }
-    
-    /// 에러메시지
-    func setErrorMessage(_ message: String?) -> Self {
-        var copy = self
-        copy.errorMessage = message
-        return copy
-    }
-}
-
 #Preview {
     @Previewable @State var text: String = "123123"
     
     UIFont.registerAllFont()
     
     return HGTextField(
+        title: "제목",
         text: $text,
         placeholder: "닉네임을 입력해주세요",
         size: .default,
         maxCount: 6
     )
-    .setTitle("닉네임")
-    .setErrorMessage("닉네임은 텍스트만 입력 가능합니다")
     .padding(.horizontal, 16)
 }

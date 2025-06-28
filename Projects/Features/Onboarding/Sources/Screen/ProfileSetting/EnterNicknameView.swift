@@ -25,15 +25,16 @@ struct EnterNicknameView: View {
                 .padding(.bottom, 56)
             
             HGTextField(
+                title: "닉네임",
                 text: Binding(
                     get: { viewModel.nickname },
                     set: { viewModel.reduce(.editNickname($0)) }
                 ),
                 placeholder: viewModel.placeholder,
-                maxCount: 6
+                maxCount: 6,
+                errorMessage: viewModel.errorMessage,
+                required: true
             )
-            .setTitle("닉네임", required: true)
-            .setErrorMessage(viewModel.errorMessage)
             .onSubmit { viewModel.reduce(.didTapNextButton)
             }
             
