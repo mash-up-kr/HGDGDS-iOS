@@ -49,7 +49,7 @@ struct SuccessRateView: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 20)
         .background(HGColors.gray0White.color)
-        .setRadius(20)
+        .setRadius(36)
     }
     
     private func reservationDescriptionView(title: String, num: Int) -> some View {
