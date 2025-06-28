@@ -15,6 +15,7 @@ let project = Project(
             name: "CreateReservationFeature",
             dependencies: [
                 .domainProject(with: .createReservation),
+                .domainProject(with: .reservation),
                 .coreProject(with: .hgCommon),
                 .coreProject(with: .hgLogger),
                 .uiProject(with: .hgDesignSystem)

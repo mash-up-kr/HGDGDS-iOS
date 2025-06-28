@@ -11,6 +11,7 @@ import OnboardingFeature
 import HomeFeature
 import MyPageFeature
 import ReservationFeature
+import CreateReservationFeature
 
 @MainActor
 struct CoordinatorFactory {
@@ -28,5 +29,9 @@ struct CoordinatorFactory {
     
     var onboardingCoordinatorRootView: some View {
         OnboardingCoordinatorView()
+    }
+    
+    var createReservationRootView: some View {
+        CreateReservationCoordinatorView()
     }
 }

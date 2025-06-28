@@ -27,15 +27,23 @@ public struct HGTextField: View {
     @Binding var text: String
     
     public init(
+        title: String? = nil,
         text: Binding<String>,
         placeholder: String,
         size: TextFieldSize = .default,
-        maxCount: Int? = nil
+        maxCount: Int? = nil,
+        hiddenClearButton: Bool = false,
+        errorMessage: String? = nil,
+        required: Bool = false
     ) {
+        self.title = title
         self.placeholder = placeholder
         self.size = size
         self.maxCount = maxCount
         self._text = text
+        self.hiddenClearButton = hiddenClearButton
+        self.errorMessage = errorMessage
+        self.required = required
     }
     
     public var body: some View {
@@ -189,7 +197,5 @@ public extension HGTextField {
         size: .default,
         maxCount: 6
     )
-    .setTitle("닉네임")
-    .setErrorMessage("닉네임은 텍스트만 입력 가능합니다")
     .padding(.horizontal, 16)
 }

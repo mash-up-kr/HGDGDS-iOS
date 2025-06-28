@@ -11,6 +11,8 @@ import HGDesignSystem
 struct HGTabView: View {
     @State private var selectedItem: TabItem = .home
     @State var tabViewManager = HGTabViewManager()
+    @State var showCreateView: Bool = false
+    
     private let coordinatorFactory: CoordinatorFactory = CoordinatorFactory()
     
     private let tabbarHeight: CGFloat = UIConstant.tabBarHeight
@@ -36,6 +38,9 @@ struct HGTabView: View {
             }
         }
         .ignoresSafeArea()
+        .fullScreenCover(isPresented: $showCreateView) {
+            coordinatorFactory.createReservationRootView
+        }
     }
     
     // MARK: - 탭바
@@ -85,7 +90,7 @@ struct HGTabView: View {
     // MARK: - 중앙 추가 버튼
     private func centerButtonView() -> some View {
         Button {
-            // TODO: 추가 플로우 이동
+            self.showCreateView = true
         } label: {
             HGIcons.plusThick.image
                 .resizable()
