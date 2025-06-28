@@ -33,9 +33,8 @@ struct ReservationResultInputView: View {
         .applyNavigationBar(
             title: "예약 결과",
             rightButtonView: {
-            
                 Button {
-                    
+                    viewModel.reduce(.didTapDoneButton)
                 } label: {
                     Text("완료")
                         .setTypo(.body_16_bold)
@@ -75,7 +74,6 @@ struct ReservationResultInputView: View {
     }
         
     private var sectionTitle: some View {
-        // TODO: 미선택, 실패시 노출
         VStack(spacing: 0) {
             Text("매쉬업 야구장 직관 모임")
                 .setTypo(.heading_24_bold)
@@ -140,26 +138,27 @@ struct ReservationResultInputView: View {
     private var successReservationDateInfoView: some View {
         HStack(spacing: 12) {
             HGTextField(
+                title: "예약 성공 날짜",
                 text: .constant(viewModel.successReservationDateString ?? ""),
                 placeholder: "예약 날짜 선택",
                 size: .default,
-                maxCount: nil
+                maxCount: nil,
+                hiddenClearButton: true,
+                required: true
             )
-            .setTitle("예약 성공 날짜", required: true)
-            .hideClearButton(true)
             .disabled(true)
             .onTapGesture {
                 viewModel.reduce(.didTapReservationDateButton)
             }
             
             HGTextField(
+                title: "예약 성공 시간",
                 text: .constant(viewModel.successReservationTimeString ?? ""),
                 placeholder: "예약 시간 선택",
                 size: .default,
-                maxCount: nil
+                maxCount: nil,
+                hiddenClearButton: true
             )
-            .setTitle("예약 성공 시간")
-            .hideClearButton(true)
             .disabled(true)
             .onTapGesture {
                 viewModel.reduce(.didTapReservationHourButton)
@@ -178,7 +177,25 @@ struct ReservationResultInputView: View {
                     .foregroundStyle(.gray50)
                 Spacer()
             }
-            HGPhotoPickerView(images: .constant([]), maxSelectCount: 3)
+            ScrollView(.horizontal) {
+                HStack(spacing: 12) {
+                    HGPhotoPickerView(
+                        selectedItems: $viewModel.state.photoItems,
+                        maxSelectCount: 3
+                    )
+                    ForEach(
+                        Array(viewModel.photoItems.enumerated()),
+                        id: \.element.hashValue
+                    ) { (index, item) in
+                        HGPhotoBox(
+                            item: viewModel.photoItems[index],
+                            action: { _ in
+                                viewModel.reduce(.didTapRemovePhotoItemIndex(index))
+                            }
+                        )
+                    }
+                }
+            }
         }
     }
 
