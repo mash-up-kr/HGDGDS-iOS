@@ -7,10 +7,10 @@
 
 import Foundation
 
-public enum ReservationCategoryType {
-    case restaurant
-    case sports
-    case concert
-    case activity
-    case etc
+public enum ReservationCategoryType: String {
+    case restaurant = "FOOD"
+    case sports = "SPORTS"
+    case performance = "PERFORMANCE"
+    case activity = "ACTIVITY"
+    case etc = "ETC"
 }
