@@ -16,14 +16,14 @@ struct HomeView: View {
     
     private let screenHeight: CGFloat = UIScreen.main.bounds.height
     private var backgroundGradientHeight: CGFloat {
-        // ContentHeight - 40(하단 패딩) - 91(카드뷰 height 절반)
+        // ContentHeight - 52(하단 패딩) - 91(카드뷰 height 절반)
         let minHeight = screenHeight - UIConstant.tabBarHeight
-        return viewModel.isExistSchduledSubReservations ? 573 : minHeight - 40 - 91
+        return viewModel.isExistSchduledSubReservations ? 573 : minHeight - 52 - 91
     }
     
     var body: some View {
-        ZStack {
-            HGColors.gray10.color
+        ZStack(alignment: .top) {
+            backgorund
                 .ignoresSafeArea()
             
             ScrollView {
@@ -35,13 +35,10 @@ struct HomeView: View {
                     } completedView: {
                         completedReservationView
                     }
-                    .padding(.bottom ,40)
+                    .padding(.bottom, 52)
                 }
                 .padding(.bottom, UIConstant.tabBarHeight)
                 .fillMaxSize(.top)
-                .background(alignment: .top) {
-                    backgorund
-                }
                 .overlay(alignment: .top) {
                     header
                         .padding(.top, UIWindow.safeAreaInsets.top)
@@ -87,20 +84,22 @@ struct HomeView: View {
     
     @ViewBuilder
     var backgorund: some View {
-        Group {
+        VStack(spacing: 0) {
             if viewModel.selectedStatusTab == .scheduled {
                 backgroundGradient
                     .overlay(alignment: .top) {
                         if viewModel.isExistScheduledReservation {
                             viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.category.image
                                 .offset(y: screenHeight * 0.18)
+                                .animation(.linear(duration: 0.35), value: viewModel.selectedStatusTab)
+                                .animation(.easeInOut(duration: 0.25), value: viewModel.selectedReservationIndex)
                         }
                     }
             }
+            
+            HGColors.gray10.color
+                .ignoresSafeArea()
         }
-        .ignoresSafeArea()
-        .animation(.linear(duration: 0.35), value: viewModel.selectedStatusTab)
-        .animation(.easeInOut(duration: 0.25), value: viewModel.selectedReservationIndex)
     }
     
     @ViewBuilder

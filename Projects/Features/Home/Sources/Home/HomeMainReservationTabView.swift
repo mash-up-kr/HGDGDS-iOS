@@ -51,7 +51,7 @@ struct HomeMainReservationTabView: View {
             }
         }
         .padding(.top, 12)
-        .padding(.bottom, 22)
+        .padding(.bottom, 34)
     }
 }
 
@@ -61,6 +61,10 @@ private struct MainReservationView: View {
     let action: () -> Void
     
     @State private var countDownTimer: CountDownTimerManager = .init()
+    
+    var dDay: Int {
+        Date().dDayValue(from: reservationInfo.reservationDatetime)
+    }
     
     init(reservationInfo: ReservationInfo, isShowSubReservationCardList: Bool, action: @escaping () -> Void) {
         self.reservationInfo = reservationInfo
@@ -73,27 +77,35 @@ private struct MainReservationView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            Spacer().frame(height: isShowSubReservationCardList ? 50 : 52)
+            Spacer().frame(height: isShowSubReservationCardList ? 20 : 44)
             
             headerTextView
             
-            Spacer().frame(height: isShowSubReservationCardList ? 20 : 100)
+            if isShowSubReservationCardList {
+                Spacer().frame(height: 42)
+            } else {
+                Spacer().frame(maxHeight: 70)
+            }
             
-            ReservationTimerView(
-                category: reservationInfo.category,
-                hours: countDownTimer.hours,
-                minutes: countDownTimer.minutes,
-                seconds: countDownTimer.seconds
-            )
+            VStack(spacing: 8) {
+                dDayText
+                
+                ReservationTimerView(
+                    category: reservationInfo.category,
+                    hours: countDownTimer.hours,
+                    minutes: countDownTimer.minutes,
+                    seconds: countDownTimer.seconds
+                )
+            }
             
-            Spacer().frame(minHeight: 62)
+            Spacer().frame(minHeight: 33)
             
             MainReservationCard(reservationInfo: reservationInfo) {
                 action()
             }
         }
         .padding(.horizontal, 16)
-        .padding(.bottom, 40)
+        .padding(.bottom, 52)
     }
     
     var headerTextView: some View {
@@ -101,6 +113,12 @@ private struct MainReservationView: View {
             .setTypo(.title_20_bold)
             .foregroundStyle(.gray0White)
             .shadow(color: reservationInfo.category.darkColor.color, radius: 20)
+    }
+    
+    var dDayText: some View {
+        Text(dDay < 0 ? "D\(dDay)" : "D-DAY")
+            .setTypo(.heading_24_bold)
+            .foregroundStyle(.gray0White)
     }
 }
 

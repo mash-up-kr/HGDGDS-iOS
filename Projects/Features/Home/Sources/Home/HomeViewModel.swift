@@ -30,18 +30,18 @@ final class HomeViewModel: Reducerable {
         var isExistSchduledSubReservations: Bool {
             !scheduledReservationInfos.isEmpty
         }
-        
+         
         var isExistCompleteReservation: Bool {
             !completedReservationInfos.isEmpty
         }
         
         var mainReservationInfos: [ReservationInfo] = [
-            .init(reservationId: 0, title: "남수와 함께하는 클라이밍", category: .activity, reservationDatetime: Date().adding(hour: 1), participantCount: 4, maxParticipants: 6, hostId: 11, hostNickname: "남수", images: [
+            .init(reservationId: 0, title: "남수와 함께하는 클라이밍", category: .restaurant, reservationDatetime: Date().addingTimeInterval(300), participantCount: 4, maxParticipants: 6, hostId: 11, hostNickname: "남수", images: [
                 "https://i.pravatar.cc/150?img=4",
                 "https://i.pravatar.cc/300",
                 "https://i.pravatar.cc/150?img=3",
             ], userStatus: "가자", isHost: true),
-            .init(reservationId: 1, title: "남수와 함께하는 클라이밍", category: .activity, reservationDatetime: Date().adding(hour: 2), participantCount: 4, maxParticipants: 6, hostId: 11, hostNickname: "남수", images: [
+            .init(reservationId: 1, title: "남수와 함께하는 클라이밍", category: .activity, reservationDatetime: Date().addingTimeInterval(999999), participantCount: 4, maxParticipants: 6, hostId: 11, hostNickname: "남수", images: [
                 "https://i.pravatar.cc/150?img=4",
                 "https://i.pravatar.cc/300",
                 "https://i.pravatar.cc/150?img=3",
@@ -80,30 +80,5 @@ final class HomeViewModel: Reducerable {
         case .setselectedStatusTab(let type):
             state.selectedStatusTab = type
         }
-    }
-}
-
-enum ReservationStatusTab: Equatable {
-    case scheduled
-    case completed
-    
-    var title: String {
-        switch self {
-        case .scheduled: "예정된 예약"
-        case .completed: "완료된 예약"
-        }
-    }
-}
-
-extension Date {
-    /// 현재 시각에서 시/분/초를 더한 새로운 Date 반환
-    func adding(hour: Int = 0, minute: Int = 0, second: Int = 0) -> Date {
-        var components = DateComponents()
-        components.hour = hour
-        components.minute = minute
-        components.second = second
-        
-        print(77, Calendar.current.date(byAdding: components, to: self) ?? self)
-        return Calendar.current.date(byAdding: components, to: self) ?? self
     }
 }
