@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ReservationDomain
 
 public struct ReservationInfo {
     public let reservationId: Int
@@ -45,12 +46,4 @@ public struct ReservationInfo {
         self.userStatus = userStatus
         self.isHost = isHost
     }
-}
-
-public enum ReservationCategoryType {
-    case restaurant
-    case sports
-    case concert
-    case activity
-    case etc
 }

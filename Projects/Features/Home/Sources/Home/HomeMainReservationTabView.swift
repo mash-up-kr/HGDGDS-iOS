@@ -9,6 +9,7 @@ import SwiftUI
 
 import HomeDomain
 import HGCommon
+import ReservationDomain
 import HGDesignSystem
 
 struct HomeMainReservationTabView: View {

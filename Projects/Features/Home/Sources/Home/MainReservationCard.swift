@@ -55,7 +55,7 @@ struct MainReservationCard: View {
             
             HGTagView(
                 style: .medium,
-                title: reservationInfo.category.name,
+                title: reservationInfo.category.title,
                 textColor: reservationInfo.category.mainColor,
                 backgroundColor: reservationInfo.category.lightColor
             )

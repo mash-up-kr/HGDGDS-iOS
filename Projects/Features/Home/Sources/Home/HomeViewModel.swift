@@ -10,6 +10,7 @@ import UIKit
 
 import HGCommon
 import HomeDomain
+import ReservationDomain
 import HGDesignSystem
 
 @Observable
