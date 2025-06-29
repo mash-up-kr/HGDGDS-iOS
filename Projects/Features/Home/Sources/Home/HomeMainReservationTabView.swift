@@ -14,31 +14,33 @@ import HGDesignSystem
 struct HomeMainReservationTabView: View {
     @Bindable var viewModel: HomeViewModel
     
-    private let tabbarHeight: CGFloat = UIConstant.tabBarHeight
-    private let headerHeight: CGFloat = UIWindow.safeAreaInsets.top + 52
-    private let tabViewHeight: CGFloat = 489
-    
     var body: some View {
         TabView(selection: $viewModel.state.selectedReservationIndex) {
-            ForEach(viewModel.mainReservationInfos, id: \.reservationId) { info in
+            ForEach(
+                Array(viewModel.mainReservationInfos.enumerated()),
+                id: \.offset
+            ) { index, info in
                 MainReservationView(
                     reservationInfo: info,
-                    isShowSubReservationCardList: viewModel.isExistSchduledSubReservations
+                    isShowSubReservationCardList: viewModel.isExistSchduledSubReservations,
+                    countDownTimer: viewModel.state.timerManagers[safe: index] ?? CountDownTimerManager()
                 ) {
-                    
+                    //TODO: 예약 상세 화면 이동
                 }
-                .tag(info.reservationId)
+                .padding(.bottom, viewModel.bottomPadding)
+                .tag(index)
             }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-        .frame(height: viewModel.isExistSchduledSubReservations ? tabViewHeight
-               : UIScreen.main.bounds.height - tabbarHeight - headerHeight)
+        .frame(height: viewModel.mainReservationTabViewHeight)
         .overlay(alignment: .bottom) {
             if viewModel.mainReservationInfos.count > 1 {
                 indicator
             }
         }
-        .animation(.easeInOut(duration: 0.25), value: viewModel.selectedReservationIndex)
+        .onAppear {
+            viewModel.reduce(.setUpTimers)
+        }
     }
     
     var indicator: some View {
@@ -59,27 +61,15 @@ struct HomeMainReservationTabView: View {
 private struct MainReservationView: View {
     let reservationInfo: ReservationInfo
     let isShowSubReservationCardList: Bool
+    @Bindable var countDownTimer: CountDownTimerManager
     let action: () -> Void
-    
-    @State private var countDownTimer: CountDownTimerManager = .init()
     
     var dDay: Int {
         Date().dDayValue(from: reservationInfo.reservationDatetime)
     }
-    
-    init(reservationInfo: ReservationInfo, isShowSubReservationCardList: Bool, action: @escaping () -> Void) {
-        self.reservationInfo = reservationInfo
-        self.isShowSubReservationCardList = isShowSubReservationCardList
-        self.action = action
-        
-        countDownTimer.setupTime(endDate: reservationInfo.reservationDatetime)
-        countDownTimer.start()
-    }
-    
+
     var body: some View {
         VStack(spacing: 0) {
-            Spacer().frame(height: isShowSubReservationCardList ? 20 : 44)
-            
             headerText
             
             if isShowSubReservationCardList {
@@ -105,8 +95,8 @@ private struct MainReservationView: View {
                 action()
             }
         }
+        .padding(.top, isShowSubReservationCardList ? 20 : 44)
         .padding(.horizontal, 16)
-        .padding(.bottom, 52)
     }
     
     var headerText: some View {

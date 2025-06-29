@@ -14,52 +14,39 @@ import HGDesignSystem
 struct HomeView: View {
     @Bindable private var viewModel: HomeViewModel = .init()
     
-    private let screenHeight: CGFloat = UIScreen.main.bounds.height
-    private var backgroundGradientHeight: CGFloat {
-        // ContentHeight - 52(하단 패딩) - 91(카드뷰 height 절반)
-        let minHeight = screenHeight - UIConstant.tabBarHeight
-        return viewModel.isExistSchduledSubReservations ? 573 : minHeight - 52 - 91
-    }
-    
     var body: some View {
         ZStack(alignment: .top) {
-            backgorund
+            background
                 .ignoresSafeArea()
             
             categoryImage
 
             ScrollView {
                 VStack(spacing: 0) {
-                    Spacer().frame(height: UIWindow.safeAreaInsets.top + 52)
+                    header
                     
                     TransitionTabSwitcherView(selectedTab: viewModel.selectedStatusTab) {
                         scheduledReservationView
                     } completedView: {
                         completedReservationView
                     }
-                    .padding(.bottom, 52)
+//                    .padding(.bottom, viewModel.bottomPadding)
                 }
                 .padding(.bottom, UIConstant.tabBarHeight)
                 .fillMaxSize(.top)
-                .overlay(alignment: .top) {
-                    header
-                        .padding(.top, UIWindow.safeAreaInsets.top)
-                        .padding(.horizontal, 16)
-                }
             }
-            .ignoresSafeArea()
         }
         .animation(.easeOut(duration: 0.4), value: viewModel.selectedStatusTab)
         .animation(.easeInOut(duration: 0.25), value: viewModel.selectedReservationIndex)
     }
     
     @ViewBuilder
-    var scheduledReservationView: some View {
+    private var scheduledReservationView: some View {
         if viewModel.isExistScheduledMainReservation {
             VStack(spacing: 0) {
                 HomeMainReservationTabView(viewModel: viewModel)
                 
-                if viewModel.isExistSchduledSubReservations  {
+                if viewModel.isExistSchduledSubReservations {
                     HomeSubReservationCardListView(
                         statusTab: .scheduled,
                         reservations: viewModel.scheduledReservationInfos
@@ -73,7 +60,7 @@ struct HomeView: View {
     }
     
     @ViewBuilder
-    var completedReservationView: some View {
+    private  var completedReservationView: some View {
         if viewModel.isExistCompleteReservation {
             HomeSubReservationCardListView(
                 statusTab: .scheduled,
@@ -87,7 +74,7 @@ struct HomeView: View {
     }
     
     @ViewBuilder
-    var backgorund: some View {
+    private  var background: some View {
         ZStack(alignment: .top) {
             if viewModel.selectedStatusTab == .scheduled {
                 VStack(spacing: 0) {
@@ -100,24 +87,24 @@ struct HomeView: View {
     }
     
     @ViewBuilder
-    var backgroundGradient: some View {
+    private var backgroundGradient: some View {
         if viewModel.isExistScheduledMainReservation {
-            viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.category.gradient
-                .frame(height: backgroundGradientHeight)
+            viewModel.selectedMainReservationCategory?.gradient
+                .frame(height: viewModel.backgroundGradientHeight)
         } else {
             HGGradient.orangeSub
                 .frame(height: 564)
         }
     }
     
-    var categoryImage: some View {
+    private var categoryImage: some View {
         TransitionTabSwitcherView(selectedTab: viewModel.selectedStatusTab) {
             Group {
                 if viewModel.isExistScheduledMainReservation {
-                    viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.category.image
+                    viewModel.selectedMainReservationCategory?.image
                         .resizable()
                         .frame(354)
-                        .offset(y: screenHeight * 0.15)
+                        .offset(y: viewModel.screenHeight * 0.15)
                         .transition(.move(edge: .leading).combined(with: .opacity))
                 }
             }
@@ -127,32 +114,14 @@ struct HomeView: View {
         }
     }
     
-    var header: some View {
+    private var header: some View {
         ReservationStatusToggle(selectedTab: $viewModel.state.selectedStatusTab)
             .frame(width: 154, height: 40)
             .padding(.vertical, 6)
     }
 }
 
-struct TransitionTabSwitcherView<FirstView: View, SecondView: View>: View {
-    let selectedTab: ReservationStatusTab
-    let scheduledView: () -> FirstView
-    let completedView: () -> SecondView
-
-    var body: some View {
-        ZStack {
-            if selectedTab == .scheduled {
-                scheduledView()
-                    .transition(.move(edge: .leading).combined(with: .opacity))
-            } else if selectedTab == .completed {
-                completedView()
-                    .transition(.move(edge: .trailing).combined(with: .opacity))
-            }
-        }
-    }
-}
-
-struct ReservationStatusToggle: View {
+private struct ReservationStatusToggle: View {
     @Binding var selectedTab: ReservationStatusTab
 
     var body: some View {
@@ -194,6 +163,24 @@ struct ReservationStatusToggle: View {
         .clipShape(Capsule())
         .frame(width: 154, height: 40)
         .padding(.vertical, 6)
+    }
+}
+
+private struct TransitionTabSwitcherView<FirstView: View, SecondView: View>: View {
+    let selectedTab: ReservationStatusTab
+    let scheduledView: () -> FirstView
+    let completedView: () -> SecondView
+
+    var body: some View {
+        ZStack {
+            if selectedTab == .scheduled {
+                scheduledView()
+                    .transition(.move(edge: .leading).combined(with: .opacity))
+            } else if selectedTab == .completed {
+                completedView()
+                    .transition(.move(edge: .trailing).combined(with: .opacity))
+            }
+        }
     }
 }
 
