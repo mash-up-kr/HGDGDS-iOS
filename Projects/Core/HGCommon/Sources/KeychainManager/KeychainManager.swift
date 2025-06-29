@@ -18,6 +18,8 @@ public actor KeychainManager: KeychainManagerable {
     
     private let serviceKey = Bundle.main.bundleIdentifier ?? "HGDGDS.HGCommon"
     
+    public init() { }
+    
     /// 키체인 추가
     public func addKeychain(key: KeychainKey, value: String) async throws {
         guard let data = value.data(using: String.Encoding.utf8) else {

@@ -13,4 +13,5 @@ import Foundation
  */
 public enum KeychainKey: String {
     case deviceToken
+    case fcmToken
 }

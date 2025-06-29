@@ -28,7 +28,9 @@ let project = Project(
                 .dataProject(with: .myPage),
                 .coreProject(with: .hgLogger),
                 .coreProject(with: .hgCommon),
-                .uiProject(with: .hgDesignSystem)
+                .uiProject(with: .hgDesignSystem),
+                .external(.firebaseCore),
+                .external(.firebaseMessaging)
             ],
             settings: .defaultSettings
         ),
