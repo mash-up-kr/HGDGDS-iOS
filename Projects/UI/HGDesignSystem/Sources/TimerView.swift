@@ -11,7 +11,7 @@ public struct TimerView: View {
     private let time: String
     private let description: String
     private let backgroundColor: Color
-    private let borderColor: LinearGradient = HGGradient.stroke30
+    private let borderColor: LinearGradient = HGGradient.strokeGradient
     
     public init(
         time: String,

@@ -1,22 +1,22 @@
 //
-//  OnboardingCoordinatorView.swift
+//  CreateReservationCoordinatorView.swift
 //  OnboardingFeature
 //
-//  Created by Enes on 6/15/25.
+//  Created by Enes on 6/28/25.
 //
 
 import SwiftUI
 import HGDesignSystem
 
-public struct OnboardingCoordinatorView: View {
-    @State private var coordinator: OnboardingCoordinator = .init()
+public struct CreateReservationCoordinatorView: View {
+    @State private var coordinator: CreateReservationCoordinator = .init()
 
     public init() { }
     
     public var body: some View {
         NavigationStack(path: $coordinator.path) {
-            coordinator.view(.onboardingMain)
-                .navigationDestination(for: OnboardingCoordinator.Screen.self) {
+            coordinator.view(.createReservationMain)
+                .navigationDestination(for: CreateReservationCoordinator.Screen.self) {
                     coordinator.view($0)
                         .toolbarVisibility(.hidden, for: .navigationBar)
                 }

@@ -155,7 +155,7 @@ fileprivate struct HGButtonStyle: ButtonStyle {
                 .tag(true)
             Text("Disabled")
                 .tag(false)
-        }.pickerStyle(.segmented)
+        }.pickerStyle(.segmented)                                                                                                                                                                                                                                                                                   
         
         HGButton(title: "Label", size: size, variant: variant, isMaxWidth: true, onTap: { })
             .disabled(!isEnabled)

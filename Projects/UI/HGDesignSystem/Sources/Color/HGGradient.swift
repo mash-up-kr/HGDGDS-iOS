@@ -183,10 +183,10 @@ public enum HGGradient {
         endPoint: .bottom
     )
     
-    /// - warning: 디자인 시스템상에서 Opacity 0.3이 적용돼있지만
+    /// - warning: 디자인 시스템상에서 Opacity 0.3, 0.6이 적용돼있지만
     /// View로 사용해야해서 적용되지않은 상태입니다.
     /// 직접 적용해줘야합니다
-    public static let stroke30: LinearGradient = LinearGradient(
+    public static let strokeGradient: LinearGradient = .init(
         stops: [
             .init(color: .init(hex: "FFFFFF"), location: 0),
             .init(color: .init(hex: "FFFFFF").opacity(0.5), location: 0.5),
@@ -195,7 +195,6 @@ public enum HGGradient {
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
-    
 }
 
 #Preview {
@@ -239,7 +238,7 @@ public enum HGGradient {
                 }
                 
                 GridRow {
-                    HGGradient.stroke30
+                    HGGradient.strokeGradient
                 }
                 .background(Color.black)
             }
