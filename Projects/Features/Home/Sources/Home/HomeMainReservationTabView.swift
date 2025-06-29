@@ -16,6 +16,7 @@ struct HomeMainReservationTabView: View {
     
     private let tabbarHeight: CGFloat = UIConstant.tabBarHeight
     private let headerHeight: CGFloat = UIWindow.safeAreaInsets.top + 52
+    private let tabViewHeight: CGFloat = 489
     
     var body: some View {
         TabView(selection: $viewModel.state.selectedReservationIndex) {
@@ -30,7 +31,7 @@ struct HomeMainReservationTabView: View {
             }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-        .frame(height: viewModel.isExistSchduledSubReservations ? 477
+        .frame(height: viewModel.isExistSchduledSubReservations ? tabViewHeight
                : UIScreen.main.bounds.height - tabbarHeight - headerHeight)
         .overlay(alignment: .bottom) {
             if viewModel.mainReservationInfos.count > 1 {
@@ -79,7 +80,7 @@ private struct MainReservationView: View {
         VStack(spacing: 0) {
             Spacer().frame(height: isShowSubReservationCardList ? 20 : 44)
             
-            headerTextView
+            headerText
             
             if isShowSubReservationCardList {
                 Spacer().frame(height: 42)
@@ -108,7 +109,7 @@ private struct MainReservationView: View {
         .padding(.bottom, 52)
     }
     
-    var headerTextView: some View {
+    var headerText: some View {
         Text("가장 가까운 예약까지")
             .setTypo(.title_20_bold)
             .foregroundStyle(.gray0White)
@@ -119,6 +120,7 @@ private struct MainReservationView: View {
         Text(dDay < 0 ? "D\(dDay)" : "D-DAY")
             .setTypo(.heading_24_bold)
             .foregroundStyle(.gray0White)
+            .shadow(color: HGColors.opacityBlack60.color, radius: 15, y: 2)
     }
 }
 

@@ -26,6 +26,8 @@ struct HomeView: View {
             backgorund
                 .ignoresSafeArea()
             
+            categoryImage
+
             ScrollView {
                 VStack(spacing: 0) {
                     Spacer().frame(height: UIWindow.safeAreaInsets.top + 52)
@@ -47,11 +49,13 @@ struct HomeView: View {
             }
             .ignoresSafeArea()
         }
+        .animation(.easeOut(duration: 0.4), value: viewModel.selectedStatusTab)
+        .animation(.easeInOut(duration: 0.25), value: viewModel.selectedReservationIndex)
     }
     
     @ViewBuilder
     var scheduledReservationView: some View {
-        if viewModel.isExistScheduledReservation {
+        if viewModel.isExistScheduledMainReservation {
             VStack(spacing: 0) {
                 HomeMainReservationTabView(viewModel: viewModel)
                 
@@ -84,32 +88,42 @@ struct HomeView: View {
     
     @ViewBuilder
     var backgorund: some View {
-        VStack(spacing: 0) {
+        ZStack(alignment: .top) {
             if viewModel.selectedStatusTab == .scheduled {
-                backgroundGradient
-                    .overlay(alignment: .top) {
-                        if viewModel.isExistScheduledReservation {
-                            viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.category.image
-                                .offset(y: screenHeight * 0.18)
-                                .animation(.linear(duration: 0.35), value: viewModel.selectedStatusTab)
-                                .animation(.easeInOut(duration: 0.25), value: viewModel.selectedReservationIndex)
-                        }
-                    }
+                VStack(spacing: 0) {
+                    backgroundGradient
+                    
+                    HGColors.gray10.color
+                }
             }
-            
-            HGColors.gray10.color
-                .ignoresSafeArea()
         }
     }
     
     @ViewBuilder
     var backgroundGradient: some View {
-        if viewModel.isExistScheduledReservation {
+        if viewModel.isExistScheduledMainReservation {
             viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.category.gradient
                 .frame(height: backgroundGradientHeight)
         } else {
             HGGradient.orangeSub
                 .frame(height: 564)
+        }
+    }
+    
+    var categoryImage: some View {
+        TransitionTabSwitcherView(selectedTab: viewModel.selectedStatusTab) {
+            Group {
+                if viewModel.isExistScheduledMainReservation {
+                    viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.category.image
+                        .resizable()
+                        .frame(354)
+                        .offset(y: screenHeight * 0.15)
+                        .transition(.move(edge: .leading).combined(with: .opacity))
+                }
+            }
+        } completedView: {
+            Color.clear
+                .transition(.move(edge: .trailing).combined(with: .opacity))
         }
     }
     
@@ -130,14 +144,11 @@ struct TransitionTabSwitcherView<FirstView: View, SecondView: View>: View {
             if selectedTab == .scheduled {
                 scheduledView()
                     .transition(.move(edge: .leading).combined(with: .opacity))
-            }
-            
-            if selectedTab == .completed {
+            } else if selectedTab == .completed {
                 completedView()
                     .transition(.move(edge: .trailing).combined(with: .opacity))
             }
         }
-        .animation(.easeIn(duration: 0.35), value: selectedTab)
     }
 }
 

@@ -98,7 +98,7 @@ struct MainReservationCard: View {
     MainReservationCard(reservationInfo:
             .init(
                 reservationId: 0,
-                title: "남수와 함꼐하는 클라이밍",
+                title: "남수와 함께하는 클라이밍",
                 category: .activity,
                 reservationDatetime: Date(),
                 participantCount: 4,
