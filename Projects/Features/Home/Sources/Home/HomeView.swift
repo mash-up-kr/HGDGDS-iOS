@@ -45,7 +45,7 @@ struct HomeView: View {
             VStack(spacing: 0) {
                 HomeMainReservationTabView(viewModel: viewModel)
                 
-                if viewModel.isExistSchduledSubReservations {
+                if viewModel.isExistScheduledSubReservations {
                     HomeSubReservationCardListView(
                         statusTab: .scheduled,
                         reservations: viewModel.scheduledReservationInfos

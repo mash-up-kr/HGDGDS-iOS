@@ -38,10 +38,10 @@ final class HomeViewModel: Reducerable {
         var backgroundGradientHeight: CGFloat {
             /// Screen height - TabBar height - Bottom padding - 91(카드뷰 height 절반)
             let noListGradientHeight = screenHeight - UIConstant.tabBarHeight - bottomPadding - 91
-            return isExistSchduledSubReservations ? 573 : noListGradientHeight
+            return isExistScheduledSubReservations ? 573 : noListGradientHeight
         }
         var mainReservationTabViewHeight: CGFloat {
-            isExistSchduledSubReservations ? defaultTabViewHeight
+            isExistScheduledSubReservations ? defaultTabViewHeight
             : screenHeight - UIConstant.tabBarHeight - headerHeight
         }
         var selectedMainReservationCategory: ReservationCategoryType? {
@@ -54,7 +54,7 @@ final class HomeViewModel: Reducerable {
         
         // MARK: - 예약 존재 여부 플래그
         var isExistScheduledMainReservation: Bool { !mainReservationInfos.isEmpty }
-        var isExistSchduledSubReservations: Bool { !scheduledReservationInfos.isEmpty }
+        var isExistScheduledSubReservations: Bool { !scheduledReservationInfos.isEmpty }
         var isExistCompleteReservation: Bool { !completedReservationInfos.isEmpty }
         
         // MARK: - 타이머

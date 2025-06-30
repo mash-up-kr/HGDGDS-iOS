@@ -23,7 +23,7 @@ struct HomeMainReservationTabView: View {
             ) { index, info in
                 MainReservationView(
                     reservationInfo: info,
-                    isShowSubReservationCardList: viewModel.isExistSchduledSubReservations,
+                    isShowSubReservationCardList: viewModel.isExistScheduledSubReservations,
                     countDownTimer: viewModel.state.timerManagers[safe: index]
                 ) {
                     //TODO: 예약 상세 화면 이동
@@ -73,7 +73,7 @@ private struct MainReservationView: View {
     let action: () -> Void
     
     var dDay: Int {
-        Date().dDayValue(from: reservationInfo.reservationDatetime)
+        reservationInfo.reservationDatetime.dDayValue(from: Date())
     }
 
     var body: some View {
