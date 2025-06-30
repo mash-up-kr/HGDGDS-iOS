@@ -42,7 +42,7 @@ struct SubReservationCard: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            hedaer
+            header
             divider
             content
         }
@@ -52,7 +52,7 @@ struct SubReservationCard: View {
         .setRadius(28)
     }
     
-    var hedaer: some View {
+    var header: some View {
         HStack(spacing: 0) {
             OffsetImageStack(
                 imageURLStrings: reservationInfo.images,

@@ -133,19 +133,19 @@ private struct ReservationTimerView: View {
             TimerView(
                 time: hours,
                 description: "시간",
-                backgroundColor: category.opcityColor.color
+                backgroundColor: category.opacityColor.color
             )
             
             TimerView(
                 time: minutes,
                 description: "분",
-                backgroundColor: category.opcityColor.color
+                backgroundColor: category.opacityColor.color
             )
             
             TimerView(
                 time: seconds,
                 description: "초",
-                backgroundColor: category.opcityColor.color
+                backgroundColor: category.opacityColor.color
             )
         }
     }

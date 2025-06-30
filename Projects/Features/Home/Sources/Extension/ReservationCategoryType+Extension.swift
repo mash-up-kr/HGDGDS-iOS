@@ -61,7 +61,7 @@ extension ReservationCategoryType {
         }
     }
 
-    public var opcityColor: HGColors {
+    public var opacityColor: HGColors {
         switch self {
         case .restaurant: HGColors.opacityPink4
         case .sports: HGColors.opacityOrange4

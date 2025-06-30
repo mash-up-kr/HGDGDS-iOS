@@ -25,6 +25,7 @@ struct OffsetImageStack: View {
     
     private var totalWidth: CGFloat {
         let imageCount = displayImageURLs.count
+        guard imageCount > 0 else { return 0 }
         return imageLength + spacing * CGFloat(imageCount - 1)
     }
     

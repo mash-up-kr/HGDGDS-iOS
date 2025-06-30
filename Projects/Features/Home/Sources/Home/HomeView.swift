@@ -63,13 +63,13 @@ struct HomeView: View {
     private  var completedReservationView: some View {
         if viewModel.isExistCompleteReservation {
             HomeSubReservationCardListView(
-                statusTab: .scheduled,
+                statusTab: .completed,
                 reservations: viewModel.completedReservationInfos
             )
             .padding(.top, 20)
             .padding(.horizontal, 16)
         } else {
-            NoCompletedReservationVIew()
+            NoCompletedReservationView()
                 .frame(height: viewModel.contentHeight)
         }
     }

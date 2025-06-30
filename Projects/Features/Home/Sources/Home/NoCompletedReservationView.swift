@@ -1,5 +1,5 @@
 //
-//  CompletedReservationVIew.swift
+//  NoCompletedReservationView.swift
 //  HomeFeature
 //
 //  Created by 박병호 on 6/25/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct NoCompletedReservationVIew: View {
+struct NoCompletedReservationView: View {
     var body: some View {
         VStack(spacing: 12) {
             Spacer()
@@ -28,5 +28,5 @@ struct NoCompletedReservationVIew: View {
 }
 
 #Preview {
-    NoCompletedReservationVIew()
+    NoCompletedReservationView()
 }
