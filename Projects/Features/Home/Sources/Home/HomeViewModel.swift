@@ -32,6 +32,9 @@ final class HomeViewModel: Reducerable {
         let headerHeight: CGFloat = UIWindow.safeAreaInsets.top + 52
         
         // MARK: - 계산된 UI 상태값
+        var contentHeight: CGFloat {
+            screenHeight - UIConstant.tabBarHeight - headerHeight
+        }
         var backgroundGradientHeight: CGFloat {
             /// Screen height - TabBar height - Bottom padding - 91(카드뷰 height 절반)
             let noListGradientHeight = screenHeight - UIConstant.tabBarHeight - bottomPadding - 91

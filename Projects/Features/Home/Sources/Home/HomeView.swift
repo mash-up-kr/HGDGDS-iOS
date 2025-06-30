@@ -55,6 +55,7 @@ struct HomeView: View {
             }
         } else {
             HomeEmptyReservationView()
+                .frame(height: viewModel.contentHeight)
         }
     }
     
@@ -69,6 +70,7 @@ struct HomeView: View {
             .padding(.horizontal, 16)
         } else {
             NoCompletedReservationVIew()
+                .frame(height: viewModel.contentHeight)
         }
     }
     
@@ -148,7 +150,7 @@ private struct ReservationStatusToggle: View {
                     if selectedTab == type {
                         Capsule()
                             .foregroundStyle(HGColors.gray0White)
-                            .padding([.vertical, .leading], 4)
+                            .padding([.vertical, type == .scheduled ? .leading : .trailing], 4)
                     }
                 }
         }
