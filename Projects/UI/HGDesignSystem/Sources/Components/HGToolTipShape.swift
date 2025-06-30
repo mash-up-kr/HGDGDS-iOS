@@ -8,13 +8,15 @@
 import SwiftUI
 
 #Preview {
-    Text("성공")
+    Text("성공123123123123")
         .border(.red)
         .background(HGToolTipShape().foregroundStyle(.purpleLight))
         .background(HGToolTipShape().strokeBorder(.orange, lineWidth: 1))
 }
 
 public struct HGToolTipShape: Shape, InsettableShape {
+    public init() { }
+    
     public func inset(by amount: CGFloat) -> some InsettableShape {
         return self
     }
@@ -25,7 +27,7 @@ public struct HGToolTipShape: Shape, InsettableShape {
         let radius: CGFloat = rect.height / 2.0
         let tipCenterX: CGFloat = width * 0.75
         let tipWidth: CGFloat = 7
-        let tipHeight: CGFloat = 6
+        let tipHeight: CGFloat = 5
         let curveWidth: CGFloat = 0.9
         let curveHeight: CGFloat = 1
         
