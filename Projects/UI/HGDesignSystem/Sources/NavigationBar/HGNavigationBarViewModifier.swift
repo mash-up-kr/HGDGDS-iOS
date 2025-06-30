@@ -41,9 +41,10 @@ struct HGNavigationBarViewModifier<R: View>: ViewModifier {
     }
     
     private var leftButtonImage: some View {
-        (leftButtonType == .back ? HGIcons.arrowLeft.image : HGIcons.close.image)
+        (leftButtonType == .close ? HGIcons.close.image : HGIcons.arrowLeft.image)
             .resizable()
             .frame(24)
+            .foregroundStyle(leftButtonType == .whiteBack ? .gray0White : .gray90)
     }
 }
 
