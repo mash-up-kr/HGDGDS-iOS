@@ -11,12 +11,9 @@ import HGDesignSystem
 
 struct HomeEmptyReservationView: View {
     var body: some View {
-        VStack(spacing: 0) {
-            Spacer().frame(height: 40)
-            
-            NoReservationCard()
-        }
-        .fillMaxHeight(.top)
+        NoReservationCard()
+            .padding([.top, .bottom], 40)
+            .fillMaxHeight(.top)
     }
 }
 
