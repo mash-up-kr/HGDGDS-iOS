@@ -64,7 +64,7 @@ public struct HGLongTextView: View {
             .autocorrectionDisabled(true)
             .onChange(of: text) { oldValue, newValue in
                 if newValue.count > maxCount {
-                    text = oldValue
+                    text = String(newValue.prefix(maxCount))
                 }
             }
     }
