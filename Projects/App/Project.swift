@@ -25,9 +25,12 @@ let project = Project(
                 .featureProject(with: .reservation),
                 .featureProject(with: .reservationHistory),
                 .featureProject(with: .myPage),
+                .domainProject(with: .onboarding),
                 .dataProject(with: .myPage),
+                .dataProject(with: .onboarding),
                 .coreProject(with: .hgLogger),
                 .coreProject(with: .hgCommon),
+                .coreProject(with: .hgNetwork),
                 .uiProject(with: .hgDesignSystem),
                 .external(.firebaseCore),
                 .external(.firebaseMessaging)

@@ -45,7 +45,8 @@ enum DependencyConfiguration {
         registerSharedObjects()
         DIContainer.shared.registerAssembly(
             assembly: [
-                MyPageAssembly()
+                MyPageAssembly(),
+                OnboardingAssembly()
             ]
         )
     }
@@ -56,6 +57,11 @@ enum DependencyConfiguration {
         DIContainer.shared.register((any Networkable).self, scope: .container) { _ in
             HGNetworkFactory.makeNetworkClient()
         }
+        
+        DIContainer.shared
+            .register(KeychainManagerable.self, scope: .container) { _ in
+                KeychainManager()
+            }
     }
     
     /// preview 및 테스트용 목업객체 등록
@@ -68,3 +74,4 @@ enum DependencyConfiguration {
         )
     }
 }
+
