@@ -9,9 +9,9 @@ import SwiftUI
 
 #Preview {
     Text("성공123123123123")
-        .border(.red)
-        .background(HGToolTipShape().foregroundStyle(.purpleLight))
+        .frame(height: 30)
         .background(HGToolTipShape().strokeBorder(.orange, lineWidth: 1))
+        .background(HGToolTipShape().foregroundStyle(.purpleLight))
 }
 
 public struct HGToolTipShape: Shape, InsettableShape {

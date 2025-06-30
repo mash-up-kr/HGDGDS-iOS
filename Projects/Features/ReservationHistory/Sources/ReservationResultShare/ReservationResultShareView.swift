@@ -34,17 +34,7 @@ struct ReservationResultShareView: View {
         .contentMargins(.bottom, 88)
         .applyNavigationBar(
             title: "",
-            leftButtonType: .whiteBack,
-            rightButtonView: {
-                Button {
-                    
-                } label: {
-                    HGIcons.edit.image
-                        .resizable()
-                        .frame(24)
-                        .foregroundStyle(.gray0White)
-                }
-            }
+            leftButtonType: .whiteBack
         )
         .background(HGGradient.purpleSub)
     }
