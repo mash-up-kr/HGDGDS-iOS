@@ -67,7 +67,7 @@ public final class OnboardingRepositoryImpl: OnboardingRepository {
                 throw NetworkError.timeout // TODO: #44 합쳐지면 변경
             }
             
-            return dtoModel.data?.map { $0.toDmomain } ?? []
+            return dtoModel.data?.map { $0.toDomain } ?? []
         } catch {
             throw NetworkError.timeout // TODO: #44 합쳐지면 변경
         }
