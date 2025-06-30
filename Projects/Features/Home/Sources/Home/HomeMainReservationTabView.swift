@@ -24,7 +24,7 @@ struct HomeMainReservationTabView: View {
                 MainReservationView(
                     reservationInfo: info,
                     isShowSubReservationCardList: viewModel.isExistSchduledSubReservations,
-                    countDownTimer: viewModel.state.timerManagers[safe: index] ?? CountDownTimerManager()
+                    countDownTimer: viewModel.state.timerManagers[safe: index]
                 ) {
                     //TODO: 예약 상세 화면 이동
                 }
@@ -40,7 +40,14 @@ struct HomeMainReservationTabView: View {
             }
         }
         .onAppear {
-            viewModel.reduce(.setUpTimers)
+            viewModel.reduce(.setUpAllTimers)
+        }
+        .onDisappear {
+            viewModel.reduce(.removeAllTimers)
+        }
+        .onChange(of: self.viewModel.selectedReservationIndex) { previousIndex, currentIndex in
+            viewModel.reduce(.stopTimer(previousIndex))
+            viewModel.reduce(.startTimer(currentIndex))
         }
     }
     
@@ -62,7 +69,7 @@ struct HomeMainReservationTabView: View {
 private struct MainReservationView: View {
     let reservationInfo: ReservationInfo
     let isShowSubReservationCardList: Bool
-    @Bindable var countDownTimer: CountDownTimerManager
+    var countDownTimer: CountDownTimerManager?
     let action: () -> Void
     
     var dDay: Int {
@@ -84,9 +91,9 @@ private struct MainReservationView: View {
                 
                 ReservationTimerView(
                     category: reservationInfo.category,
-                    hours: countDownTimer.hours,
-                    minutes: countDownTimer.minutes,
-                    seconds: countDownTimer.seconds
+                    hours: countDownTimer?.hours ?? "",
+                    minutes: countDownTimer?.minutes ?? "",
+                    seconds: countDownTimer?.seconds ?? ""
                 )
             }
             

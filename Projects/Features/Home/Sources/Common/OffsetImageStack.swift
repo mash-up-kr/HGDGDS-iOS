@@ -35,8 +35,6 @@ struct OffsetImageStack: View {
                     if let image = state.image {
                         image
                             .resizable()
-                    } else if state.error != nil {
-                        HGColors.opacityBlack10.color
                     } else {
                         HGColors.opacityBlack10.color
                     }

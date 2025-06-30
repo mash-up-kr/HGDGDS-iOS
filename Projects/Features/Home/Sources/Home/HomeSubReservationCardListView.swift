@@ -18,7 +18,7 @@ struct HomeSubReservationCardListView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 4) {
-                Text(statusTab.title)
+                Text(statusTab.listTitle)
                     .setTypo(.subTitle_18_bold)
                     .foregroundStyle(.gray80)
                 
@@ -90,8 +90,7 @@ struct SubReservationCard: View {
                 if let image = state.image {
                     image
                         .resizable()
-                } else if state.error != nil {
-                    HGColors.opacityBlack10.color
+                        .scaledToFit()
                 } else {
                     HGColors.opacityBlack10.color
                 }

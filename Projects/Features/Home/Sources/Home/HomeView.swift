@@ -30,13 +30,12 @@ struct HomeView: View {
                     } completedView: {
                         completedReservationView
                     }
-//                    .padding(.bottom, viewModel.bottomPadding)
                 }
                 .padding(.bottom, UIConstant.tabBarHeight)
                 .fillMaxSize(.top)
             }
         }
-        .animation(.easeOut(duration: 0.4), value: viewModel.selectedStatusTab)
+        .animation(.easeOut(duration: 0.35), value: viewModel.selectedStatusTab)
         .animation(.easeInOut(duration: 0.25), value: viewModel.selectedReservationIndex)
     }
     
@@ -126,43 +125,33 @@ private struct ReservationStatusToggle: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            Button {
-                selectedTab = .scheduled
-            } label: {
-                Text("예정")
-                    .setTypo(.body_14_bold)
-                    .foregroundStyle(.gray90)
-                    .fillMaxSize(.center)
-                    .background {
-                        if selectedTab == .scheduled {
-                            Capsule()
-                                .foregroundStyle(HGColors.gray0White)
-                                .padding([.vertical, .leading], 4)
-                        }
-                    }
-            }
-
-            Button {
-                selectedTab = .completed
-            } label: {
-                Text("완료")
-                    .setTypo(.body_14_bold)
-                    .foregroundStyle(.gray90)
-                    .fillMaxSize(.center)
-                    .background {
-                        if selectedTab == .completed {
-                            Capsule()
-                                .foregroundStyle(HGColors.gray0White)
-                                .padding([.vertical, .trailing], 4)
-                        }
-                    }
-            }
+            tabItem(type: .scheduled)
+            
+            tabItem(type: .completed)
         }
         .animation(.easeInOut, value: selectedTab)
         .background(.opacityBlack10)
         .clipShape(Capsule())
         .frame(width: 154, height: 40)
         .padding(.vertical, 6)
+    }
+    
+    func tabItem(type: ReservationStatusTab) -> some View {
+        Button {
+            selectedTab = type
+        } label: {
+            Text(type.tabTitle)
+                .setTypo(.body_14_bold)
+                .foregroundStyle(.gray90)
+                .fillMaxSize(.center)
+                .background {
+                    if selectedTab == type {
+                        Capsule()
+                            .foregroundStyle(HGColors.gray0White)
+                            .padding([.vertical, .leading], 4)
+                    }
+                }
+        }
     }
 }
 
