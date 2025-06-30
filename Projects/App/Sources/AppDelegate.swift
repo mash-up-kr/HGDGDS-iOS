@@ -26,13 +26,6 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
         return true
     }
-    
-    func application(
-        _ application: UIApplication,
-        didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
-    ) {
-        Messaging.messaging().apnsToken = deviceToken
-    }
 }
 
 // MARK: - Notification
@@ -55,6 +48,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         } catch {
             LoggerUtil.log("Notification authorization failed: \(error.localizedDescription)")
         }
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+        return [.badge, .banner, .list, .sound]
     }
 }
 

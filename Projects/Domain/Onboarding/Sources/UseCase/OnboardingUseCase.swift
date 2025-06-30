@@ -12,6 +12,7 @@ import HGLogger
 public protocol OnboardingUseCase {
     func signUp(deviceId: String, nickname: String, profileType: ProfileType) async throws
     func getProfileList() async throws -> [ProfileEntity]
+    func validateNickname(nickname: String) -> Bool
 }
 
 public final class OnboardingUseCaseImpl: OnboardingUseCase {
@@ -52,5 +53,17 @@ public final class OnboardingUseCaseImpl: OnboardingUseCase {
     
     public func getProfileList() async throws -> [ProfileEntity] {
         try await onboardingRepo.getProfileList()
+    }
+    
+    public func validateNickname(nickname: String) -> Bool {
+        return !nickname.contains { c in
+            c.isEmoji || c.isWhitespace || c.isNewline
+        }
+    }
+}
+
+fileprivate extension Character {
+    var isEmoji: Bool {
+        unicodeScalars.contains { $0.properties.isEmoji }
     }
 }

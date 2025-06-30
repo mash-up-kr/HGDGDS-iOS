@@ -35,8 +35,7 @@ struct EnterNicknameView: View {
                 errorMessage: viewModel.errorMessage,
                 required: true
             )
-            .onSubmit { viewModel.reduce(.didTapNextButton)
-            }
+            .onSubmit { viewModel.reduce(.didTapNextButton) }
             
             Spacer()
             
@@ -48,6 +47,7 @@ struct EnterNicknameView: View {
                 viewModel.reduce(.didTapNextButton)
             }
             .padding(.bottom, 15)
+            .disabled(!viewModel.isEnabledNextButton)
         }
         .padding(.horizontal, 16)
         .padding(.top, 26)

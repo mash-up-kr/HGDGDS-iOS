@@ -74,7 +74,8 @@ final class SelectProfileImageViewModel: Reducerable {
                 profileType: profileType
             )
             
-            // TODO: 돌아가기
+            NotificationCenter.default.post(name: .signUpComplete, object: nil)
+            
         } catch {
             print("회원가입 실패") // TODO: 토스트 처리
         }

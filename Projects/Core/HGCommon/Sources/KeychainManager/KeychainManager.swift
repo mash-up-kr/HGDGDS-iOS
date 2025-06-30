@@ -25,7 +25,7 @@ public actor KeychainManager: KeychainManagerable {
         guard let data = value.data(using: String.Encoding.utf8) else {
             throw KeychainError.invalidData
         }
-        
+
         let query: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
             kSecAttrService: serviceKey,

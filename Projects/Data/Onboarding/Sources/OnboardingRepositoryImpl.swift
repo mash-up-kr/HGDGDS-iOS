@@ -26,12 +26,12 @@ public final class OnboardingRepositoryImpl: OnboardingRepository {
         let parameters: HGParameters = [
             "deviceId": deviceId,
             "nickname": nickname,
-            "profileType": profileType.rawValue
+            "profileImageCode": profileType.rawValue
         ]
         let api = SignUpAPI(parameters: parameters)
         
         do {
-            guard let dtoModel = try await network.send(api),
+            guard let dtoModel = try await network.send(api, intercepter: nil),
                   let data = dtoModel.data else {
                 throw NetworkError.timeout // TODO: #44 합쳐지면 변경
             }
