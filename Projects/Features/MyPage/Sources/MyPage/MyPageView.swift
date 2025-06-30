@@ -9,6 +9,8 @@ import SwiftUI
 import HGDesignSystem
 
 struct MyPageView: View {
+    @Environment(MyPageCoordinator.self) var coordinator
+    
     var body: some View {
         ZStack {
             HGGradient.purpleMain
@@ -34,9 +36,9 @@ struct MyPageView: View {
     
     private var settingButton: some View {
         Button {
-            print("설정화면 이동")
+            coordinator.push(.setting)
         } label: {
-            HGIcons.calendar.image
+            HGIcons.setting.image
                 .resizable()
                 .frame(28)
                 .foregroundStyle(.opacityWhite60)
