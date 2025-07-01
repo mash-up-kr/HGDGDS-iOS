@@ -1,13 +1,13 @@
 //
-//  OnboardingRepository.swift
-//  Onboarding
+//  UserRepository.swift
+//  UserDomain
 //
 //  Created by 김남수 on 25/06/14.
 //
 
 import Foundation
 
-public protocol OnboardingRepository {
+public protocol UserRepository {
     func signUp(
         deviceId: String,
         nickname: String,

@@ -1,17 +1,17 @@
 //
-//  OnboardingRepositoryImpl.swift
-//  Onboarding
+//  UserRepositoryImpl.swift
+//  User
 //
 //  Created by 김남수 on 25/06/14.
 //
 
 import Foundation
 
-import OnboardingDomain
+import UserDomain
 import HGNetwork
 import HGCommon
 
-public final class OnboardingRepositoryImpl: OnboardingRepository {
+public final class UserRepositoryImpl: UserRepository {
         
     private let network: any Networkable
     

@@ -1,6 +1,6 @@
 //
-//  OnboardingUseCaseImpl.swift
-//  OnboardingDomain
+//  UserUseCaseImpl.swift
+//  UserDomain
 //
 //  Created by iOS신상우 on 6/30/25.
 //
@@ -9,22 +9,22 @@ import Foundation
 import HGCommon
 import HGLogger
 
-public protocol OnboardingUseCase {
+public protocol UserUseCase {
     func signUp(deviceId: String, nickname: String, profileType: ProfileType) async throws
     func getProfileList() async throws -> [ProfileEntity]
     func validateNickname(nickname: String) -> Bool
 }
 
-public final class OnboardingUseCaseImpl: OnboardingUseCase {
+public final class UserUseCaseImpl: UserUseCase {
     
-    private let onboardingRepo: OnboardingRepository
+    private let userRepo: UserRepository
     private let keychain: KeychainManagerable
     
     public init(
-        onboardingRepo: OnboardingRepository,
+        userRepo: UserRepository,
         keychain: KeychainManagerable
     ) {
-        self.onboardingRepo = onboardingRepo
+        self.userRepo = userRepo
         self.keychain = keychain
     }
     
@@ -35,7 +35,7 @@ public final class OnboardingUseCaseImpl: OnboardingUseCase {
     ) async throws {
         
         /// 회원가입
-        let response = try await onboardingRepo.signUp(
+        let response = try await userRepo.signUp(
             deviceId: deviceId,
             nickname: nickname,
             profileType: profileType
@@ -47,12 +47,12 @@ public final class OnboardingUseCaseImpl: OnboardingUseCase {
         
         /// FCM 등록
         let fcmToken = try await keychain.readKeychain(key: .fcmToken)
-        try await onboardingRepo.updateFCM(fcmToken: fcmToken)
+        try await userRepo.updateFCM(fcmToken: fcmToken)
         LoggerUtil.log("FCM 등록 성공 FCM Token: \(fcmToken) ")
     }
     
     public func getProfileList() async throws -> [ProfileEntity] {
-        try await onboardingRepo.getProfileList()
+        try await userRepo.getProfileList()
     }
     
     public func validateNickname(nickname: String) -> Bool {

@@ -1,6 +1,6 @@
 //
-//  OnboardingDomain.swift
-//  Onboarding
+//  UserData.swift
+//  User
 //
 //  Created by 김남수 on 25/06/14.
 //
@@ -9,17 +9,16 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project(
-    name: "OnboardingDomain",
+    name: "UserData",
     settings: .defaultSettings,
     targets: [
         .makeDynamicFrameworkTarget(
-            name: "OnboardingDomain",
+            name: "UserData",
             dependencies: [
-                .coreProject(with: .hgCommon),
-                .coreProject(with: .hgLogger)
+                .domainProject(with: .user),
+                .coreProject(with: .hgNetwork)
             ],
             hasResources: false
         )
     ]
 )
-

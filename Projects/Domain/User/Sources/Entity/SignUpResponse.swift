@@ -1,6 +1,6 @@
 //
 //  SignUpResponse.swift
-//  OnboardingDomain
+//  UserDomain
 //
 //  Created by iOS신상우 on 6/30/25.
 //

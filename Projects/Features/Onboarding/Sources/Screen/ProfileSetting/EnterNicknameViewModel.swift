@@ -7,7 +7,7 @@
 import Foundation
 
 import HGCommon
-import OnboardingDomain
+import UserDomain
 
 @Observable
 final class EnterNicknameViewModel: Reducerable {
@@ -21,7 +21,7 @@ final class EnterNicknameViewModel: Reducerable {
     @ObservationIgnored let viewTitle = "콕콕에서 사용할\n닉네임을 입력하세요"
     
     @ObservationIgnored
-    @Dependency var usecase: OnboardingUseCase
+    @Dependency var usecase: UserUseCase
     
     init(coordinator: OnboardingCoordinator?) {
         self.coordinator = coordinator

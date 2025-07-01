@@ -10,7 +10,7 @@ import SwiftUI
 
 import HGCommon
 import HGDesignSystem
-import OnboardingDomain
+import UserDomain
 
 @Observable
 final class SelectProfileImageViewModel: Reducerable {
@@ -22,7 +22,7 @@ final class SelectProfileImageViewModel: Reducerable {
     // MARK: - Constants
     @ObservationIgnored let viewTitle = "콕콕에서 사용할\n프로필 이미지를 선택하세요"
     @ObservationIgnored
-    @Dependency var usecase: OnboardingUseCase
+    @Dependency var usecase: UserUseCase
     
     private let nickname: String
     

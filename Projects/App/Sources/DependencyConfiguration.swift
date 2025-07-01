@@ -46,7 +46,7 @@ enum DependencyConfiguration {
         DIContainer.shared.registerAssembly(
             assembly: [
                 MyPageAssembly(),
-                OnboardingAssembly()
+                UserAssembly()
             ]
         )
     }

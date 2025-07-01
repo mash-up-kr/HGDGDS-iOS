@@ -14,7 +14,7 @@ let project = Project(
         .makeDynamicFrameworkTarget(
             name: "OnboardingFeature",
             dependencies: [
-                .domainProject(with: .onboarding),
+                .domainProject(with: .user),
                 .coreProject(with: .hgCommon),
                 .coreProject(with: .hgLogger),
                 .uiProject(with: .hgDesignSystem)

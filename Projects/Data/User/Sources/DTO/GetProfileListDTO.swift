@@ -1,12 +1,12 @@
 //
 //  GetProfileListDTO.swift
-//  OnboardingData
+//  UserData
 //
 //  Created by iOS신상우 on 6/30/25.
 //
 
 import Foundation
-import OnboardingDomain
+import UserDomain
 
 struct ProfileDTO: Decodable {
     let profileImageCodeName: String
