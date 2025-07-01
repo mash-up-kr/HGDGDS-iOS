@@ -63,7 +63,8 @@ struct SubReservationCard: View {
             
             Spacer().frame(width: 4)
             
-            Text(reservationInfo.participantCount > 1 ? "\(reservationInfo.participantCount)명 참여중!" : "혼자 참여중!")
+            Text(reservationInfo.participantCount > 1
+                 ? "\(reservationInfo.participantCount)명 참여중!" : "혼자 참여중!")
                 .setTypo(.body_14_bold)
                 .foregroundStyle(.gray80)
             
@@ -100,12 +101,14 @@ struct SubReservationCard: View {
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(reservationInfo.title)
-                    .setTypo(.title_20_bold)
+                    .setTypo(.body_16_bold)
                     .padding(.leading, 4)
                 
                 HStack(spacing: 6) {
                     HStack(spacing: 2) {
                         HGIcons.calendar.image
+                            .resizable()
+                            .frame(16)
                             .foregroundStyle(.gray40)
                         
                         Text(reservationInfo.reservationDatetime.formatted(with: .yyyyMMddKorean))
@@ -115,6 +118,8 @@ struct SubReservationCard: View {
                     
                     HStack(spacing: 2) {
                         HGIcons.timer.image
+                            .resizable()
+                            .frame(16)
                             .foregroundStyle(.gray40)
                         
                         Text(reservationInfo.reservationDatetime.formatted(with: .ahhmm))

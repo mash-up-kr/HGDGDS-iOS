@@ -73,6 +73,8 @@ struct MainReservationCard: View {
             HStack(spacing: 6) {
                 HStack(spacing: 2) {
                     HGIcons.calendar.image
+                        .resizable()
+                        .frame(16)
                         .foregroundStyle(.gray40)
                     
                     Text(reservationInfo.reservationDatetime.formatted(with: .yyyyMMddKorean))
@@ -82,6 +84,8 @@ struct MainReservationCard: View {
                 
                 HStack(spacing: 2) {
                     HGIcons.timer.image
+                        .resizable()
+                        .frame(16)
                         .foregroundStyle(.gray40)
                     
                     Text(reservationInfo.reservationDatetime.formatted(with: .ahhKorean))
