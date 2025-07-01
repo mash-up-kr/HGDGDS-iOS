@@ -55,6 +55,7 @@ struct CreateReservationView: View {
                     get: { viewModel.selectedDate ?? .now },
                     set: { viewModel.reduce(.didSelectDate($0)) }
                 ),
+                in: Date.now...,
                 displayedComponents: [.date]
             )
             .datePickerStyle(.wheel)
@@ -69,6 +70,7 @@ struct CreateReservationView: View {
                         get: { viewModel.selectedTime ?? .now },
                         set: { viewModel.reduce(.didSelectTime($0)) }
                     ),
+                    in: Date.now...,
                     displayedComponents: [.hourAndMinute]
                 )
                 .datePickerStyle(.wheel)
@@ -76,6 +78,7 @@ struct CreateReservationView: View {
                 .frame(width: 200)
             }
         }
+        .endEditing()
     }
     
     // MARK: - navigationRightButton
@@ -115,6 +118,7 @@ struct CreateReservationView: View {
             title: "제목",
             text: $viewModel.state.title,
             placeholder: "제목을 입력해주세요",
+            maxCount: 11,
             required: true
         )
     }
