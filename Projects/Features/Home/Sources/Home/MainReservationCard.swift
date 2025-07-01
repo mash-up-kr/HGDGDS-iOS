@@ -36,7 +36,7 @@ struct MainReservationCard: View {
         .cardViewShadow()
     }
     
-    var header: some View {
+    private var header: some View {
         HStack(spacing: 0) {
             OffsetImageStack(
                 imageURLStrings: reservationInfo.images,
@@ -63,7 +63,7 @@ struct MainReservationCard: View {
         .padding(.leading, 4)
     }
     
-    var content: some View {
+    private var content: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text(reservationInfo.title)
                 .setTypo(.title_20_bold)

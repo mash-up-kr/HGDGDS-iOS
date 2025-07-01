@@ -52,7 +52,7 @@ struct SubReservationCard: View {
         .setRadius(28)
     }
     
-    var header: some View {
+    private var header: some View {
         HStack(spacing: 0) {
             OffsetImageStack(
                 imageURLStrings: reservationInfo.images,
@@ -79,13 +79,13 @@ struct SubReservationCard: View {
         }
     }
     
-    var divider: some View {
+    private var divider: some View {
         Rectangle()
             .foregroundStyle(HGColors.gray15)
             .frame(height: 1)
     }
     
-    var content: some View {
+    private var content: some View {
         HStack(spacing: 12) {
             LazyImage(url: URL(string: reservationInfo.images.first ?? "")) { state in
                 if let image = state.image {

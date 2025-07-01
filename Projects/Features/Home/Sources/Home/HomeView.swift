@@ -144,7 +144,7 @@ private struct ReservationStatusToggle: View {
         .padding(.vertical, 6)
     }
     
-    func tabItem(type: ReservationStatusTab) -> some View {
+    private func tabItem(type: ReservationStatusTab) -> some View {
         Button {
             selectedTab = type
         } label: {

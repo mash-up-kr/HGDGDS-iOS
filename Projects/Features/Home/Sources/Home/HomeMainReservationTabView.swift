@@ -56,7 +56,7 @@ struct HomeMainReservationTabView: View {
         }
     }
     
-    var indicator: some View {
+    private var indicator: some View {
         HStack(spacing: 4) {
             ForEach(0..<viewModel.mainReservationInfos.count, id: \.self) { index in
                 Circle()
@@ -109,14 +109,14 @@ private struct MainReservationView: View {
         .padding(.horizontal, 16)
     }
     
-    var headerText: some View {
+    private var headerText: some View {
         Text("가장 가까운 예약까지")
             .setTypo(.title_20_bold)
             .foregroundStyle(.gray0White)
             .shadow(color: reservationInfo.category.darkColor.color, radius: 20)
     }
     
-    var dDayText: some View {
+    private var dDayText: some View {
         Text(dDay > 0 ? "D-\(dDay)" : "D-DAY")
             .setTypo(.heading_24_bold)
             .foregroundStyle(.gray0White)
