@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol KeychainManagerable {
+public protocol KeychainManagerable: Sendable {
     func addKeychain(key: KeychainKey, value: String) async throws
     func updateKeychain(key: KeychainKey, value: String) async throws
     func deleteKeychain(key: KeychainKey) async throws

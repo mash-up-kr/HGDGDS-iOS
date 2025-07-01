@@ -7,10 +7,15 @@
 
 import Alamofire
 import Foundation
+
 import HGCommon
 
-@preconcurrency
 final class HGIntercepter: RequestInterceptor {
+    let keychain: any KeychainManagerable
+    
+    init() {
+        self.keychain = DIContainer.shared.resolve(KeychainManagerable.self)
+    }
     
     func adapt(
         _ urlRequest: URLRequest,
@@ -19,7 +24,6 @@ final class HGIntercepter: RequestInterceptor {
     ) {
         Task {
             do {
-                @Dependency var keychain: KeychainManagerable
                 
                 var newURLRequest = urlRequest
                 let accessToken = try await keychain.readKeychain(key: .accessToken)
