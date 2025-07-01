@@ -9,6 +9,7 @@ import Foundation
 
 import OnboardingDomain
 import HGNetwork
+import HGCommon
 
 public final class OnboardingRepositoryImpl: OnboardingRepository {
         
@@ -33,12 +34,12 @@ public final class OnboardingRepositoryImpl: OnboardingRepository {
         do {
             guard let dtoModel = try await network.send(api, intercepter: nil),
                   let data = dtoModel.data else {
-                throw NetworkError.timeout // TODO: #44 합쳐지면 변경
+                throw HGError.domainError("dto model is nil")
             }
             
             return data.toDomain
         } catch {
-            throw NetworkError.timeout // TODO: #44 합쳐지면 변경
+            throw HGError.networkError(error)
         }
     }
 
@@ -50,12 +51,12 @@ public final class OnboardingRepositoryImpl: OnboardingRepository {
         
         do {
             guard let _ = try await network.send(api) else {
-                throw NetworkError.timeout // TODO: #44 합쳐지면 변경
+                throw HGError.domainError("dto model is nil")
             }
             
             return
         } catch {
-            throw NetworkError.timeout // TODO: #44 합쳐지면 변경
+            throw HGError.networkError(error)
         }
     }
     
@@ -64,12 +65,12 @@ public final class OnboardingRepositoryImpl: OnboardingRepository {
         
         do {
             guard let dtoModel = try await network.send(api, intercepter: nil) else {
-                throw NetworkError.timeout // TODO: #44 합쳐지면 변경
+                throw HGError.domainError("dto model is nil")
             }
             
             return dtoModel.data?.map { $0.toDomain } ?? []
         } catch {
-            throw NetworkError.timeout // TODO: #44 합쳐지면 변경
+            throw HGError.networkError(error)
         }
     }
 }
