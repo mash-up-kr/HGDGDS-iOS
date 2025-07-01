@@ -113,6 +113,9 @@ final class HomeViewModel: Reducerable {
         case .stopTimer(let index):
             state.timerManagers[safe: index]?.stop()
         case .removeAllTimers:
+            for timer in state.timerManagers {
+                timer.stop()
+            }
             state.timerManagers.removeAll()
         }
     }
