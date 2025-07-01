@@ -8,11 +8,11 @@
 import Foundation
 
 public struct ProfileEntity: Identifiable {
-    public var id: String { type?.rawValue ?? "" }
-    public let type: ProfileType?
+    public var id: String { type.rawValue }
+    public let type: ProfileType
     public let imageUrl: String
     
-    public init(type: ProfileType?, imageUrl: String) {
+    public init(type: ProfileType, imageUrl: String) {
         self.type = type
         self.imageUrl = imageUrl
     }

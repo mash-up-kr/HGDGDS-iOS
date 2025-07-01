@@ -13,7 +13,7 @@ import FirebaseCore
 import FirebaseMessaging
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
-    private let keychain: KeychainManager = .init()
+    @Dependency private var keychain: KeychainManagerable
     
     func application(
         _ application: UIApplication,

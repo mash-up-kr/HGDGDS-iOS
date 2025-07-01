@@ -11,6 +11,7 @@ import HGCommon
 
 @preconcurrency
 final class HGIntercepter: RequestInterceptor {
+    
     func adapt(
         _ urlRequest: URLRequest,
         for session: Session,
@@ -18,7 +19,8 @@ final class HGIntercepter: RequestInterceptor {
     ) {
         Task {
             do {
-                let keychain = KeychainManager()
+                @Dependency var keychain: KeychainManagerable
+                
                 var newURLRequest = urlRequest
                 let accessToken = try await keychain.readKeychain(key: .accessToken)
                 newURLRequest.headers.update(name: "Authorization", value: "Bearer \(accessToken)")

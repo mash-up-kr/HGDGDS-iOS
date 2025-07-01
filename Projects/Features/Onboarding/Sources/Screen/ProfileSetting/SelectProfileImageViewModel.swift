@@ -61,8 +61,7 @@ final class SelectProfileImageViewModel: Reducerable {
     
     private func signUp() async {
         do {
-            guard let selectedProfile = state.selectedProfile,
-                  let profileType = selectedProfile.type else {
+            guard let selectedProfile = state.selectedProfile else {
                 return
             }
             
@@ -71,7 +70,7 @@ final class SelectProfileImageViewModel: Reducerable {
             try await usecase.signUp(
                 deviceId: deviceId,
                 nickname: nickname,
-                profileType: profileType
+                profileType: selectedProfile.type
             )
             
             NotificationCenter.default.post(name: .signUpComplete, object: nil)
