@@ -13,11 +13,11 @@ import ReservationDomain
 extension ReservationCategoryType {
     public var image: Image {
         switch self {
-        case .restaurant: Image("categoryRestaurant")
-        case .sports: Image("categorySports")
-        case .performance: Image("categoryConcert")
-        case .activity: Image("categoryActivity")
-        case .etc: Image("categoryEtc")
+        case .restaurant: HGImages.categoryRestaurant.image
+        case .sports: HGImages.categorySports.image
+        case .performance: HGImages.categoryPerformace.image
+        case .activity: HGImages.categoryActivity.image
+        case .etc: HGImages.categoryETC.image
         }
     }
     

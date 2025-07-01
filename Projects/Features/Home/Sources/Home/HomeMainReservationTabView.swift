@@ -61,9 +61,8 @@ struct HomeMainReservationTabView: View {
             ForEach(0..<viewModel.mainReservationInfos.count, id: \.self) { index in
                 Circle()
                     .frame(6)
-                    .foregroundStyle(
-                        index == viewModel.selectedReservationIndex ? HGColors.orange500Main : HGColors.gray20
-                    )
+                    .foregroundStyle(index == viewModel.selectedReservationIndex
+                                     ? HGColors.orange500Main : HGColors.gray20)
             }
         }
         .padding(.top, 12)
@@ -77,9 +76,7 @@ private struct MainReservationView: View {
     var countDownTimer: CountDownTimerManager?
     let action: () -> Void
     
-    var dDay: Int {
-        reservationInfo.reservationDatetime.dDayValue(from: Date())
-    }
+    var dDay: Int { reservationInfo.reservationDatetime.dDayValue() }
 
     var body: some View {
         VStack(spacing: 0) {
