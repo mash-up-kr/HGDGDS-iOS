@@ -8,17 +8,31 @@
 import Alamofire
 import Foundation
 
-@preconcurrency
+import HGCommon
+
 final class HGIntercepter: RequestInterceptor {
+    let keychain: any KeychainManagerable
+    
+    init() {
+        self.keychain = DIContainer.shared.resolve(KeychainManagerable.self)
+    }
+    
     func adapt(
         _ urlRequest: URLRequest,
         for session: Session,
         completion: @escaping (Result<URLRequest, any Error>) -> Void
     ) {
-        var newURLRequest = urlRequest
-        let accessToken = "토큰" // TODO: 키체인에서 받던지 싱글톤으로 저장해뒀다가 가져오던지 하기
-        newURLRequest.headers.update(name: "Authorization", value: accessToken)
-        
-        completion(.success(urlRequest))
+        Task {
+            do {
+                
+                var newURLRequest = urlRequest
+                let accessToken = try await keychain.readKeychain(key: .accessToken)
+                newURLRequest.headers.update(name: "Authorization", value: "Bearer \(accessToken)")
+                
+                completion(.success(newURLRequest))
+            } catch {
+                completion(.failure(error))
+            }
+        }
     }
 }

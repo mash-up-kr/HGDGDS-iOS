@@ -90,3 +90,5 @@ Tuist/.build
 
 # environment file
 **/fastlane/.env
+
+**/GoogleService-Info.plist

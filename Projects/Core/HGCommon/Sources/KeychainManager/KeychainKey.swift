@@ -12,5 +12,6 @@ import Foundation
  키체인에 사용할 Key값을 여기에 추가해서 사용해주세요!
  */
 public enum KeychainKey: String {
-    case deviceToken
+    case accessToken
+    case fcmToken
 }

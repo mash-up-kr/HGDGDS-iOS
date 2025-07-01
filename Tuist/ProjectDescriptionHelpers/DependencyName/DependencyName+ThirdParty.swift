@@ -12,7 +12,9 @@ public extension DependencyName {
         case alamofire = "Alamofire"
         case lottie = "Lottie"
         case nukeUI = "NukeUI"
-        case firebase = "Firebase"
+        case firebaseAuth = "FirebaseAuth"
+        case firebaseCore = "FirebaseCore"
+        case firebaseMessaging = "FirebaseMessaging"
         case swinject = "Swinject"
     }
 }

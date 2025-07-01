@@ -8,6 +8,6 @@
 import Foundation
 
 public enum BaseURL: String {
-    case host = "nsios.tistory.com"
+    case host = "hgdgds.duckdns.org"
     case image = "my-app-image-bucket.s3.ap-northeast-2.amazonaws.com"
 }

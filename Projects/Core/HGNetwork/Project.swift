@@ -9,7 +9,8 @@ let project = Project(
         .makeDynamicFrameworkTarget(
             name: "HGNetwork",
             dependencies: [
-                .external(.alamofire)
+                .external(.alamofire),
+                .coreProject(with: .hgCommon)
             ],
             hasResources: false
         )

@@ -12,7 +12,7 @@ import Alamofire
 final class NetworkClient: Networkable {
     private let session: Session
     private let commonHeaders: HTTPHeaders
-    private let interceptor: HGIntercepter = .init()
+    private let interceptor: RequestInterceptor = HGIntercepter()
     private let jsonDecoder: JSONDecoder = .init()
     
     init(
@@ -23,13 +23,23 @@ final class NetworkClient: Networkable {
         self.session = session
     }
     
+    // MARK: - Send
+    func send<T: EndPointable & Sendable>(
+        _ request: T,
+        intercepter: RequestInterceptor?
+    ) async throws(NetworkError) -> T.Response? {
+        let response = try await _send(request, interceptor: intercepter)
+        return try handleResponse(response)
+    }
+    
     func send<T: EndPointable & Sendable>(
         _ request: T
     ) async throws(NetworkError) -> T.Response? {
-        let response = try await _send(request)
+        let response = try await _send(request, interceptor: interceptor)
         return try handleResponse(response)
     }
 
+    // MARK: - Upload
     func upload<T:MultipartRequestable & Sendable>(
         _ request: T
     ) async throws(NetworkError) -> T.Response? {
@@ -57,7 +67,7 @@ private extension NetworkClient {
         }
     }
     
-    func _send<T: EndPointable>(_ request: T) async throws(NetworkError) -> DataResponse<T.Response, AFError> {
+    func _send<T: EndPointable>(_ request: T, interceptor: RequestInterceptor?) async throws(NetworkError) -> DataResponse<T.Response, AFError> {
         guard let url = request.url else {
             throw .invalidURL
         }
