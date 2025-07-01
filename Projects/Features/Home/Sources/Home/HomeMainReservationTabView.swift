@@ -88,16 +88,13 @@ private struct MainReservationView: View {
                 Spacer().frame(maxHeight: 70)
             }
             
-            VStack(spacing: 8) {
-                dDayText
-                
-                ReservationTimerView(
-                    category: reservationInfo.category,
-                    hours: countDownTimer?.hours ?? "",
-                    minutes: countDownTimer?.minutes ?? "",
-                    seconds: countDownTimer?.seconds ?? ""
-                )
-            }
+            ReservationTimerView(
+                category: reservationInfo.category,
+                dDay: dDay,
+                hours: countDownTimer?.hours ?? "",
+                minutes: countDownTimer?.minutes ?? "",
+                seconds: countDownTimer?.seconds ?? ""
+            )
             
             Spacer().frame(minHeight: 33)
             
@@ -115,6 +112,44 @@ private struct MainReservationView: View {
             .foregroundStyle(.gray0White)
             .shadow(color: reservationInfo.category.darkColor.color, radius: 20)
     }
+}
+
+private struct ReservationTimerView: View {
+    let category: ReservationCategoryType
+    var dDay: Int
+    var hours: String
+    var minutes: String
+    var seconds: String
+    
+    var body: some View {
+        VStack(spacing: 8) {
+            dDayText
+            
+            HStack(spacing: 4) {
+                TimerView(
+                    time: hours,
+                    description: "시간",
+                    backgroundColor: category.opacityColor.color
+                )
+                
+                colon
+                
+                TimerView(
+                    time: minutes,
+                    description: "분",
+                    backgroundColor: category.opacityColor.color
+                )
+                
+                colon
+                
+                TimerView(
+                    time: seconds,
+                    description: "초",
+                    backgroundColor: category.opacityColor.color
+                )
+            }
+        }
+    }
     
     private var dDayText: some View {
         Text(dDay > 0 ? "D-\(dDay)" : "D-DAY")
@@ -122,34 +157,11 @@ private struct MainReservationView: View {
             .foregroundStyle(.gray0White)
             .shadow(color: HGColors.opacityBlack60.color, radius: 15, y: 2)
     }
-}
-
-private struct ReservationTimerView: View {
-    let category: ReservationCategoryType
-    var hours: String
-    var minutes: String
-    var seconds: String
     
-    var body: some View {
-        HStack(spacing: 18) {
-            TimerView(
-                time: hours,
-                description: "시간",
-                backgroundColor: category.opacityColor.color
-            )
-            
-            TimerView(
-                time: minutes,
-                description: "분",
-                backgroundColor: category.opacityColor.color
-            )
-            
-            TimerView(
-                time: seconds,
-                description: "초",
-                backgroundColor: category.opacityColor.color
-            )
-        }
+    private var colon: some View {
+        Text(":")
+            .setTypo(.display_32_extraBold)
+            .foregroundStyle(.opacityWhite60)
     }
 }
 
