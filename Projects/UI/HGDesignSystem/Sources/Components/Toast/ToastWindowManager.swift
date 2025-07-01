@@ -41,11 +41,13 @@ final class ToastWindowManager {
         window?.isHidden = false
         window?.rootViewController = hosting
         
-        workItem = DispatchWorkItem { [weak self] in
+        let workItem = DispatchWorkItem { [weak self] in
             self?.dismiss()
         }
+
+        self.workItem = workItem
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: workItem!)
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: workItem)
     }
     
     private func dismiss() {

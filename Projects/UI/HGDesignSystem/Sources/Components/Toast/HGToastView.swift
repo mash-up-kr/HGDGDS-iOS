@@ -7,26 +7,26 @@
 
 import SwiftUI
 
-public struct HGToastView: View {
+struct HGToastView: View {
     
     private let title: String
     private let icon: HGIcons?
     private let totalDuration: TimeInterval
     
-    private var animationDuration: TimeInterval { totalDuration / 10.0 }
+    private var animationDuration: TimeInterval { 0.3 }
     private var presentingDuration: TimeInterval { totalDuration - animationDuration*2 }
     private let screenOutOffsetY: CGFloat = 100
     
     @State private var isVisible: Bool = false
     @State private var offsetY: CGFloat = .zero
     
-    public init(title: String, icon: HGIcons?, totalDuration: TimeInterval) {
+    init(title: String, icon: HGIcons?, totalDuration: TimeInterval) {
         self.title = title
         self.icon = icon
-        self.totalDuration = totalDuration
+        self.totalDuration = max(1.6, totalDuration) // 1.6초 보단 길게
     }
     
-    public var body: some View {
+    var body: some View {
         VStack(spacing: .zero) {
             Spacer()
             if isVisible {
