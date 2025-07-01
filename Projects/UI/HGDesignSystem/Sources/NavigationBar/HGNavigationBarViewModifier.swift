@@ -57,7 +57,6 @@ struct HGNavigationBarViewModifier<S: ShapeStyle, R: View>: ViewModifier {
 }
 
 public extension View {
-    @ViewBuilder
     func applyNavigationBar(
         title: String,
         isHiddenBackground: Bool = false,
@@ -66,16 +65,16 @@ public extension View {
         leftAction: (() -> Void)? = nil,
         @ViewBuilder rightButtonView: () -> some View = { EmptyView() }
     ) -> some View {
-            self.modifier(
-                HGNavigationBarViewModifier(
-                    title: title,
-                    isHiddenBackground: isHiddenBackground,
-                    backgroundColor: backgroundColor,
-                    leftButtonType: type,
-                    leftButtonAction: leftAction,
-                    rightButtonView: rightButtonView
-                )
+        self.modifier(
+            HGNavigationBarViewModifier(
+                title: title,
+                isHiddenBackground: isHiddenBackground,
+                backgroundColor: backgroundColor,
+                leftButtonType: type,
+                leftButtonAction: leftAction,
+                rightButtonView: rightButtonView
             )
+        )
     }
 }
 
