@@ -10,7 +10,7 @@ import SwiftUI
 import HGDesignSystem
 import ReservationDomain
 
-extension ReservationCategoryType {    
+extension ReservationCategoryType {
     public var image: Image {
         switch self {
         case .restaurant: Image("categoryRestaurant")
@@ -21,7 +21,7 @@ extension ReservationCategoryType {
         }
     }
     
-    public  var gradient: LinearGradient {
+    public var gradient: LinearGradient {
         switch self {
         case .restaurant: HGGradient.pinkSub
         case .sports: HGGradient.orangeSub

@@ -15,6 +15,11 @@ import HGDesignSystem
 struct HomeMainReservationTabView: View {
     @Bindable var viewModel: HomeViewModel
     
+    private var mainReservationTabViewHeight: CGFloat {
+        viewModel.isExistScheduledSubReservations ? HomeUIConstans.defaultTabViewHeight
+        : HomeUIConstans.screenHeight - UIConstant.tabBarHeight - HomeUIConstans.headerHeight
+    }
+    
     var body: some View {
         TabView(selection: $viewModel.state.selectedReservationIndex) {
             ForEach(
@@ -28,12 +33,12 @@ struct HomeMainReservationTabView: View {
                 ) {
                     //TODO: 예약 상세 화면 이동
                 }
-                .padding(.bottom, viewModel.bottomPadding)
+                .padding(.bottom, HomeUIConstans.bottomPadding)
                 .tag(index)
             }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-        .frame(height: viewModel.mainReservationTabViewHeight)
+        .frame(height: mainReservationTabViewHeight)
         .overlay(alignment: .bottom) {
             if viewModel.mainReservationInfos.count > 1 {
                 indicator
@@ -115,7 +120,7 @@ private struct MainReservationView: View {
     }
     
     var dDayText: some View {
-        Text(dDay < 0 ? "D\(dDay)" : "D-DAY")
+        Text(dDay > 0 ? "D-\(dDay)" : "D-DAY")
             .setTypo(.heading_24_bold)
             .foregroundStyle(.gray0White)
             .shadow(color: HGColors.opacityBlack60.color, radius: 15, y: 2)

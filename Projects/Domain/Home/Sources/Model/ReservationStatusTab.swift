@@ -10,18 +10,4 @@ import Foundation
 public enum ReservationStatusTab: Equatable {
     case scheduled
     case completed
-    
-    public var tabTitle: String {
-        switch self {
-        case .scheduled: "예정"
-        case .completed: "완료"
-        }
-    }
-    
-    public var listTitle: String {
-        switch self {
-        case .scheduled: "예정된 예약"
-        case .completed: "완료된 예약"
-        }
-    }
 }

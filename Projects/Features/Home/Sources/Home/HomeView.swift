@@ -14,6 +14,12 @@ import HGDesignSystem
 struct HomeView: View {
     @Bindable private var viewModel: HomeViewModel = .init()
     
+    private var backgroundGradientHeight: CGFloat {
+        /// Screen height - TabBar height - Bottom padding - 91(카드뷰 height 절반)
+        let noListGradientHeight = HomeUIConstans.screenHeight - UIConstant.tabBarHeight - HomeUIConstans.bottomPadding - 91
+        return viewModel.isExistScheduledSubReservations ? 573 : noListGradientHeight
+    }
+    
     var body: some View {
         ZStack(alignment: .top) {
             background
@@ -55,12 +61,12 @@ struct HomeView: View {
             }
         } else {
             HomeEmptyReservationView()
-                .frame(height: viewModel.contentHeight)
+                .frame(height: HomeUIConstans.contentHeight)
         }
     }
     
     @ViewBuilder
-    private  var completedReservationView: some View {
+    private var completedReservationView: some View {
         if viewModel.isExistCompleteReservation {
             HomeSubReservationCardListView(
                 statusTab: .completed,
@@ -70,12 +76,12 @@ struct HomeView: View {
             .padding(.horizontal, 16)
         } else {
             NoCompletedReservationView()
-                .frame(height: viewModel.contentHeight)
+                .frame(height: HomeUIConstans.contentHeight)
         }
     }
     
     @ViewBuilder
-    private  var background: some View {
+    private var background: some View {
         ZStack(alignment: .top) {
             if viewModel.selectedStatusTab == .scheduled {
                 VStack(spacing: 0) {
@@ -90,8 +96,8 @@ struct HomeView: View {
     @ViewBuilder
     private var backgroundGradient: some View {
         if viewModel.isExistScheduledMainReservation {
-            viewModel.selectedMainReservationCategory?.gradient
-                .frame(height: viewModel.backgroundGradientHeight)
+            viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.category.gradient
+                .frame(height: backgroundGradientHeight)
         } else {
             HGGradient.orangeSub
                 .frame(height: 564)
@@ -102,10 +108,10 @@ struct HomeView: View {
         TransitionTabSwitcherView(selectedTab: viewModel.selectedStatusTab) {
             Group {
                 if viewModel.isExistScheduledMainReservation {
-                    viewModel.selectedMainReservationCategory?.image
+                    viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.category.image
                         .resizable()
                         .frame(354)
-                        .offset(y: viewModel.screenHeight * 0.15)
+                        .offset(y: HomeUIConstans.screenHeight * 0.15)
                         .transition(.move(edge: .leading).combined(with: .opacity))
                 }
             }
