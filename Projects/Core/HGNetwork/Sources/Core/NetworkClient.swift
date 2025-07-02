@@ -78,7 +78,7 @@ private extension NetworkClient {
                 method: request.method.toAFMethod,
                 parameters: request.parameters,
                 encoding: request.encoding.toAFEndcoding,
-                headers: commonHeaders,
+                headers: request.requestHeaders.toAFHeaders,
                 interceptor: interceptor
             )
             .validate()
@@ -109,7 +109,7 @@ private extension NetworkClient {
                 },
                 to: url,
                 method: request.method.toAFMethod,
-                headers: commonHeaders
+                headers: request.requestHeaders.toAFHeaders
             )
             .serializingDecodable(T.Response.self)
             .response
