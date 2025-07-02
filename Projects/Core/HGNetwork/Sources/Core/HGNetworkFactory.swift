@@ -10,13 +10,15 @@ import Foundation
 import Alamofire
 
 public enum HGNetworkFactory {
-    public static func makeNetworkClient(
-        commonHeaders: HTTPHeaders = [:],
-        session: Session = .default
-    ) -> Networkable {
-        return NetworkClient(
-            commonHeaders: commonHeaders,
-            session: session
-        )
+    public static func makeNetworkClient(session: Session? = nil) -> Networkable {
+        if let session {
+            return NetworkClient(session: session)
+        } else {
+            let session = Session(
+                configuration: URLSessionConfiguration.af.default,
+                eventMonitors: [HGNetworkLogger()]
+            )
+            return NetworkClient(session: session)
+        }
     }
 }
