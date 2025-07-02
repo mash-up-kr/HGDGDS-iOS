@@ -16,7 +16,6 @@ struct HGNavigationBarView<L: View, R: View>: View {
         let iconWidth: CGFloat = 24
         return iconWidth + padding * 2
     }
-    private let navigationBarHeight: CGFloat = 56
     
     init(
         title: String = "",
@@ -41,7 +40,7 @@ struct HGNavigationBarView<L: View, R: View>: View {
                 rightButtonView
             }
         }
-        .frame(height: navigationBarHeight)
+        .frame(height: UIConstant.navigationBarHeight)
         .padding(.horizontal, 16)
     }
 }
