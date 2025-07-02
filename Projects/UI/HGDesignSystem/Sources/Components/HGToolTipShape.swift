@@ -15,7 +15,11 @@ import SwiftUI
 }
 
 public struct HGToolTipShape: Shape, InsettableShape {
-    public init() { }
+    let tipXRatio: CGFloat
+    
+    public init(tipXRatio: CGFloat = 0.75) {
+        self.tipXRatio = tipXRatio
+    }
     
     public func inset(by amount: CGFloat) -> some InsettableShape {
         return self
@@ -25,7 +29,7 @@ public struct HGToolTipShape: Shape, InsettableShape {
         let width: CGFloat = rect.width
         let height: CGFloat = rect.height
         let radius: CGFloat = rect.height / 2.0
-        let tipCenterX: CGFloat = width * 0.75
+        let tipCenterX: CGFloat = width * tipXRatio
         let tipWidth: CGFloat = 7
         let tipHeight: CGFloat = 5
         let curveWidth: CGFloat = 0.9

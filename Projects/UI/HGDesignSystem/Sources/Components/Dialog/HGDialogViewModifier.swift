@@ -11,6 +11,7 @@ struct HGDialogViewModifier: ViewModifier {
     @Binding var isPresented: Bool
     let title: String
     let description: String
+    let image: HGImages?
     let okTitle: String
     let okAction: (() -> Void)?
     let cancelTitle: String?
@@ -26,6 +27,7 @@ struct HGDialogViewModifier: ViewModifier {
                             isPresented: $isPresented,
                             title: title,
                             description: description,
+                            image: image,
                             okTitle: okTitle,
                             okAction: okAction,
                             cancelTitle: cancelTitle,
@@ -42,6 +44,7 @@ public extension View {
         isPresented: Binding<Bool>,
         title: String = "",
         description: String = "",
+        image: HGImages? = nil,
         okTitle: String,
         okAction: (() -> Void)? = nil,
         cancelTitle: String? = nil,
@@ -52,6 +55,7 @@ public extension View {
                 isPresented: isPresented,
                 title: title,
                 description: description,
+                image: image,
                 okTitle: okTitle,
                 okAction: okAction,
                 cancelTitle: cancelTitle,
