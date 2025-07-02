@@ -34,7 +34,3 @@ final class HGIntercepter: RequestInterceptor {
         }
     }
 }
-
-
-
-
