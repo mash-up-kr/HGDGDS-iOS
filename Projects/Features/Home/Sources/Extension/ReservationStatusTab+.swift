@@ -1,5 +1,5 @@
 //
-//  ReservationStatusTab+Extension.swift
+//  ReservationStatusTab+.swift
 //  HomeFeature
 //
 //  Created by 박병호 on 7/1/25.

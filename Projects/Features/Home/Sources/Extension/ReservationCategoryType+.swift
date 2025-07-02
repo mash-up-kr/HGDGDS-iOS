@@ -1,5 +1,5 @@
 //
-//  ReservationCategoryType.swift
+//  ReservationCategoryType+.swift
 //  HomeFeature
 //
 //  Created by 박병호 on 6/28/25.
