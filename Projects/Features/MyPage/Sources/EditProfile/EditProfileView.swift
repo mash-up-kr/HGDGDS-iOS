@@ -15,7 +15,13 @@ struct EditProfileView: View {
     var body: some View {
         VStack(spacing: 0) {
             Spacer().frame(height: 27)
-            ProfileImagePicker(itemList: viewModel.candidateProfiles, selectedItem: $viewModel.state.selectedProfile)
+            ProfileImagePicker(
+                itemList: viewModel.candidateProfiles,
+                selectedItem: .init(
+                    get: { viewModel.selectedProfile },
+                    set: { viewModel.reduce(.updateProfile($0)) }
+                )
+            )
             Spacer().frame(height: 44)
             HGTextField(
                 title: "닉네임",
@@ -39,6 +45,9 @@ struct EditProfileView: View {
         .padding(.horizontal, 16)
         .padding(.bottom, 12)
         .applyNavigationBar(title: "프로필 편집")
+        .onAppear {
+            viewModel.reduce(.onAppear)
+        }
     }
 }
 
