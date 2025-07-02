@@ -24,11 +24,9 @@ final class HGIntercepter: RequestInterceptor {
     ) {
         Task {
             do {
-                
                 var newURLRequest = urlRequest
                 let accessToken = try await keychain.readKeychain(key: .accessToken)
                 newURLRequest.headers.update(name: "Authorization", value: "Bearer \(accessToken)")
-                
                 completion(.success(newURLRequest))
             } catch {
                 completion(.failure(error))

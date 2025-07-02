@@ -32,7 +32,7 @@ public final class UserRepositoryImpl: UserRepository {
         let api = SignUpAPI(parameters: parameters)
         
         do {
-            guard let dtoModel = try await network.send(api, intercepter: nil),
+            guard let dtoModel = try await network.send(api),
                   let data = dtoModel.data else {
                 throw HGError.domainError("dto model is nil")
             }
@@ -64,7 +64,7 @@ public final class UserRepositoryImpl: UserRepository {
         let api = GetProfileListAPI(parameters: nil)
         
         do {
-            guard let dtoModel = try await network.send(api, intercepter: nil) else {
+            guard let dtoModel = try await network.send(api) else {
                 throw HGError.domainError("dto model is nil")
             }
             
