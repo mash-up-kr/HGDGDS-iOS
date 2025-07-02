@@ -1,4 +1,5 @@
 import SwiftUI
+import HGDesignSystem
 
 @main
 struct HGDGDSiOSApp: App {
@@ -6,6 +7,7 @@ struct HGDGDSiOSApp: App {
     
     init() {
         DependencyConfiguration.configure()
+        UIFont.registerAllFont()
     }
     
     var body: some Scene {
