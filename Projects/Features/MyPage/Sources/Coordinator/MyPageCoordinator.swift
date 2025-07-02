@@ -26,7 +26,7 @@ public final class MyPageCoordinator: Coordinatorable {
         switch screen {
         case .main: MyPageView()
         case .setting: SettingView()
-        case .editProfile: Color.red
+        case .editProfile: EditProfileView()
         }
     }
     
