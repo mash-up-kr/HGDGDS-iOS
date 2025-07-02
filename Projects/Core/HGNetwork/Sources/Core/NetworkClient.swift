@@ -11,31 +11,23 @@ import Alamofire
 
 final class NetworkClient: Networkable {
     private let session: Session
-    private let commonHeaders: HTTPHeaders
-    private let interceptor: RequestInterceptor = HGIntercepter()
+    private let interceptor: any RequestInterceptor = HGIntercepter()
     private let jsonDecoder: JSONDecoder = .init()
     
-    init(
-        commonHeaders: HTTPHeaders = [:],
-        session: Session = .default
-    ) {
-        self.commonHeaders = commonHeaders
+    init(session: Session) {
         self.session = session
     }
     
     // MARK: - Send
     func send<T: EndPointable & Sendable>(
-        _ request: T,
-        intercepter: RequestInterceptor?
-    ) async throws(NetworkError) -> T.Response? {
-        let response = try await _send(request, interceptor: intercepter)
-        return try handleResponse(response)
-    }
-    
-    func send<T: EndPointable & Sendable>(
         _ request: T
     ) async throws(NetworkError) -> T.Response? {
-        let response = try await _send(request, interceptor: interceptor)
+        let requestInterceptor: RequestInterceptor? = if request.isNeedAuthorization {
+            interceptor
+        } else {
+            nil
+        }
+        let response = try await _send(request, interceptor: requestInterceptor)
         return try handleResponse(response)
     }
 
@@ -78,7 +70,7 @@ private extension NetworkClient {
                 method: request.method.toAFMethod,
                 parameters: request.parameters,
                 encoding: request.encoding.toAFEndcoding,
-                headers: commonHeaders,
+                headers: request.requestHeaders.toAFHeaders,
                 interceptor: interceptor
             )
             .validate()
@@ -109,7 +101,7 @@ private extension NetworkClient {
                 },
                 to: url,
                 method: request.method.toAFMethod,
-                headers: commonHeaders
+                headers: request.requestHeaders.toAFHeaders
             )
             .serializingDecodable(T.Response.self)
             .response
