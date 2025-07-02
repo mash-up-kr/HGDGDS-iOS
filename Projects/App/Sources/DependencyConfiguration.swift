@@ -7,6 +7,7 @@
 
 import Foundation
 import HGCommon
+import HGNetwork
 
 /**
  ``` swift
@@ -44,14 +45,23 @@ enum DependencyConfiguration {
         registerSharedObjects()
         DIContainer.shared.registerAssembly(
             assembly: [
-                // SampleAssembly()
+                MyPageAssembly(),
+                UserAssembly()
             ]
         )
     }
     
     /// Network, DB, 등 공통사용 객체등록
+    /// - NOTE: scope: .container설정으로 객체사용시 다시 생성되지 않도록 해주세요
     private static func registerSharedObjects() {
+        DIContainer.shared.register((any Networkable).self, scope: .container) { _ in
+            HGNetworkFactory.makeNetworkClient()
+        }
         
+        DIContainer.shared
+            .register(KeychainManagerable.self, scope: .container) { _ in
+                KeychainManager()
+            }
     }
     
     /// preview 및 테스트용 목업객체 등록
@@ -64,3 +74,4 @@ enum DependencyConfiguration {
         )
     }
 }
+

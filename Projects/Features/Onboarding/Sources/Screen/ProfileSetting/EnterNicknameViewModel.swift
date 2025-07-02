@@ -7,7 +7,7 @@
 import Foundation
 
 import HGCommon
-import OnboardingDomain
+import UserDomain
 
 @Observable
 final class EnterNicknameViewModel: Reducerable {
@@ -20,13 +20,21 @@ final class EnterNicknameViewModel: Reducerable {
     @ObservationIgnored let placeholder = "닉네임을 입력해주세요"
     @ObservationIgnored let viewTitle = "콕콕에서 사용할\n닉네임을 입력하세요"
     
+    @ObservationIgnored
+    @Dependency var usecase: UserUseCase
+    
     init(coordinator: OnboardingCoordinator?) {
         self.coordinator = coordinator
     }
     
     struct State {
         var nickname: String = ""
-        var errorMessage: String? = nil
+        var errorMessage: String?
+        
+        var isEnabledNextButton: Bool {
+            errorMessage == nil &&
+            !nickname.isEmpty
+        }
     }
     
     enum Action {
@@ -37,17 +45,18 @@ final class EnterNicknameViewModel: Reducerable {
     func reduce(_ action: Action) {
         switch action {
         case let .editNickname(newNickname):
-            state.errorMessage = nil
+            state.errorMessage = .none
             state.nickname = newNickname
+
         case .didTapNextButton:
             Task {
-                await validateNickname(nickname: self.state.nickname)
-                await coordinator?.push(.selectProfileImage(nickname: self.state.nickname))
+                let isValidNickname = usecase.validateNickname(nickname: state.nickname)
+                if isValidNickname {
+                    await coordinator?.push(.selectProfileImage(nickname: self.state.nickname))
+                } else {
+                    state.errorMessage = "닉네임은 텍스트만 입력 가능합니다"
+                }
             }
         }
-    }
-    
-    private func validateNickname(nickname: String) async {
-        // API Call
     }
 }

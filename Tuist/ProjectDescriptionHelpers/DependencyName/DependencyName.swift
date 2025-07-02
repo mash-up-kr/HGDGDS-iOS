@@ -9,6 +9,7 @@ import Foundation
 
 public enum DependencyName: String {
     case onboarding = "Onboarding"
+    case user = "User"
     case home = "Home"
     case reservation = "Reservation"
     case reservationHistory = "ReservationHistory"

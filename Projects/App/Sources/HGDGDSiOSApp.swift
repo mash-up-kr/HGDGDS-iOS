@@ -1,5 +1,4 @@
 import SwiftUI
-import HGDesignSystem
 
 @main
 struct HGDGDSiOSApp: App {
@@ -11,7 +10,7 @@ struct HGDGDSiOSApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
         }
     }
 }

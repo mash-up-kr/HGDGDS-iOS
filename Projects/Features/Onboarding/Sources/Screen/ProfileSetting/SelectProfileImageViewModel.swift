@@ -10,6 +10,7 @@ import SwiftUI
 
 import HGCommon
 import HGDesignSystem
+import UserDomain
 
 @Observable
 final class SelectProfileImageViewModel: Reducerable {
@@ -20,6 +21,8 @@ final class SelectProfileImageViewModel: Reducerable {
     
     // MARK: - Constants
     @ObservationIgnored let viewTitle = "콕콕에서 사용할\n프로필 이미지를 선택하세요"
+    @ObservationIgnored
+    @Dependency var usecase: UserUseCase
     
     private let nickname: String
     
@@ -32,40 +35,60 @@ final class SelectProfileImageViewModel: Reducerable {
     }
     
     struct State {
-        var selectedImage: ProfileImage?
-        var imageList: [ProfileImage] = [ // 추후 api통해 받아와야함
-            .init(id: "1", image: HGImages.imageTemp.image),
-            .init(id: "2", image: HGImages.kongjuRiceAppIcon.image),
-            .init(id: "3", image: HGImages.profileImageTemp.image),
-            .init(id: "4", image: HGIcons.bell.image),
-            .init(id: "5", image: HGIcons.calendar.image),
-        ]
+        var selectedProfile: ProfileEntity?
+        var profileList: [ProfileEntity] = []
     }
     
     enum Action {
-        case selectImage(ProfileImage)
+        case setup
+        case selectImage(ProfileEntity)
         case didTapNextButton
     }
     
     func reduce(_ action: Action) {
         switch action {
-        case let .selectImage(image):
-            state.selectedImage = image
-        case .didTapNextButton:
-            Task {
-                await signUp()
-                // TODO: 돌아가기
+        case .setup:
+            Task { @MainActor in
+                self.state.profileList = await getProfileImage()
             }
+            
+        case let .selectImage(profile):
+            state.selectedProfile = profile
+        case .didTapNextButton:
+            Task { await signUp() }
         }
     }
     
     private func signUp() async {
-        // API Call
+        do {
+            guard let selectedProfile = state.selectedProfile else {
+                return
+            }
+            
+            let deviceId = await UIDevice.current.identifierForVendor?.uuidString ?? ""
+            
+            try await usecase.signUp(
+                deviceId: deviceId,
+                nickname: nickname,
+                profileType: selectedProfile.type
+            )
+            
+            NotificationCenter.default.post(name: .signUpComplete, object: nil)
+            
+        } catch {
+            print("회원가입 실패") // TODO: 토스트 처리
+        }
+    }
+    
+    private func getProfileImage() async -> [ProfileEntity] {
+        let profileList = try? await usecase.getProfileList()
+        return profileList ?? []
     }
 }
 
-// 임시 타입입니다.
-struct ProfileImage: ProfileImagePickable, Equatable {
-    var id: String
-    var image: Image
+/// Profile Picker 사용을 위해 채택
+extension ProfileEntity: @retroactive ProfileImagePickable, @retroactive Equatable {
+    public static func == (lhs: ProfileEntity, rhs: ProfileEntity) -> Bool {
+        lhs.id == rhs.id
+    }
 }

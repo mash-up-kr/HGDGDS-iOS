@@ -25,6 +25,8 @@ public final class MyPageCoordinator: Coordinatorable {
     public func view(_ screen: Screen) -> some View {
         switch screen {
         case .main: MyPageView()
+        case .setting: SettingView()
+        case .editProfile: Color.red
         }
     }
     

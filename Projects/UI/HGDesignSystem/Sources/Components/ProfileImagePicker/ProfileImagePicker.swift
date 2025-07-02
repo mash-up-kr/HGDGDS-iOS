@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import NukeUI
+import Nuke
 
 public protocol ProfileImagePickable: Identifiable {
     var id: String { get }
-    var image: Image { get }
+    var imageUrl: String { get }
 }
 
 public struct ProfileImagePicker<Item: ProfileImagePickable & Equatable>: View {
@@ -26,12 +28,13 @@ public struct ProfileImagePicker<Item: ProfileImagePickable & Equatable>: View {
     
     public var body: some View {
         VStack(spacing: .zero) {
-            Group {
-                if let item = selectedItem {
-                    item.image
+            LazyImage(url: .init(string: selectedItem?.imageUrl ?? "")) { state in
+                if let image = state.image {
+                    image
                         .resizable()
+                        .scaledToFit()
                 } else {
-                    HGColors.gray10.color
+                    HGColors.opacityBlack10.color
                 }
             }
             .frame(180)
@@ -43,18 +46,25 @@ public struct ProfileImagePicker<Item: ProfileImagePickable & Equatable>: View {
                         Button {
                             withAnimation(.spring(duration: 0.35)) { selectedItem = item }
                         } label: {
-                            item.image
-                                .resizable()
-                                .frame(58)
-                                .setRadius(58/2 - 3)
-                                .padding(4)
-                                .if(item.id == selectedItem?.id) {
-                                    $0.strokeBorder(
-                                        HGColors.orange500Main.color,
-                                        radius: 66/2 - 3,
-                                        linewidth: 2
-                                    )
+                            LazyImage(url: .init(string: item.imageUrl)) { state in
+                                if let image = state.image {
+                                    image.resizable()
+                                        .scaledToFit()
+                                } else {
+                                    HGColors.opacityBlack10.color
                                 }
+                            }
+                            .frame(58)
+                            .scaledToFit()
+                            .setRadius(58/2 - 3)
+                            .padding(4)
+                            .if(item.id == selectedItem?.id) {
+                                $0.strokeBorder(
+                                    HGColors.orange500Main.color,
+                                    radius: 66/2 - 3,
+                                    linewidth: 2
+                                )
+                            }
                         }
                     }
                 }

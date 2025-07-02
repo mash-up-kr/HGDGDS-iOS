@@ -33,12 +33,12 @@ struct SelectProfileImageView: View {
                 .padding(.top, 26)
             
             ProfileImagePicker(
-                itemList: viewModel.imageList,
+                itemList: viewModel.profileList,
                 selectedItem: .init(
-                    get: { viewModel.selectedImage },
+                    get: { viewModel.selectedProfile },
                     set: {
-                        if let selectImage = $0 {
-                            viewModel.reduce(.selectImage(selectImage))
+                        if let selectProfile = $0 {
+                            viewModel.reduce(.selectImage(selectProfile))
                         }
                     }
                 )
@@ -57,10 +57,12 @@ struct SelectProfileImageView: View {
         .padding(.horizontal, 16)
         .applyNavigationBar(title: "")
         .background(.gray0White)
+        .task {
+            viewModel.reduce(.setup)
+        }
     }
 }
 
-#Preview {
-    UIFont.registerAllFont()
+#Preview(traits: .applyFont) {
     return SelectProfileImageView(nickname: "123", coordinator: nil)
 }

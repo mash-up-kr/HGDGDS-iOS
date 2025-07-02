@@ -25,9 +25,16 @@ let project = Project(
                 .featureProject(with: .reservation),
                 .featureProject(with: .reservationHistory),
                 .featureProject(with: .myPage),
+                .domainProject(with: .user),
+                .domainProject(with: .myPage),
+                .dataProject(with: .user),
+                .dataProject(with: .myPage),
                 .coreProject(with: .hgLogger),
                 .coreProject(with: .hgCommon),
-                .uiProject(with: .hgDesignSystem)
+                .coreProject(with: .hgNetwork),
+                .uiProject(with: .hgDesignSystem),
+                .external(.firebaseCore),
+                .external(.firebaseMessaging)
             ],
             settings: .defaultSettings
         ),

@@ -39,7 +39,7 @@ public final class DIContainer {
 
 
 @propertyWrapper
-public class Dependency<T> {
+public struct Dependency<T> {
     public let wrappedValue: T
     
     public init() {
