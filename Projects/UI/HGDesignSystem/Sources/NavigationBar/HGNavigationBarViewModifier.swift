@@ -7,23 +7,31 @@
 
 import SwiftUI
 
-struct HGNavigationBarViewModifier<R: View>: ViewModifier {
+struct HGNavigationBarViewModifier<S: ShapeStyle, R: View>: ViewModifier {
     @Environment(\.dismiss) var dismiss
     let title: String
+    let isHiddenBackground: Bool
+    let backgroundColor: S
     let leftButtonType: HGNavigationBarLeftButtonType
     let leftButtonAction: (() -> Void)?
     @ViewBuilder let rightButtonView: R?
     
     func body(content: Content) -> some View {
-        VStack(spacing: 0) {
-            HGNavigationBarView(
-                title: title,
-                leftButtonView: { leftButton },
-                rightButtonView: { rightButtonView }
-            )
+        ZStack(alignment: .top) {
             content
                 .fillMaxSize()
                 .toolbarVisibility(.hidden, for: .navigationBar)
+                .safeAreaPadding(.top, UIConstant.navigationBarHeight)
+            VStack(spacing: 0) {
+                HGNavigationBarView(
+                    title: title,
+                    leftButtonView: { leftButton },
+                    rightButtonView: { rightButtonView }
+                )
+                .background(isHiddenBackground ? backgroundColor.opacity(0) : backgroundColor.opacity(1))
+                .animation(.easeInOut, value: isHiddenBackground)
+                Spacer()
+            }
         }
     }
     
@@ -51,6 +59,8 @@ struct HGNavigationBarViewModifier<R: View>: ViewModifier {
 public extension View {
     func applyNavigationBar(
         title: String,
+        isHiddenBackground: Bool = false,
+        backgroundColor: some ShapeStyle = .clear,
         leftButtonType type: HGNavigationBarLeftButtonType = .back,
         leftAction: (() -> Void)? = nil,
         @ViewBuilder rightButtonView: () -> some View = { EmptyView() }
@@ -58,6 +68,8 @@ public extension View {
         self.modifier(
             HGNavigationBarViewModifier(
                 title: title,
+                isHiddenBackground: isHiddenBackground,
+                backgroundColor: backgroundColor,
                 leftButtonType: type,
                 leftButtonAction: leftAction,
                 rightButtonView: rightButtonView

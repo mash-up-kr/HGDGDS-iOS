@@ -9,6 +9,7 @@ import SwiftUI
 import HGDesignSystem
 
 struct ReservationResultShareView: View {
+    @Environment(\.colorScheme) var colorScheme
     private let innerPadding: CGFloat = 16
     private let outsidePadding: CGFloat = 16
     private var photoGridSize: CGFloat {
@@ -16,12 +17,27 @@ struct ReservationResultShareView: View {
         let spacing: CGFloat = 8
         return ((UIWindow.current?.screen.bounds.width ?? 100) - (padding + spacing) * 2) / 3
     }
+    @State private var isHiddenNavigationBar = true
     
     var body: some View {
+        contentView
+            .applyNavigationBar(
+                title: "",
+                isHiddenBackground: isHiddenNavigationBar,
+                backgroundColor: .ultraThinMaterial,
+                leftButtonType: .whiteBack
+            )
+            .environment(\.colorScheme, .dark)
+    }
+    
+    private var contentView: some View {
         ScrollView {
             LazyVStack {
                 Spacer().frame(height: 8)
                 reservationTitleSectionView
+                    .onScrollVisibilityChange(threshold: 0.7) { isHiddenNavigationBar in
+                        self.isHiddenNavigationBar = isHiddenNavigationBar
+                    }
                 Spacer().frame(height: 186)
                 profileSectionView(isShared: true)
                 togetherTeamSectionView
@@ -32,10 +48,6 @@ struct ReservationResultShareView: View {
             .padding(.horizontal, outsidePadding)
         }
         .contentMargins(.bottom, 88)
-        .applyNavigationBar(
-            title: "",
-            leftButtonType: .whiteBack
-        )
         .background(HGGradient.purpleSub)
     }
     
