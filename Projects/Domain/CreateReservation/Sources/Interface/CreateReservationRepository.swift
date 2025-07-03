@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol CreateReservationRepository {
-
+    func createReservation(entity: CreateReservationRequest) async throws
 }
