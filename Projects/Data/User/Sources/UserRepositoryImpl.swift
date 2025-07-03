@@ -77,7 +77,7 @@ public final class UserRepositoryImpl: UserRepository {
     public func requestUserInfo() async throws(HGError) -> UserInfo {
         let api = UserInfoAPI()
         do {
-            guard let dtoModel = try await network.send(api) else {
+            guard let dtoModel = try await network.send(api)?.data else {
                 throw HGError.domainError("dto model is nil")
             }
             let domainModel = dtoModel.toDomain
