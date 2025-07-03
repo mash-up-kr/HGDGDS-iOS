@@ -25,7 +25,7 @@ public extension TargetDependency {
     static func dataProject(with dependecyName: DependencyName) -> TargetDependency {
         .project(
             target: "\(dependecyName.rawValue)Data",
-            path: .relativeToRoot(Constants.projectBasePath + "Data/\(dependecyName)")
+            path: .relativeToRoot(Constants.projectBasePath + "Data/\(dependecyName.rawValue)")
         )
     }
     
