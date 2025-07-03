@@ -12,7 +12,11 @@ import Alamofire
 final class NetworkClient: Networkable {
     private let session: Session
     private let interceptor: any RequestInterceptor = HGIntercepter()
-    private let jsonDecoder: JSONDecoder = .init()
+    private let jsonDecoder: JSONDecoder = {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        return decoder
+    }()
     
     init(session: Session) {
         self.session = session
@@ -74,7 +78,7 @@ private extension NetworkClient {
                 interceptor: interceptor
             )
             .validate()
-            .serializingDecodable(T.Response.self)
+            .serializingDecodable(T.Response.self, decoder: jsonDecoder)
             .response
     }
     
@@ -103,12 +107,11 @@ private extension NetworkClient {
                 method: request.method.toAFMethod,
                 headers: request.requestHeaders.toAFHeaders
             )
-            .serializingDecodable(T.Response.self)
+            .serializingDecodable(T.Response.self, decoder: jsonDecoder)
             .response
     }
     
     func mapToNetworkError(_ error: Error) -> NetworkError {
-        
         if let afError = error as? AFError {
             switch afError {
             case .sessionTaskFailed(let underlyingError):
