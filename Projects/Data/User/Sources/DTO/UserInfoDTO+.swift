@@ -14,6 +14,7 @@ extension UserInfoDTO {
             userId: userId,
             nickname: nickname,
             profileType: ProfileType(rawValue: profileImageCode) ?? .purple,
+            profileImageURL: profileImageUrl,
             isReservationAlarmSetting: reservationAlarmSetting,
             isKokAlarmSetting: kokAlarmSetting,
             totalReservations: statistics.totalReservations,

@@ -21,12 +21,14 @@ struct UserAssembly: Assembly {
     func assemble(container: Container) {
         container.register(UserRepository.self) { r in
             let network = r.resolve(Networkable.self)!
-            
             return UserRepositoryImpl(network: network)
-        }
+        }.inObjectScope(.container)
+
+        let repository = container.resolve(UserRepository.self)!
+        UserPrivateDependency.registerUserInfoUseCase(repository: repository)
         
         container.register(UserUseCase.self) { r in
-            let repository = r.resolve(UserRepository.self)!
+            let repository = container.resolve(UserRepository.self)!
             let keychain = r.resolve(KeychainManagerable.self)!
             
             return UserUseCaseImpl(

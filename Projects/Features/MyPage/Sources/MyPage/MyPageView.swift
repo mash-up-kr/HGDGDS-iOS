@@ -33,9 +33,6 @@ struct MyPageView: View {
             .fillMaxSize(.top)
             .overlay(alignment: .topTrailing) { settingButton }
         }
-        .task {
-            await viewModel.requestUserInfo()
-        }
     }
     
     private var settingButton: some View {

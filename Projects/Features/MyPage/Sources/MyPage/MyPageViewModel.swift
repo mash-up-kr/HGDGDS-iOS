@@ -12,12 +12,13 @@ import UserDomain
 
 @Observable
 final class MyPageViewModel {
-    @ObservationIgnored
-    @Dependency var userUseCase: UserUseCase
+    private let userManager: UserManager = .shared
+    
+    init() { }
     
     func requestUserInfo() async {
         do {
-            let userInfo = try await userUseCase.requestUserInfo()
+            let userInfo = try await userManager.fetchUser()
             print(userInfo)
         } catch {
             print(error)

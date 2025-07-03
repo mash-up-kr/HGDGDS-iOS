@@ -54,25 +54,6 @@ public final class UserUseCaseImpl: UserUseCase {
             c.isEmoji || c.isWhitespace || c.isNewline
         }
     }
-    
-    public func requestUserInfo() async throws -> UserInfo {
-        try await userRepo.requestUserInfo()
-    }
-    
-    public func requestUpdateUserInfo(
-        nickname: String?,
-        profileImageCode: String?,
-        isReservationAlarm: Bool?,
-        isKokAlarm: Bool?
-    ) async throws -> Bool {
-        let statusCode = try await userRepo.requestUpdateUserInfo(
-            nickname: nickname,
-            profileImageCode: profileImageCode,
-            isReservationAlarm: isReservationAlarm,
-            isKokAlarm: isKokAlarm
-        )
-        return statusCode == 200
-    }
 }
 
 fileprivate extension Character {
