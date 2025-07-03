@@ -8,12 +8,22 @@
 import SwiftUI
 import HGDesignSystem
 
+import UserDomain
+
 struct SuccessRateView: View {
     let allCount: Int
     let successCount: Int
     let tintColor: HGColors
     let sliderGradient: LinearGradient
     let backgroundColor: HGColors
+    
+    init(allCount: Int, successCount: Int, profileType type: ProfileType) {
+        self.allCount = allCount
+        self.successCount = successCount
+        self.tintColor = type.tagTintColor
+        self.sliderGradient = type.gaugeColor
+        self.backgroundColor = type.tagBackgroundColor
+    }
     
     var successRate: Double {
         guard allCount > 0 else { return 0.0 }
@@ -111,8 +121,6 @@ struct SuccessRateView: View {
     SuccessRateView(
         allCount: 3,
         successCount: 2,
-        tintColor: .purpleMain,
-        sliderGradient: HGGradient.purpleMainWidth,
-        backgroundColor: .purpleLight
+        profileType: .pink
     )
 }

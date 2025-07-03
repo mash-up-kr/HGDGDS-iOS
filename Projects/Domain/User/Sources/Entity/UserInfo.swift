@@ -15,8 +15,8 @@ public struct UserInfo {
     public let isReservationAlarmSetting: Bool
     public let isKokAlarmSetting: Bool
     
-    public let totalReservations: Int
-    public let successReservations: Int
+    public let totalReservationCount: Int
+    public let successReservationCount: Int
     public let successRate: Int
     
     public init(
@@ -36,8 +36,8 @@ public struct UserInfo {
         self.profileImageURL = profileImageURL
         self.isReservationAlarmSetting = isReservationAlarmSetting
         self.isKokAlarmSetting = isKokAlarmSetting
-        self.totalReservations = totalReservations
-        self.successReservations = successReservations
+        self.totalReservationCount = totalReservations
+        self.successReservationCount = successReservations
         self.successRate = successRate
     }
 }
