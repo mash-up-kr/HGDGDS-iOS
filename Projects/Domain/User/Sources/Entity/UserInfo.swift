@@ -10,7 +10,7 @@ import Foundation
 public struct UserInfo {
     public let userId: Int
     public let nickname: String
-    public let profileImageCode: String
+    public let profileType: ProfileType
     public let isReservationAlarmSetting: Bool
     public let isKokAlarmSetting: Bool
     
@@ -21,7 +21,7 @@ public struct UserInfo {
     public init(
         userId: Int,
         nickname: String,
-        profileImageCode: String,
+        profileType: ProfileType,
         isReservationAlarmSetting: Bool,
         isKokAlarmSetting: Bool,
         totalReservations: Int,
@@ -30,7 +30,7 @@ public struct UserInfo {
     ) {
         self.userId = userId
         self.nickname = nickname
-        self.profileImageCode = profileImageCode
+        self.profileType = profileType
         self.isReservationAlarmSetting = isReservationAlarmSetting
         self.isKokAlarmSetting = isKokAlarmSetting
         self.totalReservations = totalReservations

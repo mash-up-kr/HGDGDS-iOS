@@ -15,6 +15,7 @@ let project = Project(
             name: "MyPageFeature",
             dependencies: [
                 .domainProject(with: .myPage),
+                .domainProject(with: .user),
                 .coreProject(with: .hgCommon),
                 .coreProject(with: .hgLogger),
                 .uiProject(with: .hgDesignSystem)

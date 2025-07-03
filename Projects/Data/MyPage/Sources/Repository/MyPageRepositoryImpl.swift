@@ -17,38 +17,4 @@ public final class MyPageRepositoryImpl: MyPageRepository {
         self.network = network
     }
     
-    public func requestUserInfo() async throws(HGError) -> UserInfo {
-        let api = UserInfoAPI()
-        do {
-            guard let dtoModel = try await network.send(api) else {
-                throw HGError.domainError("dto model is nil")
-            }
-            let domainModel = dtoModel.toDomain
-            return domainModel
-        } catch {
-            throw HGError.networkError(error)
-        }
-    }
-    
-    public func requestUpdateUserInfo(
-        nickname: String? = nil,
-        profileImageCode: String? = nil,
-        isReservationAlarm: Bool? = nil,
-        isKokAlarm: Bool? = nil
-    ) async throws -> StatusCode {
-        let api = UserInfoUpdateAPI(
-            nickname: nickname,
-            profileImageCode: profileImageCode,
-            isReservationAlarm: isReservationAlarm,
-            isKokAlarm: isKokAlarm
-        )
-        do {
-            guard let dtoModel = try await network.send(api) else {
-                throw HGError.domainError("dto model is nil")
-            }
-            return 200
-        } catch NetworkError.requestFailed(let statusCode) {
-            return statusCode
-        }
-    }
 }

@@ -8,13 +8,4 @@
 import Foundation
 
 public protocol MyPageRepository {
-    typealias StatusCode = Int
-    
-    func requestUserInfo() async throws -> UserInfo
-    func requestUpdateUserInfo(
-        nickname: String?,
-        profileImageCode: String?,
-        isReservationAlarm: Bool?,
-        isKokAlarm: Bool?
-    ) async throws -> StatusCode
 }

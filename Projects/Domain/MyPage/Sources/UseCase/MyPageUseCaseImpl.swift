@@ -13,23 +13,4 @@ public final class MyPageUseCaseImpl: MyPageUseCase {
     public init(repository: any MyPageRepository) {
         self.repository = repository
     }
-    
-    public func requestUserInfo() async throws -> UserInfo {
-        try await repository.requestUserInfo()
-    }
-    
-    public func requestUpdateUserInfo(
-        nickname: String?,
-        profileImageCode: String?,
-        isReservationAlarm: Bool?,
-        isKokAlarm: Bool?
-    ) async throws -> Bool {
-        let statusCode = try await repository.requestUpdateUserInfo(
-            nickname: nickname,
-            profileImageCode: profileImageCode,
-            isReservationAlarm: isReservationAlarm,
-            isKokAlarm: isKokAlarm
-        )
-        return statusCode == 200
-    }
 }

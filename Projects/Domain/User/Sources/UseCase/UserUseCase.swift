@@ -13,57 +13,28 @@ public protocol UserUseCase {
     func signUp(deviceId: String, nickname: String, profileType: ProfileType) async throws
     func getProfileList() async throws -> [ProfileEntity]
     func validateNickname(nickname: String) -> Bool
+    func requestUserInfo() async throws -> UserInfo
+    func requestUpdateUserInfo(
+        nickname: String?,
+        profileImageCode: String?,
+        isReservationAlarm: Bool?,
+        isKokAlarm: Bool?
+    ) async throws -> Bool
 }
 
-public final class UserUseCaseImpl: UserUseCase {
-    
-    private let userRepo: UserRepository
-    private let keychain: KeychainManagerable
-    
-    public init(
-        userRepo: UserRepository,
-        keychain: KeychainManagerable
-    ) {
-        self.userRepo = userRepo
-        self.keychain = keychain
-    }
-    
-    public func signUp(
-        deviceId: String,
-        nickname: String,
-        profileType: ProfileType
-    ) async throws {
-        
-        /// 회원가입
-        let response = try await userRepo.signUp(
-            deviceId: deviceId,
+public extension UserUseCase {
+    /// 수정이 필요한것만 선택해서 받아서 업데이트합니다
+    func requestUpdateUserInfo(
+        nickname: String? = nil,
+        profileImageCode: String? = nil,
+        isReservationAlarm: Bool? = nil,
+        isKokAlarm: Bool? = nil
+    ) async throws -> Bool {
+        try await self.requestUpdateUserInfo(
             nickname: nickname,
-            profileType: profileType
+            profileImageCode: profileImageCode,
+            isReservationAlarm: isReservationAlarm,
+            isKokAlarm: isKokAlarm
         )
-        LoggerUtil.log("회원가입 성공 UserId: \(response.userId) ")
-        
-        /// JWT 저장
-        try await keychain.addKeychain(key: .accessToken, value: response.accessToken)
-        
-        /// FCM 등록
-        let fcmToken = try await keychain.readKeychain(key: .fcmToken)
-        try await userRepo.updateFCM(fcmToken: fcmToken)
-        LoggerUtil.log("FCM 등록 성공 FCM Token: \(fcmToken) ")
-    }
-    
-    public func getProfileList() async throws -> [ProfileEntity] {
-        try await userRepo.getProfileList()
-    }
-    
-    public func validateNickname(nickname: String) -> Bool {
-        return !nickname.contains { c in
-            c.isEmoji || c.isWhitespace || c.isNewline
-        }
-    }
-}
-
-fileprivate extension Character {
-    var isEmoji: Bool {
-        unicodeScalars.contains { $0.properties.isEmoji }
     }
 }

@@ -10,6 +10,7 @@ import HGDesignSystem
 
 struct MyPageView: View {
     @Environment(MyPageCoordinator.self) var coordinator
+    @State private var viewModel: MyPageViewModel = .init()
     
     var body: some View {
         ZStack {
@@ -31,6 +32,9 @@ struct MyPageView: View {
             .applyTabbarHeight(padding: 38)
             .fillMaxSize(.top)
             .overlay(alignment: .topTrailing) { settingButton }
+        }
+        .task {
+            await viewModel.requestUserInfo()
         }
     }
     

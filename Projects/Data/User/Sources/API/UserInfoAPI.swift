@@ -16,4 +16,5 @@ struct UserInfoAPI: EndPointable {
     var method: HGNetwork.HGHTTPMethod { .get }
     var parameters: HGNetwork.HGParameters?
     var headers: HGNetwork.HGHTTPHeaders?
+    var isNeedAuthorization: Bool { true }
 }

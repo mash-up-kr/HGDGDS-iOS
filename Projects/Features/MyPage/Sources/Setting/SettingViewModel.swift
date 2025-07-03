@@ -7,7 +7,7 @@
 
 import Foundation
 import HGCommon
-import MyPageDomain
+import UserDomain
 import HGLogger
 
 @Observable
@@ -15,7 +15,7 @@ final class SettingViewModel: Reducerable {
     var state: State = .init()
     
     @ObservationIgnored
-    @Dependency var myPageUseCase: any MyPageUseCase
+    @Dependency var userUseCase: any UserUseCase
     
     enum Action {
         case setup
@@ -66,7 +66,7 @@ final class SettingViewModel: Reducerable {
     @MainActor
     private func setupUserInfo() async {
         do {
-            let userInfo = try await myPageUseCase.requestUserInfo()
+            let userInfo = try await userUseCase.requestUserInfo()
             state.nickname = userInfo.nickname
             state.isOnReservationAlarm = userInfo.isReservationAlarmSetting
             state.isOnKokAlarm = userInfo.isKokAlarmSetting
@@ -78,7 +78,7 @@ final class SettingViewModel: Reducerable {
     @MainActor
     private func requestUpdateReserveAlarm(isOn: Bool) async {
         do {
-            let isSuccess = try await myPageUseCase.requestUpdateUserInfo(isReservationAlarm: isOn)
+            let isSuccess = try await userUseCase.requestUpdateUserInfo(isReservationAlarm: isOn)
             LoggerUtil.log(isSuccess)
         } catch {
             LoggerUtil.log(error, level: .error)
@@ -88,7 +88,7 @@ final class SettingViewModel: Reducerable {
     @MainActor
     private func requestUpdateKokAlarm(isOn: Bool) async {
         do {
-            let isSuccess = try await myPageUseCase.requestUpdateUserInfo(isKokAlarm: isOn)
+            let isSuccess = try await userUseCase.requestUpdateUserInfo(isKokAlarm: isOn)
             LoggerUtil.log(isSuccess)
         } catch {
             LoggerUtil.log(error, level: .error)
