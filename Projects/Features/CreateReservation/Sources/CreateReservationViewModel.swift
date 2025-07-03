@@ -22,6 +22,12 @@ final class CreateReservationViewModel: Reducerable {
     let bannerContent = "예약 주최자에 한해 생성 이후에도 수정 가능해요."
     let allCategory = ReservationCategoryType.allCases
     
+    @ObservationIgnored
+    private let event: Debouncer = .init()
+    
+    @ObservationIgnored
+    @Dependency private var createReservationUseCase: CreateReservationUseCase
+    
     struct State {
         var title: String = ""
         var selectedCategory: ReservationCategoryType?
@@ -36,7 +42,13 @@ final class CreateReservationViewModel: Reducerable {
         var showDatePicker: Bool = false
         var showTimePicker: Bool = false
         
-        var isEnabledFinishButton: Bool { true } // TODO: 임시처리
+        var isEnabledFinishButton: Bool {
+            title.isNotEmpty &&
+            selectedDate.isSome &&
+            selectedTime.isSome &&
+            url.isNotEmpty &&
+            selectedCategory.isSome
+        }
     }
     
     enum Action {
@@ -60,9 +72,11 @@ final class CreateReservationViewModel: Reducerable {
         case let .didSelectCategory(category):
             self.state.selectedCategory = category
         case .didTapFinish:
-            // TODO: API Call
-            break
-            
+            Task {
+                await self.event.debounce(delay: 1) {
+                    await self.createReservation()
+                }
+            }
         case .didTapDatePicker:
             state.showDatePicker = true
         case .didTapTimePicker:
@@ -71,6 +85,29 @@ final class CreateReservationViewModel: Reducerable {
             state.selectedDate = date
         case let .didSelectTime(date):
             state.selectedTime = date
+        }
+    }
+    
+    private func createReservation() async {
+        do {
+            let reservationInfo: CreateReservationRequest = .init(
+                title: self.title,
+                cateogry: self.selectedCategory?.rawValue ?? "",
+                date: self.selectedDate ?? .now,
+                time: self.selectedTime ?? .now,
+                linkUrl: self.url,
+                linkTitle: self.linkTitle,
+                description: self.description,
+                images: [] // TODO: presignedUrlList
+            )
+            try await self.createReservationUseCase.createReservation(with: reservationInfo)
+            
+            await MainActor.run {
+                NotificationCenter.default.post(name: .createReservationComplete, object: nil)
+            }
+            
+        } catch {
+            print("실패")
         }
     }
 }

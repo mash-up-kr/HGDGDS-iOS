@@ -8,6 +8,9 @@
 import Foundation
 
 public extension String {
+    var isNotEmpty: Bool {
+        !isEmpty
+    }
     var asInt: Int? { Int(self) }
     var asDouble: Double? { Double(self) }
 }

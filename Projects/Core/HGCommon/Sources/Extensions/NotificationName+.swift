@@ -9,4 +9,5 @@ import Foundation
 
 public extension Notification.Name {
     static let signUpComplete = Notification.Name("signUpComplete")
+    static let createReservationComplete = Notification.Name("createReservationComplete")
 }

@@ -39,6 +39,7 @@ struct CreateReservationView: View {
             .padding(.top, 16)
             .padding(.bottom, 56)
             .background(.gray0White)
+            .endEditing()
         }
         .scrollIndicators(.hidden)
         .applyNavigationBar(
@@ -78,7 +79,6 @@ struct CreateReservationView: View {
                 .frame(width: 200)
             }
         }
-        .endEditing()
     }
     
     // MARK: - navigationRightButton
