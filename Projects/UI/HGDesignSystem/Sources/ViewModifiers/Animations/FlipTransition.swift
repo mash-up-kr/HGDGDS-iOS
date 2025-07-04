@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-public struct FlipTransition: ViewModifier {
+struct FlipTransition: ViewModifier {
     var progress: CGFloat = 0
     var animatableData: CGFloat {
         get { progress }
         set { progress = newValue }
     }
     
-    public func body(content: Content) -> some View {
+    func body(content: Content) -> some View {
         content
             .opacity(abs(progress) < 0.5 ? 1 : 0) // progress < 0.5 의미는 아직 회전이 90도 보다 아래라는 뜻
             .rotation3DEffect(
