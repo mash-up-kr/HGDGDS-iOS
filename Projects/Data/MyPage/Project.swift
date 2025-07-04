@@ -16,6 +16,7 @@ let project = Project(
             name: "MyPageData",
             dependencies: [
                 .domainProject(with: .myPage),
+                .domainProject(with: .user),
                 .coreProject(with: .hgCommon),
                 .coreProject(with: .hgNetwork)
             ],
