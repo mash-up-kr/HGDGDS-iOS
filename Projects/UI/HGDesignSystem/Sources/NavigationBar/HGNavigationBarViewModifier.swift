@@ -35,16 +35,21 @@ struct HGNavigationBarViewModifier<S: ShapeStyle, R: View>: ViewModifier {
         }
     }
     
+    @ViewBuilder
     private var leftButton: some View {
-        Button {
-            if leftButtonAction != nil {
-                leftButtonAction?()
-            } else {
-                dismiss()
+        if leftButtonType == .none {
+            EmptyView()
+        } else {
+            Button {
+                if leftButtonAction != nil {
+                    leftButtonAction?()
+                } else {
+                    dismiss()
+                }
+            } label: {
+                leftButtonImage
+                    .foregroundStyle(.gray90)
             }
-        } label: {
-            leftButtonImage
-                .foregroundStyle(.gray90)
         }
     }
     

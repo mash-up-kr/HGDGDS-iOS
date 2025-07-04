@@ -9,4 +9,5 @@ public enum HGNavigationBarLeftButtonType {
     case back
     case close
     case whiteBack
+    case none
 }
