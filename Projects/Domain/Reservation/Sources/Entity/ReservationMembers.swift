@@ -8,9 +8,9 @@
 import Foundation
 
 public struct ReservationMembers {
-    let members: [ReservationMember]
-    let me: ReservationMember
-    let totalCount: Int
+    public let members: [ReservationMember]
+    public let me: ReservationMember
+    public let totalCount: Int
     
     public init(members: [ReservationMember], me: ReservationMember, totalCount: Int) {
         self.members = members

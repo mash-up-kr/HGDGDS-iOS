@@ -10,9 +10,15 @@ import Foundation
 import HGCommon
 import ReservationDomain
 import HGDesignSystem
+import HGLogger
 
 @Observable
 final class ReservationViewModel: Reducerable {
+    var state: State = .init()
+    
+    @ObservationIgnored
+    @Dependency var reservationUsecase: ReservationUsecase
+    
     enum Action {
         case readyButtonTapped
         case inviteButtonTapped
@@ -81,8 +87,6 @@ final class ReservationViewModel: Reducerable {
         var isShowEditPermissionDialog: Bool = false
     }
     
-    var state: State = .init()
-    
     func reduce(_ action: Action) {
         switch action {
         case .readyButtonTapped:
@@ -105,6 +109,45 @@ final class ReservationViewModel: Reducerable {
             print("showImageViewer \(index)")
         case let .showEditPermissionDialog(show):
             state.isShowEditPermissionDialog = show
+        }
+    }
+    
+    @MainActor
+    func getReservationDetail(reservationId: Int) async {
+        do {
+            let reservation = try await reservationUsecase.reqeustReservationDetail(id: reservationId)
+            state.reservation = reservation
+        } catch {
+            LoggerUtil.log(error, level: .error)
+        }
+    }
+    
+    @MainActor
+    func getReservationMembers(reservationId: Int) async {
+        do {
+            let members = try await reservationUsecase.reqeustReservationMembers(id: reservationId)
+            state.members = members.members
+            state.me = members.me
+        } catch {
+            LoggerUtil.log(error, level: .error)
+        }
+    }
+    
+    @MainActor
+    func updateReadyStatus(reservationId: Int, status: UserReservationStatus) async {
+        do {
+            try await reservationUsecase.updateReadyStatus(id: reservationId, status: status)
+            state.isReady = status == .ready
+        } catch {
+            LoggerUtil.log(error, level: .error)
+        }
+    }
+    
+    func kok(reservationId: Int, userId: Int) async {
+        do {
+            try await reservationUsecase.kok(reservationId: reservationId, userId: userId)
+        } catch {
+            LoggerUtil.log(error, level: .error)
         }
     }
 }

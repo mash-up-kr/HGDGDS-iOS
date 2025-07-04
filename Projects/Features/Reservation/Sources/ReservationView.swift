@@ -38,10 +38,6 @@ struct ReservationView: View {
                 .colorScheme(.dark)
         }
         .dialog(
-//            isPresented: Binding(
-//                get: { viewModel.isShowEditPermissionDialog },
-//                set: { viewModel.reduce(.showEditPermissionDialog($0)) }
-//            ),
             isPresented: $viewModel.state.isShowEditPermissionDialog,
             title: "예약을 만든 주최자만\n편집 가능해요",
             description: "주최자에게 편집을 요청하세요",
@@ -65,7 +61,7 @@ struct ReservationView: View {
                         readyTipMessage
                     }
                     profileSectionView(isReady: viewModel.isReady)
-                    togetherTeamSectionView(isExistTeamMember: true)
+                    togetherTeamSectionView
                     linkSectionView
                     sharedPhotosSectionView
                     descriptionSectionView
@@ -264,7 +260,7 @@ struct ReservationView: View {
             }
     }
     
-    private func togetherTeamSectionView(isExistTeamMember: Bool) -> some View {
+    private var togetherTeamSectionView: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 2) {
                 HGIcons.group.image
