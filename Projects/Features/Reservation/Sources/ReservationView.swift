@@ -8,6 +8,7 @@
 import SwiftUI
 
 import HGCommon
+import ReservationDomain
 import HGDesignSystem
 
 struct ReservationView: View {
@@ -19,8 +20,9 @@ struct ReservationView: View {
         return ((UIWindow.current?.screen.bounds.width ?? 100) - (padding + spacing) * 2) / 3
     }
     @State private var isHiddenNavigationBar = true
-    @State private var isShowKokToast = false
-    @State private var isShowDialog = false
+    
+    @Bindable var viewModel: ReservationViewModel = .init()
+    @State private var countDownTimer: CountDownTimerManager = .init()
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -36,7 +38,11 @@ struct ReservationView: View {
                 .colorScheme(.dark)
         }
         .dialog(
-            isPresented: $isShowDialog,
+//            isPresented: Binding(
+//                get: { viewModel.isShowEditPermissionDialog },
+//                set: { viewModel.reduce(.showEditPermissionDialog($0)) }
+//            ),
+            isPresented: $viewModel.state.isShowEditPermissionDialog,
             title: "예약을 만든 주최자만\n편집 가능해요",
             description: "주최자에게 편집을 요청하세요",
             image: .categorySuccess,
@@ -47,7 +53,7 @@ struct ReservationView: View {
     private var contentView: some View {
         ScrollView {
             LazyVStack(spacing: 0) {
-                TitleView
+                titleView
                     .onScrollVisibilityChange(threshold: 0.7) { isHiddenNavigationBar in
                         self.isHiddenNavigationBar = isHiddenNavigationBar
                     }
@@ -55,8 +61,10 @@ struct ReservationView: View {
                 timerView
                 Spacer().frame(height: 91)
                 LazyVStack(spacing: 8) {
-                    readyTipMessage
-                    profileSectionView(isReady: false)
+                    if !viewModel.isWithin24Hours {
+                        readyTipMessage
+                    }
+                    profileSectionView(isReady: viewModel.isReady)
                     togetherTeamSectionView(isExistTeamMember: true)
                     linkSectionView
                     sharedPhotosSectionView
@@ -70,7 +78,11 @@ struct ReservationView: View {
     
     private var navigationRightButton: some View {
         Button {
-            isShowDialog = true
+            if !viewModel.me.isHost {
+                viewModel.reduce(.showEditPermissionDialog(true))
+            } else {
+                //TODO: 에약 수정 화면 이동
+            }
         } label: {
             HGIcons.edit.image
                 .resizable()
@@ -81,7 +93,7 @@ struct ReservationView: View {
     
     private var background: some View {
         VStack(spacing: 0) {
-            HGGradient.orangeSub.frame(height: 637)
+            viewModel.reservation.category.gradient.frame(height: 637)
             HGColors.gray10.color
         }
         .ignoresSafeArea()
@@ -96,16 +108,16 @@ struct ReservationView: View {
             )
     }
     
-    private var TitleView: some View {
+    private var titleView: some View {
         VStack(spacing: 0) {
             HGTagView(
                 style: .medium,
-                title: "액티비티",
+                title: viewModel.reservation.category.title,
                 textColor: .gray10,
                 backgroundColor: HGColors.opacityWhite10
             )
             Spacer().frame(height: 20)
-            Text("펜타포트 예매")
+            Text(viewModel.reservation.title)
                 .setTypo(.display_32_extraBold)
                 .foregroundStyle(.gray0White)
             HStack(spacing: 2) {
@@ -113,14 +125,14 @@ struct ReservationView: View {
                     .resizable()
                     .frame(16)
                     .foregroundStyle(.opacityWhite30)
-                Text(Date().formatted(with: .yyyyMMddKorean))
+                Text(viewModel.reservation.reservationDatetime.formatted(with: .yyyyMMddKorean))
                     .setTypo(.body_14_bold)
                     .foregroundStyle(.opacityWhite60)
                 HGIcons.timer.image
                     .resizable()
                     .frame(16)
                     .foregroundStyle(.opacityWhite30)
-                Text(Date().formatted(with: .ahhmm))
+                Text(viewModel.reservation.reservationDatetime.formatted(with: .ahhmm))
                     .setTypo(.body_14_bold)
                     .foregroundStyle(.opacityWhite60)
             }
@@ -132,7 +144,7 @@ struct ReservationView: View {
                 
                 Group {
                     Text("같은 예약에 ")
-                    Text("24명").foregroundStyle(.orange700)
+                    Text("\(viewModel.rivalCount)명").foregroundStyle(.orange700)
                     Text(" 도전중")
                 }
                 .setTypo(.caption_12_medium)
@@ -153,7 +165,7 @@ struct ReservationView: View {
             Spacer().frame(height: 8)
             HStack(spacing: 4) {
                 TimerView(
-                    time: "10",
+                    time: countDownTimer.hours,
                     description: "시간",
                     backgroundColor: HGColors.opacityPurple4.color
                 )
@@ -161,7 +173,7 @@ struct ReservationView: View {
                     .setTypo(.display_32_extraBold)
                     .foregroundStyle(.opacityWhite60)
                 TimerView(
-                    time: "42",
+                    time: countDownTimer.minutes,
                     description: "분",
                     backgroundColor: HGColors.opacityPurple4.color
                 )
@@ -169,13 +181,20 @@ struct ReservationView: View {
                     .setTypo(.display_32_extraBold)
                     .foregroundStyle(.opacityWhite60)
                 TimerView(
-                    time: "21",
+                    time: countDownTimer.seconds,
                     description: "초",
                     backgroundColor: HGColors.opacityPurple4.color
                 )
             }
         }
         .colorScheme(.light)
+        .onAppear {
+            countDownTimer.setupTime(endDate: viewModel.reservation.reservationDatetime)
+            countDownTimer.start()
+        }
+        .onDisappear {
+            countDownTimer.stop()
+        }
     }
     
     private var readyTipMessage: some View {
@@ -197,7 +216,7 @@ struct ReservationView: View {
         )
         .overlay {
             RoundedRectangle(cornerRadius: 22)
-                .stroke(HGGradient.orangeMainWidth, lineWidth: 1)
+                .stroke(viewModel.reservation.category.widthGradient, lineWidth: 1)
         }
         .shadow(color: HGColors.purpleDark.color.opacity(0.15), radius: 20, x: 0, y: 2)
         .colorScheme(.light)
@@ -207,12 +226,12 @@ struct ReservationView: View {
         makeSectionCardView(icon: .person, title: "내 프로필") {
             HStack(spacing: 12) {
                 profileImageView()
-                Text("이름이름")
+                Text(viewModel.me.nickname)
                     .setTypo(.body_16_bold)
                     .foregroundStyle(.gray95)
                 Spacer()
                 Button {
-                    
+                    viewModel.reduce(.readyButtonTapped)
                 } label: {
                     Text("준비 완료")
                         .setTypo(.body_14_bold)
@@ -224,9 +243,11 @@ struct ReservationView: View {
                 }
             }
             .overlay(alignment: .topTrailing) {
-                makeReadyTipBubleView
-                    .padding(.trailing, 12)
-                    .offset(y: -8)
+                if !viewModel.isWithin24Hours {
+                    makeReadyTipBubleView
+                        .padding(.trailing, 12)
+                        .offset(y: -8)
+                }
             }
         }
     }
@@ -253,12 +274,12 @@ struct ReservationView: View {
                 Text("함께하는 팀원")
                     .setTypo(.subTitle_18_bold)
                     .foregroundStyle(.gray95)
-                Text("0명")
+                Text("\(viewModel.members.count)명")
                     .setTypo(.subTitle_18_bold)
                     .foregroundStyle(.orange500Main)
                 Spacer()
                 Button {
-                    
+                    viewModel.reduce(.refreshButtonTapped)
                 } label: {
                     HGIcons.retry.image
                         .resizable()
@@ -266,7 +287,7 @@ struct ReservationView: View {
                 }
             }
             
-            if isExistTeamMember {
+            if !viewModel.members.isEmpty {
                 LazyVGrid(
                     columns: [
                         GridItem(.flexible(), spacing: 7),
@@ -274,10 +295,9 @@ struct ReservationView: View {
                     ],
                     spacing: 9
                 ) {
-                    makeTeamMemberView(name: "김프디1234567890", isReady: true)
-                    makeTeamMemberView(name: "김프디", isReady: false)
-                    makeTeamMemberView(name: "김프디", isReady: true)
-                    makeTeamMemberView(name: "김프디", isReady: true)
+                    ForEach(viewModel.members, id: \.userId) { member in
+                        makeTeamMemberView(member: member)
+                    }
                 }
             } else {
                 VStack(spacing: 8) {
@@ -301,7 +321,7 @@ struct ReservationView: View {
                 variant: .subtle,
                 isMaxWidth: true
             ) {
-                
+                viewModel.reduce(.inviteButtonTapped)
             }
         }
         .fillMaxWidth()
@@ -312,7 +332,7 @@ struct ReservationView: View {
         .setRadius(28)
     }
     
-    private func makeTeamMemberView(name: String, isReady: Bool) -> some View {
+    private func makeTeamMemberView(member: ReservationMember) -> some View {
         VStack {
             Spacer()
             ZStack(alignment: .top) {
@@ -327,11 +347,11 @@ struct ReservationView: View {
                 .frame(height: 158)
                 VStack(spacing: 6) {
                     profileImageView()
-                    Text(name)
+                    Text(member.nickname)
                         .setTypo(.body_16_bold)
                         .foregroundStyle(.gray95)
                     Button {
-                        ToastUtils.showToast("친구를 콕 찔러 알림을 보냈어요", icon: .checkInCircle)
+                        viewModel.reduce(.kokButtonTapped(member.userId))
                     } label: {
                         Text("콕 찌르기")
                             .setTypo(.body_14_bold)
@@ -346,9 +366,9 @@ struct ReservationView: View {
                 .padding(.horizontal, 11)
             }
         }
-        .frame(height: isReady ? 175 : 158)
+        .frame(height: member.status == .ready ? 175 : 158)
         .overlay(alignment: .top) {
-            if isReady {
+            if member.status == .ready {
                 makeReadyBubbleView
                     .shadow(
                         color: HGColors.gray100Black.color.opacity(0.07),
@@ -377,14 +397,14 @@ struct ReservationView: View {
     private var linkSectionView: some View {
         makeSectionCardView(icon: .link, title: "링크") {
             Button {
-                
+                viewModel.reduce(.linkButtonTapped)
             } label: {
                 HStack(spacing: 4) {
                     HGIcons.linkURL.image
                         .resizable()
                         .foregroundStyle(.gray70)
                         .frame(24)
-                    Text("링크링크링크링크링크링크링클이클이큰ㅇㄹㅇㄴㄹㄴㅇㅇㄴㄹㄴㅇ")
+                    Text(viewModel.reservation.linkUrl)
                         .lineLimit(1)
                         .setTypo(.body_16_bold)
                         .foregroundStyle(.gray80)
@@ -399,11 +419,15 @@ struct ReservationView: View {
     private var sharedPhotosSectionView: some View {
         makeSectionCardView(icon: .cameraShare, title: "공유된 사진") {
             HStack(spacing: 5) {
-                ForEach(0...1, id: \.self) { _ in
-                    Color.red
-                        .frame(photoGridSize)
-                        .setRadius(16)
-                        .strokeBorder(HGColors.gray20.color, radius: 16, linewidth: 1)
+                ForEach(Array(viewModel.reservation.images.enumerated()), id: \.offset) { index, image in
+                    Button {
+                        viewModel.reduce(.showImageViewer(index))
+                    } label: {
+                        Color.red
+                            .frame(photoGridSize)
+                            .setRadius(16)
+                            .strokeBorder(HGColors.gray20.color, radius: 16, linewidth: 1)
+                    }
                 }
             }
         }
@@ -411,7 +435,7 @@ struct ReservationView: View {
     
     private var descriptionSectionView: some View {
         makeSectionCardView(icon: .writePencilCircle, title: "설명") {
-            Text("설명을 작성합니다설명을 작성합니다설명을 작성합니다설명을작성합니다설명을작성합니다설명을작성합니다")
+            Text(viewModel.reservation.description)
                 .setTypo(.body_16_regular)
                 .foregroundStyle(.gray80)
         }
