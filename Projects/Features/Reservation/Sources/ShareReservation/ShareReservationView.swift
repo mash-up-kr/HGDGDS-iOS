@@ -34,30 +34,45 @@ struct ShareReservationView: View {
                 }
             }
         )
-        .background(HGGradient.purpleSub) // TODO: 임시 컬러 추후 디자이너가 배경 주면 적용
+        .background(
+            viewModel.reservation.category.background.image
+                .resizable()
+                .scaledToFill()
+                .ignoresSafeArea()
+        )
     }
     
     private var cardView: some View {
-        ZStack {
-            switch viewModel.state.cardState {
-            case .front:
-                cardFrontView
-                    .applySwayRepeatAnimation()
-                    .transition(.flip)
-            case .back:
-                cardBackView
-                    .transition(.reverseFlip)
+        VStack {
+            Text("이미지를 탭 해보세요")
+                .setTypo(.body_14_bold)
+                .padding(.vertical, 6)
+                .foregroundStyle(.gray70)
+                .background {
+                    HGToolTipShape(tipXRatio: 0.5)
+                        .fill(HGColors.gray0White.color)
+                }
+                .padding(.bottom, 12)
+            
+            ZStack {
+                switch viewModel.state.cardState {
+                case .front:
+                    cardFrontView
+                        .applySwayRepeatAnimation()
+                        .transition(.flip)
+                case .back:
+                    cardBackView
+                        .transition(.reverseFlip)
+                }
             }
+            .onTapGesture {
+                viewModel.reduce(.toggleCardState)
+            }
+            .sensoryFeedback(
+                .impact(weight: .light),
+                trigger: viewModel.cardState == .back
+            )
         }
-        .animation(.bouncy(duration: 0.5), value: viewModel.cardState)
-        .onTapGesture {
-            viewModel.reduce(.toggleCardState)
-        }
-        .sensoryFeedback(
-            .impact(weight: .light),
-            trigger: viewModel.cardState == .back
-        )
-        
     }
     
     private var cardFrontView: some View {
@@ -93,8 +108,8 @@ struct ShareReservationView: View {
             HGTagView(
                 style: .medium,
                 title: viewModel.reservation.category.title,
-                textColor: .purpleMain, // TODO: 추후 카테고리 맞게 변경
-                backgroundColor: .purpleLight // TODO: 추후 카테고리 맞게 변경
+                textColor: viewModel.reservation.category.tagTextColor,
+                backgroundColor: viewModel.reservation.category.tagBackgroundColor
             )
             .padding(.bottom, 5)
             
@@ -127,7 +142,11 @@ struct ShareReservationView: View {
         .padding(.bottom, 29)
         .fillMaxWidth(.center)
         .frame(height: 402)
-        .background(HGGradient.purpleSub) // TODO: 임시 컬러 추후 디자이너가 배경 주면 적용
+        .background(
+            viewModel.reservation.category.card.image
+                .resizable()
+                .scaledToFill()
+        )
         .setRadius(31)
         .strokeOutterBorder(
             HGGradient.strokeGradient.opacity(0.6),
@@ -152,7 +171,8 @@ struct ShareReservationView: View {
             cardDetailHeader(
                 icon: .camera,
                 title: "공유 사진",
-                content: "\(viewModel.reservation.images.count)장"
+                content: nil,
+                boldContent: "\(viewModel.reservation.images.count)장"
             )
             .padding(.bottom, 10)
             if viewModel.reservation.images.isEmpty {
@@ -229,7 +249,8 @@ struct ShareReservationView: View {
     private func cardDetailHeader(
         icon: HGIcons,
         title: String,
-        content: String?
+        content: String?,
+        boldContent: String? = nil
     ) -> some View {
         HStack(spacing: 2) {
             icon.image
@@ -242,8 +263,17 @@ struct ShareReservationView: View {
             Spacer()
             if let content {
                 Text(content)
+                    .setTypo(.body_14_regular)
+                    .foregroundStyle(.gray95)
+                    .lineLimit(1)
+                    .frame(maxWidth: 150, alignment: .trailing)
+            }
+            
+            if let boldContent {
+                Text(boldContent)
                     .setTypo(.body_14_bold)
                     .foregroundStyle(.gray95)
+                    .frame(alignment: .trailing)
                     .multilineTextAlignment(.trailing)
             }
         }
@@ -258,13 +288,13 @@ struct ShareReservationView: View {
                     .frame(87)
                     .strokeBorder(
                         HGColors.gray20.color,
-                        radius: 14.37,
-                        linewidth: 1.27
-                    ) // TODO: 소수점 문의중
+                        radius: 15,
+                        linewidth: 1
+                    )
             } else {
                 HGColors.opacityBlack10.color
                     .frame(87)
-                    .setRadius(14.37)
+                    .setRadius(15)
             }
         }
     }
