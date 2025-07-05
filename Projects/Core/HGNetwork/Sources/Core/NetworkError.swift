@@ -15,6 +15,7 @@ public enum NetworkError: Error, LocalizedError {
     case decodingFailed(any Error)                      // 디코딩 실패
     case requestFailed(statusCode: Int)                 // 기타 서버 에러
     case underlying(any Error)                          // Alamofire, 시스템 등 기타 에러
+    case none
 
     public var errorDescription: String? {
         switch self {
@@ -32,6 +33,8 @@ public enum NetworkError: Error, LocalizedError {
             return "요청이 실패했습니다. (code: \(code))"
         case .underlying(let error):
             return error.localizedDescription
+        case .none:
+            return nil
         }
     }
 }

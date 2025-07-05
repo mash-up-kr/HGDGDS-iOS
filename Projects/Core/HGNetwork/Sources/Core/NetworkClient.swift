@@ -39,8 +39,16 @@ final class NetworkClient: Networkable {
     func upload<T:MultipartRequestable & Sendable>(
         _ request: T
     ) async throws(NetworkError) -> T.Response? {
-        let response = try await _upload(request)
-        return try handleResponse(response)
+        do {
+            let response = try await _upload(request)
+            return try handleResponse(response)
+        } catch {
+            if case .none = error {
+                return nil
+            } else {
+                throw error
+            }
+        }
     }
 }
 
@@ -104,6 +112,7 @@ private extension NetworkClient {
                 to: url,
                 method: request.method.toAFMethod
             )
+            .validate()
             .serializingDecodable(T.Response.self, decoder: jsonDecoder)
             .response
     }
@@ -140,6 +149,8 @@ private extension NetworkClient {
                 switch reason {
                 case .decodingFailed(let decodeError):
                     return .decodingFailed(decodeError)
+                case .inputDataNilOrZeroLength:
+                    return .none
                 default:
                     return .decodingFailed(afError)
                 }
