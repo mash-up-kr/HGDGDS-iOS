@@ -10,9 +10,6 @@ import HGNetwork
 import HGCommon
 
 public protocol HGImageUploader {
-    typealias PresignedURL = String
-    typealias FilePath = String
-    
     func uploadImage(type: PresignedPathType, imageData: Data?) async throws
 }
 
@@ -25,6 +22,9 @@ public protocol HGImageUploader {
 */
 
 public final class HGImageUploaderImpl: HGImageUploader {
+    typealias PresignedURL = String
+    typealias FilePath = String
+    
     private let network: any Networkable
     
     public init(network: any Networkable) {
