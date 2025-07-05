@@ -11,6 +11,7 @@ import HGDesignSystem
 struct SettingView: View {
     @State private var viewModel: SettingViewModel = .init()
     @Environment(MyPageCoordinator.self) var coordinator
+    @Environment(HGTabViewManager.self) var tabManager
     
     var body: some View {
         VStack(spacing: 24) {
@@ -23,7 +24,10 @@ struct SettingView: View {
         .padding(.horizontal, 16)
         .padding(.top, 26)
         .applyNavigationBar(title: "설정")
-        .onAppear { viewModel.reduce(.setup) }
+        .onAppear {
+            viewModel.reduce(.setup)
+            tabManager.setTabBarHidden(true)
+        }
     }
     
     private var profileView: some View {

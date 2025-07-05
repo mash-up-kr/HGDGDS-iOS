@@ -10,6 +10,7 @@ import HGDesignSystem
 
 struct MyPageView: View {
     @Environment(MyPageCoordinator.self) var coordinator
+    @Environment(HGTabViewManager.self) var tabManager
     @State private var viewModel: MyPageViewModel = .init()
     
     var body: some View {
@@ -32,6 +33,7 @@ struct MyPageView: View {
             .overlay(alignment: .topTrailing) { settingButton }
         }
         .onAppear {
+            tabManager.setTabBarHidden(false)
             viewModel.reduce(.onAppear)
         }
     }

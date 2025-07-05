@@ -11,6 +11,7 @@ struct HGDialogView: View {
     @Binding var isPresented: Bool
     let title: String
     let description: String
+    let image: HGImages?
 
     let okTitle: String
     let okAction: (() -> Void)?
@@ -19,6 +20,13 @@ struct HGDialogView: View {
     
     var body: some View {
         VStack(spacing: 0) {
+            if let image {
+                image.image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 120)
+                Spacer().frame(height: 8)
+            }
             Text(title)
                 .setTypo(.title_20_bold)
                 .foregroundStyle(.gray95)
@@ -28,7 +36,7 @@ struct HGDialogView: View {
                 .setTypo(.body_14_medium)
                 .foregroundStyle(.gray50)
                 .multilineTextAlignment(.center)
-            Spacer().frame(height: 32)
+            Spacer().frame(height: image == nil ? 32 : 24)
             HStack {
                 if let cancelTitle {
                     HGButton(title: cancelTitle, size: .large, variant: .subtle, isMaxWidth: true) {
@@ -58,4 +66,5 @@ struct HGDialogView: View {
     }
     .dialog(isPresented: $isPresent, title: "12", description: "1234", okTitle: "넹")
     .dialog(isPresented: $isPresent, title: "12", description: "1234", okTitle: "넹", cancelTitle: "취소")
+    .dialog(isPresented: $isPresent, title: "12", description: "1234", image: .categorySuccess, okTitle: "넹")
 }
