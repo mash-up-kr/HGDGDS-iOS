@@ -6,14 +6,15 @@
 //
 
 import Foundation
-import MyPageDomain
+import UserDomain
 
 extension UserInfoDTO {
     var toDomain: UserInfo {
         UserInfo(
             userId: userId,
             nickname: nickname,
-            profileImageCode: profileImageCode,
+            profileType: ProfileType(rawValue: profileImageCode) ?? .purple,
+            profileImageURL: profileImageUrl,
             isReservationAlarmSetting: reservationAlarmSetting,
             isKokAlarmSetting: kokAlarmSetting,
             totalReservations: statistics.totalReservations,

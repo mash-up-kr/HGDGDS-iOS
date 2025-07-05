@@ -7,6 +7,7 @@
 
 import Foundation
 import HGCommon
+import UserDomain
 
 @Observable
 final class RootViewModel: Reducerable {
@@ -34,6 +35,7 @@ final class RootViewModel: Reducerable {
         case .onAppear:
             Task {
                 if let _ = try? await keychain.readKeychain(key: .accessToken) {
+                    await UserManager.shared.requestUserInfo()
                     state.routeState = .mainTab
                 } else {
                     state.routeState = .onboarding

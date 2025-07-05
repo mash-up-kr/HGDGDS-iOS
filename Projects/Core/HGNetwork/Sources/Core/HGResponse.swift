@@ -19,5 +19,3 @@ public struct HGErrorResponse: Decodable, Sendable {
     public let code: Int
     public let message: String
 }
-
-

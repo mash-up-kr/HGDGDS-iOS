@@ -11,6 +11,7 @@ struct UserInfoDTO: Decodable {
     let userId: Int
     let nickname: String
     let profileImageCode: String
+    let profileImageUrl: String
     let statistics: Statistics
     let reservationAlarmSetting: Bool
     let kokAlarmSetting: Bool

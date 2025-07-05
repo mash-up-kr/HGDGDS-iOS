@@ -11,21 +11,20 @@ import HGDesignSystem
 struct MyPageView: View {
     @Environment(MyPageCoordinator.self) var coordinator
     @Environment(HGTabViewManager.self) var tabManager
+    @State private var viewModel: MyPageViewModel = .init()
     
     var body: some View {
         ZStack {
-            HGGradient.purpleMain
+            viewModel.profileType.backgroundColor
                 .ignoresSafeArea()
             VStack(spacing: 0) {
                 Spacer().frame(height: 58)
                 nicknameView
                 Spacer()
                 SuccessRateView(
-                    allCount: 3,
-                    successCount: 2,
-                    tintColor: .purpleMain,
-                    sliderGradient: HGGradient.purpleMainWidth,
-                    backgroundColor: .purpleLight
+                    allCount: viewModel.totalReservationCount,
+                    successCount: viewModel.successReservationCount,
+                    profileType: viewModel.profileType
                 )
                 .padding(.horizontal, 16)
             }
@@ -35,6 +34,7 @@ struct MyPageView: View {
         }
         .onAppear {
             tabManager.setTabBarHidden(false)
+            viewModel.reduce(.onAppear)
         }
     }
     
@@ -51,15 +51,14 @@ struct MyPageView: View {
     }
     
     private var nicknameView: some View {
-        Text("날아라병아리")
+        Text(viewModel.nickname)
             .setTypo(.title_20_bold)
             .foregroundStyle(.gray0White)
             .frame(height: 53)
             .padding(.horizontal, 32)
             .background(.white.opacity(0.1))
             .background(.ultraThinMaterial)
-            .strokeBorder(.red, radius: 27, linewidth: 2)
-        // TODO: stroke는 디자인컴포넌트 수정이후에 적용할 예정입니다
+            .strokeBorder(HGColors.opacityWhite10.color, radius: 27, linewidth: 2)
     }
 }
 

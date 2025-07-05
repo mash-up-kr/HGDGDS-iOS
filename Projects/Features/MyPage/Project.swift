@@ -14,7 +14,7 @@ let project = Project(
         .makeDynamicFrameworkTarget(
             name: "MyPageFeature",
             dependencies: [
-                .domainProject(with: .myPage),
+                .domainProject(with: .user),
                 .coreProject(with: .hgCommon),
                 .coreProject(with: .hgLogger),
                 .uiProject(with: .hgDesignSystem)

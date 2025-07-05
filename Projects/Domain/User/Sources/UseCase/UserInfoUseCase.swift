@@ -1,20 +1,18 @@
 //
-//  MyPageRepository.swift
-//  MyPage
+//  UserInfoUseCase.swift
+//  UserDomain
 //
-//  Created by 김남수 on 25/06/14.
+//  Created by Enes on 7/3/25.
 //
 
 import Foundation
 
-public protocol MyPageRepository {
-    typealias StatusCode = Int
-    
+protocol UserInfoUseCase {
     func requestUserInfo() async throws -> UserInfo
     func requestUpdateUserInfo(
         nickname: String?,
         profileImageCode: String?,
         isReservationAlarm: Bool?,
         isKokAlarm: Bool?
-    ) async throws -> StatusCode
+    ) async throws -> Bool
 }
