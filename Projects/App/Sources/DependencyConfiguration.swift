@@ -8,6 +8,7 @@
 import Foundation
 import HGCommon
 import HGNetwork
+import HGImageUploader
 
 /**
  ``` swift
@@ -62,6 +63,11 @@ enum DependencyConfiguration {
             .register(KeychainManagerable.self, scope: .container) { _ in
                 KeychainManager()
             }
+        
+        DIContainer.shared.register((any HGImageUploader).self, scope: .container) { r in
+            let network = r.resolve((any Networkable).self)!
+            return HGImageUploaderImpl(network: network)
+        }
     }
     
     /// preview 및 테스트용 목업객체 등록
