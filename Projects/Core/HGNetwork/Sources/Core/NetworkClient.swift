@@ -90,18 +90,16 @@ private extension NetworkClient {
         return await session
             .upload(
                 multipartFormData: { multipart in
-                    request.files.forEach { file in
-                        multipart.append(
-                            file.data,
-                            withName: file.name,
-                            fileName: file.filename,
-                            mimeType: file.mimeType
-                        )
-                    }
                     request.parameters?.forEach { key, value in
                         let stringValue = String(describing: value)
                         multipart.append(Data(stringValue.utf8), withName: key)
                     }
+                    multipart.append(
+                        request.file.data,
+                        withName: request.file.name,
+                        fileName: request.file.filename,
+                        mimeType: request.file.mimeType
+                    )
                 },
                 to: url,
                 method: request.method.toAFMethod

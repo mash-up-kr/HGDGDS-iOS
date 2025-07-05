@@ -12,7 +12,7 @@ struct ImageUploadAPI: MultipartRequestable {
     typealias Response = HGEmptyResponse
     
     let url: URL?
-    var files: [MultipartFile]
+    var file: MultipartFile
     var parameters: HGParameters? { nil }
     var headers: HGHTTPHeaders? { nil }
     var method: HGHTTPMethod { .put }

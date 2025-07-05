@@ -16,7 +16,7 @@ public protocol MultipartRequestable {
     var method: HGHTTPMethod { get }
     var parameters: HGParameters? { get }
     var encoding: HGParameterEncoding { get }
-    var files: [MultipartFile] { get }
+    var file: MultipartFile { get }
 }
 
 public extension MultipartRequestable {

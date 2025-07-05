@@ -7,12 +7,13 @@
 
 import Foundation
 import HGNetwork
+import HGCommon
 
 public protocol HGImageUploader {
     typealias PresignedURL = String
     typealias FilePath = String
     
-    func uploadImage(type: PresignedPathType, imageData: Data...) async throws
+    func uploadImage(type: PresignedPathType, imageData: Data?) async throws
 }
 
 /**
@@ -30,7 +31,10 @@ public final class HGImageUploaderImpl: HGImageUploader {
         self.network = network
     }
     
-    public func uploadImage(type: PresignedPathType, imageData: Data...) async throws {
+    public func uploadImage(type: PresignedPathType, imageData: Data?) async throws {
+        guard let imageData else {
+            throw HGError.domainError("이미지 데이터가 없습니다.")
+        }
         let (presignedURL, filePath) = try await generatePresignedURL(type: type)
         try await uploadImage(
             mimeType: .jpeg,
@@ -55,19 +59,17 @@ public final class HGImageUploaderImpl: HGImageUploader {
         name: String,
         presignedURL: String,
         filePath: String,
-        imageData: [Data]
+        imageData: Data
     ) async throws {
-        let multipartFiles = imageData.map {
-            MultipartFile(
-                name: name,
-                filename: filePath,
-                mimeType: mimeType,
-                data: $0
-            )
-        }
+        let multipartFiles = MultipartFile(
+            name: name,
+            filename: filePath,
+            mimeType: mimeType,
+            data: imageData
+        )
         
         let url = URL(string: presignedURL)
-        let uploadAPI = ImageUploadAPI(url: url, files: multipartFiles)
+        let uploadAPI = ImageUploadAPI(url: url, file: multipartFiles)
         _ = try await network.upload(uploadAPI)
     }
 }
