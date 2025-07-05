@@ -104,8 +104,7 @@ private extension NetworkClient {
                     }
                 },
                 to: url,
-                method: request.method.toAFMethod,
-                headers: request.requestHeaders.toAFHeaders
+                method: request.method.toAFMethod
             )
             .serializingDecodable(T.Response.self, decoder: jsonDecoder)
             .response
