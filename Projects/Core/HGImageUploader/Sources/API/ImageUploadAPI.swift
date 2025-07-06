@@ -8,12 +8,13 @@
 import Foundation
 import HGNetwork
 
-struct ImageUploadAPI: MultipartRequestable {
+struct ImageUploadAPI: PresignedUploadable {
     typealias Response = HGEmptyResponse
     
     let url: URL?
-    var file: MultipartFile
-    var parameters: HGParameters? { nil }
-    var headers: HGHTTPHeaders? { nil }
+    let data: Data
+    var headers: HGHTTPHeaders? {
+        ["Content-Type" : "application/octet-stream"]
+    }
     var method: HGHTTPMethod { .put }
 }

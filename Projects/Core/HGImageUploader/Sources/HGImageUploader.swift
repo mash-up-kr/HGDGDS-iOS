@@ -23,8 +23,7 @@ public protocol HGImageUploader {
 
 public final class HGImageUploaderImpl: HGImageUploader {
     typealias PresignedURL = String
-    typealias FilePath = String
-    
+
     private let network: any Networkable
     
     public init(network: any Networkable) {
@@ -37,12 +36,10 @@ public final class HGImageUploaderImpl: HGImageUploader {
         }
         let (presignedURL, filePath) = try await generatePresignedURL(type: type)
         try await uploadImage(
-            mimeType: .jpeg,
-            name: type.name,
             presignedURL: presignedURL,
-            filePath: filePath,
             imageData: imageData
         )
+        return filePath
     }
     
     private func generatePresignedURL(type: PresignedPathType) async throws -> (PresignedURL, FilePath) {
@@ -55,21 +52,11 @@ public final class HGImageUploaderImpl: HGImageUploader {
     }
     
     private func uploadImage(
-        mimeType: MimeType,
-        name: String,
         presignedURL: String,
-        filePath: String,
         imageData: Data
     ) async throws {
-        let multipartFiles = MultipartFile(
-            name: name,
-            filename: filePath,
-            mimeType: mimeType,
-            data: imageData
-        )
-        
         let url = URL(string: presignedURL)
-        let uploadAPI = ImageUploadAPI(url: url, file: multipartFiles)
-        _ = try await network.upload(uploadAPI)
+        let uploadAPI = ImageUploadAPI(url: url, data: imageData)
+        _ = try await network.uploadPresignURL(uploadAPI)
     }
 }

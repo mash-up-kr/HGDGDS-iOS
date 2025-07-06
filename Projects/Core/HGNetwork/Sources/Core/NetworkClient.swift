@@ -36,11 +36,11 @@ final class NetworkClient: Networkable {
     }
 
     // MARK: - Upload
-    func upload<T:MultipartRequestable & Sendable>(
+    func uploadPresignURL<T:PresignedUploadable & Sendable>(
         _ request: T
     ) async throws(NetworkError) -> T.Response? {
         do {
-            let response = try await _upload(request)
+            let response = try await _uploadPresignURL(request)
             return try handleResponse(response)
         } catch {
             if case .none = error {
@@ -90,31 +90,21 @@ private extension NetworkClient {
             .response
     }
     
-    func _upload<T: MultipartRequestable>(_ request: T) async throws(NetworkError) -> DataResponse<T.Response, AFError> {
+    func _uploadPresignURL<T: PresignedUploadable>(_ request: T) async throws(NetworkError) -> DataResponse<T.Response, AFError> {
         guard let url = request.url else {
             throw .invalidURL
         }
-        
-        return await session
-            .upload(
-                multipartFormData: { multipart in
-                    request.parameters?.forEach { key, value in
-                        let stringValue = String(describing: value)
-                        multipart.append(Data(stringValue.utf8), withName: key)
-                    }
-                    multipart.append(
-                        request.file.data,
-                        withName: request.file.name,
-                        fileName: request.file.filename,
-                        mimeType: request.file.mimeType
-                    )
-                },
-                to: url,
-                method: request.method.toAFMethod
-            )
-            .validate()
-            .serializingDecodable(T.Response.self, decoder: jsonDecoder)
-            .response
+       
+        return await session.upload(
+            request.data,
+            to: url,
+            method: request.method.toAFMethod,
+            headers: request.headers?.toAFHeaders,
+            interceptor: nil
+        )
+        .validate()
+        .serializingDecodable(T.Response.self, decoder: jsonDecoder)
+        .response
     }
     
     func mapToNetworkError(_ error: Error) -> NetworkError {
