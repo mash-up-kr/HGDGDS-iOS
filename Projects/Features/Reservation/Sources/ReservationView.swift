@@ -24,6 +24,8 @@ struct ReservationView: View {
     @Bindable var viewModel: ReservationViewModel = .init()
     @State private var countDownTimer: CountDownTimerManager = .init()
     
+    var dDay: Int { viewModel.reservation.reservationDatetime.dDayValue() }
+    
     var body: some View {
         ZStack(alignment: .top) {
             background
@@ -60,7 +62,7 @@ struct ReservationView: View {
                     if !viewModel.isWithin24Hours {
                         readyTipMessage
                     }
-                    profileSectionView(isReady: viewModel.isReady)
+                    profileSectionView
                     togetherTeamSectionView
                     linkSectionView
                     sharedPhotosSectionView
@@ -155,7 +157,7 @@ struct ReservationView: View {
     
     private var timerView: some View {
         VStack(spacing: 0) {
-            Text("D-74")
+            Text(dDay > 0 ? "D-\(dDay)" : "D-DAY")
                 .setTypo(.heading_24_bold)
                 .foregroundStyle(.gray0White)
             Spacer().frame(height: 8)
@@ -195,8 +197,9 @@ struct ReservationView: View {
     
     private var readyTipMessage: some View {
         HStack(spacing: 11) {
-            Color.red.frame(40)
-                .clipShape(.circle)
+            HGImages.readyBell.image
+                .resizable()
+                .frame(40)
             Text("에약 1시간 전부터\n준비 버튼을 누를 수 있어요!")
                 .setTypo(.body_14_bold)
                 .foregroundStyle(.gray95)
@@ -218,7 +221,7 @@ struct ReservationView: View {
         .colorScheme(.light)
     }
     
-    private func profileSectionView(isReady: Bool) -> some View {
+    var profileSectionView: some View {
         makeSectionCardView(icon: .person, title: "내 프로필") {
             HStack(spacing: 12) {
                 profileImageView()
@@ -234,8 +237,9 @@ struct ReservationView: View {
                         .foregroundStyle(.white)
                         .padding(.horizontal, 15)
                         .padding(.vertical, 5)
-                        .background(isReady ? .orange500Main : .gray30)
+                        .background(viewModel.isReady ? .orange500Main : .gray30)
                         .clipShape(Capsule())
+                        .disabled(!viewModel.isWithin24Hours)
                 }
             }
             .overlay(alignment: .topTrailing) {
@@ -375,7 +379,7 @@ struct ReservationView: View {
     }
     
     private var makeReadyBubbleView: some View {
-        Text("준비완료!")
+        Text("준비 완료!")
             .setTypo(.caption_12_bold)
             .foregroundStyle(.orange500Main)
             .frame(height: 28)

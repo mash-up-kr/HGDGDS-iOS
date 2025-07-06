@@ -12,15 +12,13 @@ import ReservationDomain
 
 extension ReservationCategoryType {
     var image: Image {
-        // TODO: HomeView merge 후 작업
-        return Image("")
-//        switch self {
-//        case .restaurant: HGImages.categoryRestaurant.image
-//        case .sports: HGImages.categorySports.image
-//        case .performance: HGImages.categoryPerformace.image
-//        case .activity: HGImages.categoryActivity.image
-//        case .etc: HGImages.categoryETC.image
-//        }
+        switch self {
+        case .restaurant: HGImages.categoryRestaurant.image
+        case .sports: HGImages.categorySports.image
+        case .performance: HGImages.categoryPerformace.image
+        case .activity: HGImages.categoryActivity.image
+        case .etc: HGImages.categoryETC.image
+        }
     }
 
     var gradient: LinearGradient {

@@ -15,6 +15,8 @@ import HGDesignSystem
 
 @Observable
 final class HomeViewModel: Reducerable {
+    var state: State = .init()
+    
     enum Action {
         case setUpAllTimers
         case startTimer(Int)
@@ -94,8 +96,6 @@ final class HomeViewModel: Reducerable {
                   ], userStatus: "가자", isHost: true),
         ]
     }
-    
-    var state: State = .init()
     
     func reduce(_ action: Action) {
         switch action {
