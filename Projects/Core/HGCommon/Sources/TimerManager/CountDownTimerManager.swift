@@ -49,7 +49,7 @@ public final class CountDownTimerManager {
     public func updateRemainDate() {
         let remainTime = max(0, remainTime)
         DispatchQueue.main.async { [weak self] in
-            self?.hours = String(format: "%02d", Int(remainTime) / 3600)
+            self?.hours = String(format: "%02d", Int(remainTime) / 3600 % 24)
             self?.minutes = String(format: "%02d", Int(remainTime) % 3600 / 60)
             self?.seconds = String(format: "%02d", Int(remainTime) % 60)
         }
