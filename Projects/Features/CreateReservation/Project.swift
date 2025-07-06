@@ -18,7 +18,8 @@ let project = Project(
                 .domainProject(with: .reservation),
                 .coreProject(with: .hgCommon),
                 .coreProject(with: .hgLogger),
-                .uiProject(with: .hgDesignSystem)
+                .uiProject(with: .hgDesignSystem),
+                .interfaceProject(with: .reservation)
             ],
             hasResources: false
         )

@@ -10,6 +10,7 @@ import SwiftUI
 import HGDesignSystem
 import HGCommon
 import NukeUI
+import ReservationFeatureInterface
 
 struct ShareReservationView: View {
     @Bindable var viewModel: ShareReservationViewModel

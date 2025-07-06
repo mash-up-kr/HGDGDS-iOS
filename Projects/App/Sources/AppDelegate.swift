@@ -77,15 +77,3 @@ private extension AppDelegate {
         Messaging.messaging().delegate = self
     }
 }
-
-// MARK: - DeepLink
-extension AppDelegate {
-    func application(
-        _ app: UIApplication,
-        open url: URL,
-        options: [UIApplication.OpenURLOptionsKey : Any] = [:]
-    ) -> Bool {
-        print("📬 AppDelegate 딥링크 수신: \(url)")
-        return true
-    }
-}

@@ -10,6 +10,7 @@ import Foundation
 import HGCommon
 import HGLogger
 import ReservationDomain
+import ReservationFeatureInterface
 
 @Observable
 final class ShareReservationViewModel: Reducerable {
@@ -18,10 +19,7 @@ final class ShareReservationViewModel: Reducerable {
     var state: State = .init()
     
     /// 예약장을 받는 사람 보내는 사람의 액션을 구분하기 위함
-    @ObservationIgnored
     let shareViewType: ShareViewType
-    
-    @ObservationIgnored
     let reservationId: Int
 
     @ObservationIgnored
@@ -43,7 +41,7 @@ final class ShareReservationViewModel: Reducerable {
     }
     
     struct State {
-        var reservation: ReservationInfo = .mockData
+        var reservation: ReservationDetail = .mockData
         var cardState: CardState = .front
         var isPresentedShareSheet: Bool = false
     }
@@ -84,15 +82,5 @@ final class ShareReservationViewModel: Reducerable {
         }
     }
     
-    enum ShareViewType: String, CaseIterable {
-        case receiver
-        case sender
-        
-        var title: String {
-            switch self {
-            case .receiver: "함께 예약을 시작해볼까요?"
-            case .sender: "예약 일정이 생성되었어요!"
-            }
-        }
-    }
+
 }

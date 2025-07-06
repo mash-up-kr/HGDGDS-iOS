@@ -6,8 +6,15 @@
 //
 
 import SwiftUI
+import HGCommon
 
 @MainActor
 public protocol ReservationViewProviderable {
     var reservationMainView: AnyView { get }
+    
+    func reservationShareView(
+        reservationId: Int,
+        type: ShareViewType,
+        coordinator: (any Coordinatorable)
+    ) -> AnyView
 }

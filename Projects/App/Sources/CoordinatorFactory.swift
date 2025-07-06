@@ -12,6 +12,7 @@ import HomeFeature
 import MyPageFeature
 import ReservationFeature
 import CreateReservationFeature
+import ReservationFeatureInterface
 
 @MainActor
 struct CoordinatorFactory {
@@ -33,5 +34,16 @@ struct CoordinatorFactory {
     
     var createReservationRootView: some View {
         CreateReservationCoordinatorView()
+    }
+    
+    var reservationRootView: some View {
+        ReservationCoordinatorView()
+    }
+    
+    func reservationShareView(reservationId: Int, type: ShareViewType) -> some View {
+        ReservationShareCoordinatorView(
+            reservationId: reservationId,
+            type: type
+        )
     }
 }

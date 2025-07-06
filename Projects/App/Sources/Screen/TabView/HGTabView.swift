@@ -7,11 +7,14 @@
 
 import SwiftUI
 import HGDesignSystem
+import HGCommon
 
 struct HGTabView: View {
     @State private var selectedItem: TabItem = .home
     @State var tabViewManager = HGTabViewManager()
     @State var showCreateView: Bool = false
+    
+    @State var deepLinkItem: DeepLinkType? = nil
     
     private let coordinatorFactory: CoordinatorFactory = CoordinatorFactory()
     
@@ -40,6 +43,16 @@ struct HGTabView: View {
         .ignoresSafeArea()
         .fullScreenCover(isPresented: $showCreateView) {
             coordinatorFactory.createReservationRootView
+        }
+        .fullScreenCover(item: $deepLinkItem, content: { item in
+            switch item {
+            case let .invite(reservationId):
+                coordinatorFactory.reservationShareView(reservationId: reservationId, type: .receiver)
+            }
+        })
+        .onOpenURL { url in
+            let deepLink = try? DeepLinkPhaser.phase(url)
+            self.deepLinkItem = deepLink
         }
     }
     

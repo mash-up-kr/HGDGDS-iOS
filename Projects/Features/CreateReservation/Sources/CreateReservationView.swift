@@ -38,9 +38,14 @@ struct CreateReservationView: View {
             }
             .padding(.top, 16)
             .padding(.bottom, 56)
+            .background(.gray0White)
         }
         .scrollIndicators(.hidden)
-        .applyNavigationBar(title: "예약 일정 생성", leftButtonType: .close, rightButtonView:  {
+        .applyNavigationBar(
+            title: "예약 일정 생성",
+            backgroundColor: HGColors.gray0White.color,
+            leftButtonType: .close,
+            rightButtonView:  {
             barRightButton
         })
         .sheet(isPresented: $viewModel.state.showDatePicker) {

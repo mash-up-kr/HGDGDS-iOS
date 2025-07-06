@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ReservationInfo: Equatable {
+public struct ReservationDetail: Equatable {
     public let reservationId: Int
     public let title: String
     public let category: ReservationCategoryType
@@ -83,7 +83,7 @@ public struct ReservationInfo: Equatable {
 
 
 // TODO: 테스트용 실제 API연결 후 지우기
-public extension ReservationInfo {
+public extension ReservationDetail {
     static let mockData: Self = .init(
         reservationId: 42,
         title: "오아시스를 직접 본다",
