@@ -15,7 +15,7 @@ public enum DeepLinkPhaser {
         let queryItems = components?.queryItems
         
         switch url.host() {
-        case "host":
+        case "invite":
             if let queryItem = queryItems?.first(where: { $0.name == "reservationId" }),
                let reservationId = queryItem.value?.asInt {
                 return .invite(reservationId: reservationId)
