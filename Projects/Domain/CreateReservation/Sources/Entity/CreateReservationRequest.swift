@@ -13,7 +13,6 @@ public struct CreateReservationRequest {
     public let date: Date
     public let time: Date
     public let linkUrl: String
-    public let linkTitle: String
     public let description: String?
     public let images: [String]
     
@@ -35,7 +34,6 @@ public struct CreateReservationRequest {
         date: Date,
         time: Date,
         linkUrl: String,
-        linkTitle: String,
         description: String?,
         images: [String]
     ) {
@@ -44,7 +42,6 @@ public struct CreateReservationRequest {
         self.date = date
         self.time = time
         self.linkUrl = linkUrl
-        self.linkTitle = linkTitle
         self.description = description
         self.images = images
     }

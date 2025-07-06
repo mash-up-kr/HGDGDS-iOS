@@ -12,6 +12,7 @@ import HGDesignSystem
 struct CreateReservationView: View {
     @Bindable private var viewModel: CreateReservationViewModel = .init()
     @FocusState private var focus: Bool
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         ScrollView {
@@ -46,6 +47,9 @@ struct CreateReservationView: View {
             title: "예약 일정 생성",
             backgroundColor: HGColors.gray0White.color,
             leftButtonType: .close,
+            leftAction: {
+                viewModel.reduce(.didTapDismiss)
+            },
             rightButtonView:  {
             barRightButton
         })
@@ -79,6 +83,14 @@ struct CreateReservationView: View {
                 .frame(width: 200)
             }
         }
+        .dialog(
+            isPresented: $viewModel.state.isShowDialog,
+            title: "예약 생성을 중단하시겠어요?",
+            description: "지금 나가시면 생성 중인 예약 일정이 초기화돼요",
+            okTitle: "네",
+            okAction: { dismiss() },
+            cancelTitle: "취소"
+        )
     }
     
     // MARK: - navigationRightButton
@@ -211,33 +223,7 @@ struct CreateReservationView: View {
                 placeholder: "예약이 진행되는 링크를 첨부해주세요",
                 required: true
             )
-
-            Button {
-                viewModel.reduce(.toggleLinkTitleEnabled)
-            } label: {
-                HStack(spacing: .zero) {
-                    let icon = viewModel.isLinkTitleEnabled ? HGIcons.checkOnInBox : HGIcons.checkOffInBox
-                    
-                    icon.image
-                        .resizable()
-                        .frame(20)
-                    Text("맞춤 제목 설정")
-                        .setTypo(.body_14_medium)
-                        .foregroundStyle(.gray80)
-                        .padding(.leading, 4)
-                    
-                    if viewModel.isLinkTitleEnabled {
-                        HGTextField(
-                            text: $viewModel.state.linkTitle,
-                            placeholder: "링크 제목 입력"
-                        )
-                        .padding(.leading, 16)
-                    }
-                }
-            }
-            .frame(height: 30)
         }
-        .animation(.spring, value: viewModel.isLinkTitleEnabled)
     }
     
     // MARK: - PhotoArea

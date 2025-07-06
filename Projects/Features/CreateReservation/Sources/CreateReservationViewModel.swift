@@ -12,6 +12,8 @@ import PhotosUI
 import HGCommon
 import CreateReservationDomain
 import ReservationDomain
+import HGImageUploader
+import HGDesignSystem
 
 @Observable
 final class CreateReservationViewModel: Reducerable {
@@ -28,19 +30,21 @@ final class CreateReservationViewModel: Reducerable {
     @ObservationIgnored
     @Dependency private var createReservationUseCase: CreateReservationUseCase
     
+    @ObservationIgnored
+    @Dependency var imageUploader: any HGImageUploader
+    
     struct State {
         var title: String = ""
         var selectedCategory: ReservationCategoryType?
         var selectedDate: Date?
         var selectedTime: Date?
         var url: String = ""
-        var linkTitle: String = ""
         var description: String = ""
         var selectedPhotos: [PhotosPickerItem] = []
-        var isLinkTitleEnabled: Bool = false
         
         var showDatePicker: Bool = false
         var showTimePicker: Bool = false
+        var isShowDialog: Bool = false
         
         var isEnabledFinishButton: Bool {
             title.isNotEmpty &&
@@ -52,9 +56,9 @@ final class CreateReservationViewModel: Reducerable {
     }
     
     enum Action {
-        case toggleLinkTitleEnabled
         case didTapDeletePhoto(PhotosPickerItem)
         case didTapFinish
+        case didTapDismiss
         case didSelectCategory(ReservationCategoryType)
         
         case didTapTimePicker
@@ -65,8 +69,8 @@ final class CreateReservationViewModel: Reducerable {
     
     func reduce(_ action: Action) {
         switch action {
-        case .toggleLinkTitleEnabled:
-            self.state.isLinkTitleEnabled = !self.state.isLinkTitleEnabled
+        case .didTapDismiss:
+            state.isShowDialog = true
         case let .didTapDeletePhoto(item):
             self.state.selectedPhotos.removeAll { $0 == item }
         case let .didSelectCategory(category):
@@ -90,24 +94,61 @@ final class CreateReservationViewModel: Reducerable {
     
     private func createReservation() async {
         do {
+            /// 이미지 업로드
+            let imgUrls: [String] = try await withThrowingTaskGroup(of: String.self) { group in
+                for photo in state.selectedPhotos {
+                    group.addTask { try await self.uploadImage(photo) }
+                }
+                
+                return try await group.reduce(into: [String]()) { $0.append($1) }
+            }
+            
+            /// 예약 생성
             let reservationInfo: CreateReservationRequest = .init(
                 title: self.title,
                 cateogry: self.selectedCategory?.rawValue ?? "",
                 date: self.selectedDate ?? .now,
                 time: self.selectedTime ?? .now,
                 linkUrl: self.url,
-                linkTitle: self.linkTitle,
                 description: self.description,
-                images: [] // TODO: presignedUrlList
+                images: imgUrls
             )
+            
             try await self.createReservationUseCase.createReservation(with: reservationInfo)
             
             await MainActor.run {
                 NotificationCenter.default.post(name: .createReservationComplete, object: nil)
             }
-            
+        } catch let error as HGError {
+            switch error {
+            case .imageConversionFailed,
+                    .imageLoadFailed,
+                    .imageUploadFailed:
+                await ToastUtils.showToast(error.localizedDescription)
+            default:
+                await ToastUtils.showToast("예약을 생성하지 못했어요")
+            }
         } catch {
-            print("실패")
+            await ToastUtils.showToast("예약을 생성하지 못했어요")
         }
+    }
+    
+    private func uploadImage(_ photo: PhotosPickerItem) async throws -> String {
+        guard let uiImage = await photo.loadImage() else {
+            throw HGError.imageLoadFailed
+        }
+        
+        guard let imageData = uiImage.jpegData(compressionQuality: 0.7) else {
+            throw HGError.imageConversionFailed
+        }
+        
+        guard let filePath = try? await self.imageUploader.uploadImage(
+            type: .info,
+            imageData: imageData
+        ) else {
+            throw HGError.imageUploadFailed
+        }
+        
+        return filePath
     }
 }
