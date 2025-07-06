@@ -10,7 +10,8 @@ import HGNetwork
 import HGCommon
 
 public protocol HGImageUploader {
-    func uploadImage(type: PresignedPathType, imageData: Data?) async throws
+    typealias FilePath = String
+    func uploadImage(type: PresignedPathType, imageData: Data?) async throws -> FilePath
 }
 
 /**
@@ -30,7 +31,7 @@ public final class HGImageUploaderImpl: HGImageUploader {
         self.network = network
     }
     
-    public func uploadImage(type: PresignedPathType, imageData: Data?) async throws {
+    public func uploadImage(type: PresignedPathType, imageData: Data?) async throws -> FilePath {
         guard let imageData else {
             throw HGError.domainError("이미지 데이터가 없습니다.")
         }
