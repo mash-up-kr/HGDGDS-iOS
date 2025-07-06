@@ -13,6 +13,13 @@ public extension Array {
     }
 }
 
+public extension Collection {
+    /// 안전 조회
+    subscript(safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
+    }
+}
+
 public extension Collection where Element: Hashable {
     /// 배열 중복 제거
     var deDuplicated: [Self.Element] {
