@@ -14,6 +14,7 @@ import ReservationFeatureInterface
 
 struct ShareReservationView: View {
     @Bindable var viewModel: ShareReservationViewModel
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         VStack(spacing: .zero) {
@@ -28,7 +29,7 @@ struct ShareReservationView: View {
             leftButtonType: .none,
             rightButtonView:  {
                 Button {
-                    viewModel.reduce(.didTapDismiss)
+                    dismiss()
                 } label: {
                     HGIcons.close.image
                         .foregroundStyle(.gray0White)
@@ -44,9 +45,13 @@ struct ShareReservationView: View {
         .background(
             ActivityView(
                 isPresented: $viewModel.state.isPresentedShareSheet,
-                items: ["kokkok://invite?reservationId=\(viewModel.reservationId)"] // TODO: 임시 URL
+                items: ["kokkok://invite?reservationId=\(viewModel.reservationId)"]
             )
         )
+        .onAppear {
+            viewModel.reduce(.fetchReservationInfo)
+        }
+        .isLoading(viewModel.isLoading)
     }
     
     private var cardView: some View {
@@ -218,6 +223,7 @@ struct ShareReservationView: View {
             } else {
                 Text(viewModel.reservation.description)
                     .setTypo(.body_14_regular)
+                    .fillMaxWidth()
                     .foregroundStyle(.gray80)
                     .multilineTextAlignment(.leading)
                     .lineLimit(4)
@@ -241,6 +247,9 @@ struct ShareReservationView: View {
         Text(viewModel.shareViewType.title).padding(.top, 17)
             .setTypo(.heading_24_bold)
             .foregroundStyle(.gray0White)
+            .onTapGesture {
+                viewModel.reduce(.fetchReservationInfo)
+            }
     }
     
     private var bottomArea: some View {

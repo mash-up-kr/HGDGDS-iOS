@@ -95,6 +95,7 @@ struct CreateReservationView: View {
             okAction: { dismiss() },
             cancelTitle: "취소"
         )
+        .isLoading(viewModel.isLoading)
     }
     
     // MARK: - navigationRightButton

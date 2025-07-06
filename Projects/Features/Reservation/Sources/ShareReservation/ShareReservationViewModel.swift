@@ -21,6 +21,9 @@ final class ShareReservationViewModel: Reducerable {
     /// 예약장을 받는 사람 보내는 사람의 액션을 구분하기 위함
     let shareViewType: ShareViewType
     let reservationId: Int
+    
+    @ObservationIgnored
+    @Dependency var usecase: ReservationUseCase
 
     @ObservationIgnored
     var bottomButtonTitle: String {
@@ -44,20 +47,35 @@ final class ShareReservationViewModel: Reducerable {
         var reservation: ReservationDetail = .mockData
         var cardState: CardState = .front
         var isPresentedShareSheet: Bool = false
+        var isLoading: Bool = false
     }
     
     enum Action {
         case fetchReservationInfo
         case toggleCardState
         case didTapBottomButton
-        case didTapDismiss
     }
     
     func reduce(_ action: Action) {
         switch action {
         case .fetchReservationInfo:
-            // TODO: API Call
-            break
+            Task {
+                do {
+                    self.state.isLoading = true
+                    let reservationDetail = try await usecase.getReservationDetail(
+                        reservationId: self.reservationId
+                    )
+                    
+                    await MainActor.run {
+                        self.state.isLoading = false
+                        self.state.reservation = reservationDetail
+                    }
+                } catch {
+                    // TODO: 에러처리 화면 필요
+                    self.state.isLoading = false
+                }
+            }
+            
         case .toggleCardState:
             self.state.cardState.toggleState()
         case .didTapBottomButton:
@@ -66,10 +84,6 @@ final class ShareReservationViewModel: Reducerable {
             } else {
                 state.isPresentedShareSheet = true
             }
-        case .didTapDismiss:
-            Task { @MainActor in
-                coordinator?.dismissCover()
-            }    
         }
     }
     
@@ -81,6 +95,4 @@ final class ShareReservationViewModel: Reducerable {
             self = (self == .front) ? .back : .front
         }
     }
-    
-
 }

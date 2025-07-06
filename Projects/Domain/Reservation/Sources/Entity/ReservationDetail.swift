@@ -86,23 +86,19 @@ public struct ReservationDetail: Equatable {
 public extension ReservationDetail {
     static let mockData: Self = .init(
         reservationId: 42,
-        title: "오아시스를 직접 본다",
+        title: "예약 정보를 불러오고 있어요.",
         category: .sports,
         reservationDatetime: .now,
-        description: "1순위로 E열 선점하기.. 만약에 안되면 H도 괜찮아요 진짜우요1순위로 E열 선점하기.. 만약에 안되면 H도 괜찮아요 진짜우요1순위로 E열 선점하기.. 만약에 안되면 H도 괜찮아요",
-        linkUrl: "https://example.com/reservation-linkaskjajkhckashkjcahsjkchasjkhcjkashcjkahsjkchakj",
-        images: [
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjhxiEO7SmdBQbLuIW5eG21fFzqm4LcPrJzQ&s",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjhxiEO7SmdBQbLuIW5eG21fFzqm4LcPrJzQ&s",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjhxiEO7SmdBQbLuIW5eG21fFzqm4LcPrJzQ&s"
-        ],
+        description: "",
+        linkUrl: "url",
+        images: [ ],
         host: .init(
-            hostId: 1,
-            nickName: "ㄱㅣㅁㅍㅏㄷㅣ",
+            hostId: -1,
+            nickName: "예약자",
             profileImageName: "IMG_001"
         ),
         currentUser: .init(
-            userId: 123,
+            userId: -1,
             status: .default,
             isHost: false,
             canEdit: false,

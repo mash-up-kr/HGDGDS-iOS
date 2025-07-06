@@ -50,6 +50,7 @@ final class CreateReservationViewModel: Reducerable {
         var showDatePicker: Bool = false
         var showTimePicker: Bool = false
         var isShowDialog: Bool = false
+        var isLoading: Bool = false
         
         var isEnabledFinishButton: Bool {
             title.isNotEmpty &&
@@ -105,6 +106,10 @@ final class CreateReservationViewModel: Reducerable {
                 return
             }
             
+            await MainActor.run {
+                self.state.isLoading = true
+            }
+            
             /// 이미지 업로드
             let imgUrls: [String] = try await withThrowingTaskGroup(of: String.self) { group in
                 for photo in state.selectedPhotos {
@@ -130,9 +135,12 @@ final class CreateReservationViewModel: Reducerable {
             )
             
             await MainActor.run {
+                state.isLoading = false
                 coordinator?.push(.shareReservation(reservationId: response.reservationId))
             }
         } catch let error as HGError {
+            await MainActor.run { self.state.isLoading = false }
+            
             switch error {
             case .imageConversionFailed,
                     .imageLoadFailed,
@@ -142,6 +150,7 @@ final class CreateReservationViewModel: Reducerable {
                 await ToastUtils.showToast("예약을 생성하지 못했어요")
             }
         } catch {
+            await MainActor.run { self.state.isLoading = false }
             await ToastUtils.showToast("예약을 생성하지 못했어요")
         }
     }

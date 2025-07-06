@@ -8,6 +8,6 @@
 import Foundation
 import HGNetwork
 
-struct ReservationAPI: EndPointable {
-
-}
+//struct ReservationAPI: EndPointable {
+//
+//}

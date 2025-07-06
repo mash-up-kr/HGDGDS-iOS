@@ -40,10 +40,6 @@ struct CoordinatorFactory {
             .environment(coordinator)
     }
     
-    var reservationRootView: some View {
-        ReservationCoordinatorView()
-    }
-    
     func reservationShareView(reservationId: Int, type: ShareViewType) -> some View {
         ReservationShareCoordinatorView(
             reservationId: reservationId,
