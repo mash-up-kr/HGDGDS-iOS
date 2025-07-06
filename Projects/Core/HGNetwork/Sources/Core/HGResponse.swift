@@ -19,3 +19,6 @@ public struct HGErrorResponse: Decodable, Sendable {
     public let code: Int
     public let message: String
 }
+
+// 빈 응답 구조
+public struct HGEmptyResponse: Decodable, Sendable { }
