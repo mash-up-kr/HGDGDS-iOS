@@ -12,7 +12,7 @@ import HGCommon
 import NukeUI
 
 struct ShareReservationView: View {
-    var viewModel: ShareReservationViewModel
+    @Bindable var viewModel: ShareReservationViewModel
     
     var body: some View {
         VStack(spacing: .zero) {
@@ -40,6 +40,12 @@ struct ShareReservationView: View {
                 .scaledToFill()
                 .ignoresSafeArea()
         )
+        .background(
+            ActivityView(
+                isPresented: $viewModel.state.isPresentedShareSheet,
+                items: ["kokkok://invite?reservationId=\(viewModel.reservationId)"] // TODO: 임시 URL
+            )
+        )
     }
     
     private var cardView: some View {
@@ -66,7 +72,9 @@ struct ShareReservationView: View {
                 }
             }
             .onTapGesture {
-                viewModel.reduce(.toggleCardState)
+                withAnimation(.bouncy(duration: 0.5)) {
+                    viewModel.reduce(.toggleCardState)
+                }
             }
             .sensoryFeedback(
                 .impact(weight: .light),

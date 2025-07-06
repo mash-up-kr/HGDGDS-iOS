@@ -45,6 +45,7 @@ final class ShareReservationViewModel: Reducerable {
     struct State {
         var reservation: ReservationInfo = .mockData
         var cardState: CardState = .front
+        var isPresentedShareSheet: Bool = false
     }
     
     enum Action {
@@ -65,7 +66,7 @@ final class ShareReservationViewModel: Reducerable {
             if shareViewType == .receiver {
                 // TODO: 함께하기 API Call
             } else {
-                // TODO: Share
+                state.isPresentedShareSheet = true
             }
         case .didTapDismiss:
             Task { @MainActor in
