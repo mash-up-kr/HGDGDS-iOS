@@ -33,7 +33,11 @@ struct CoordinatorFactory {
     }
     
     var createReservationRootView: some View {
-        CreateReservationCoordinatorView()
+        let coordinator = CreateReservationCoordinator(
+            reservationViewProvider: ReservationModuleViewProvider()
+        )
+        return CreateReservationCoordinatorView()
+            .environment(coordinator)
     }
     
     var reservationRootView: some View {

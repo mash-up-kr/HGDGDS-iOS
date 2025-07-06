@@ -8,11 +8,29 @@
 import Foundation
 
 public struct CreateReservationResponse {
-    let reservationId: String
-    let title: String
-    let category: String
-    let reservationDatetime: Date
-    let linkUrl: String?
-    let hostId: Int
-    let createAt: Date
+    public let reservationId: Int
+    public let title: String
+    public let category: String
+    public let reservationDatetime: Date
+    public let linkUrl: String?
+    public let hostId: Int
+    public let createAt: Date
+    
+    public init(
+        reservationId: Int,
+        title: String,
+        category: String,
+        reservationDatetime: Date,
+        linkUrl: String?,
+        hostId: Int,
+        createAt: Date
+    ) {
+        self.reservationId = reservationId
+        self.title = title
+        self.category = category
+        self.reservationDatetime = reservationDatetime
+        self.linkUrl = linkUrl
+        self.hostId = hostId
+        self.createAt = createAt
+    }
 }

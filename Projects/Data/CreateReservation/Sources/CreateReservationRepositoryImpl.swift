@@ -18,7 +18,7 @@ public final class CreateReservationRepositoryImpl: CreateReservationRepository 
         self.network = network
     }
     
-    public func createReservation(entity: CreateReservationRequest) async throws {
+    public func createReservation(entity: CreateReservationRequest) async throws -> CreateReservationResponse {
         let parameters: HGParameters = [
             "title" : entity.title,
             "category" : entity.cateogry,
@@ -32,10 +32,12 @@ public final class CreateReservationRepositoryImpl: CreateReservationRepository 
         let api = CreateReservationAPI(parameters: parameters)
         
         do {
-            guard let _ = try await network.send(api) else {
+            guard let dtoModel = try await network.send(api),
+                  let data = dtoModel.data else {
                 throw HGError.domainError("dto model is nil")
             }
-
+            
+            return data.toDomain
         } catch {
             throw HGError.networkError(error)
         }

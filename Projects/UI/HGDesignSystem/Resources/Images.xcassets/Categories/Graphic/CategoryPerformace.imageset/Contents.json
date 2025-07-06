@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "category=food-1.png",
+      "filename" : "CategoryPerformance.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "category=food@2x.png",
+      "filename" : "CategoryPerformance@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "category=food.png",
+      "filename" : "CategoryPerformance@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

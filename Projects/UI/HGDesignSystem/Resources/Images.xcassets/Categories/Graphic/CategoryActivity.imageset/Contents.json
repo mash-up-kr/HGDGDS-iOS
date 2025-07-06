@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "category=concert-2.png",
+      "filename" : "CategoryActivity.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "category=concert-1.png",
+      "filename" : "CategoryActivity@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "category=concert.png",
+      "filename" : "CategoryActivity@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

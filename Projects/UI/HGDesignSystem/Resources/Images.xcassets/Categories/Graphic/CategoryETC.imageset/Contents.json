@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "category=sports.png",
+      "filename" : "CategoryETC.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "category=sports@2x.png",
+      "filename" : "CategoryETC@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "category=sports@3x.png",
+      "filename" : "CategoryETC@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

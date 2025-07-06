@@ -17,6 +17,11 @@ import HGDesignSystem
 
 @Observable
 final class CreateReservationViewModel: Reducerable {
+    private weak var coordinator: CreateReservationCoordinator?
+    
+    init(coordinator: CreateReservationCoordinator?) {
+        self.coordinator = coordinator
+    }
     
     var state: State = .init()
     
@@ -94,6 +99,12 @@ final class CreateReservationViewModel: Reducerable {
     
     private func createReservation() async {
         do {
+            /// URL 검사
+            guard validateURLFormat(self.url) else {
+                await ToastUtils.showToast("유효한 URL이 아닙니다.")
+                return
+            }
+            
             /// 이미지 업로드
             let imgUrls: [String] = try await withThrowingTaskGroup(of: String.self) { group in
                 for photo in state.selectedPhotos {
@@ -114,10 +125,12 @@ final class CreateReservationViewModel: Reducerable {
                 images: imgUrls
             )
             
-            try await self.createReservationUseCase.createReservation(with: reservationInfo)
+            let response = try await self.createReservationUseCase.createReservation(
+                with: reservationInfo
+            )
             
             await MainActor.run {
-                NotificationCenter.default.post(name: .createReservationComplete, object: nil)
+                coordinator?.push(.shareReservation(reservationId: response.reservationId))
             }
         } catch let error as HGError {
             switch error {
@@ -150,5 +163,11 @@ final class CreateReservationViewModel: Reducerable {
         }
         
         return filePath
+    }
+    
+    // 추후 다른데서 필요하면 도메인으로 뺄게요
+    private func validateURLFormat(_ string: String) -> Bool {
+        let pattern = #"^(http|https)://[^\s/$.?#].[^\s]*$"#
+        return string.range(of: pattern, options: .regularExpression) != nil
     }
 }

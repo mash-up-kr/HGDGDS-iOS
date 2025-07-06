@@ -18,4 +18,5 @@ struct CreateReservationAPI: EndPointable {
     var method: HGHTTPMethod { .post }
     var headers: HGHTTPHeaders? { ["Content-Type": "application/json"] }
     var path: String { "/reservations" }
+    var isNeedAuthorization: Bool { true }
 }

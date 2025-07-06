@@ -8,7 +8,9 @@
 import Foundation
 
 public protocol CreateReservationUseCase {
-    func createReservation(with reservation: CreateReservationRequest) async throws
+    func createReservation(
+        with reservation: CreateReservationRequest
+    ) async throws -> CreateReservationResponse
 }
 
 public class CreateReservationUseCaseImpl: CreateReservationUseCase {
@@ -18,7 +20,9 @@ public class CreateReservationUseCaseImpl: CreateReservationUseCase {
         self.createReservationRepo = createReservationRepo
     }
     
-    public func createReservation(with reservation: CreateReservationRequest) async throws {
+    public func createReservation(
+        with reservation: CreateReservationRequest
+    ) async throws -> CreateReservationResponse{
         try await createReservationRepo.createReservation(entity: reservation)
     }
 }

@@ -10,9 +10,13 @@ import SwiftUI
 import HGDesignSystem
 
 struct CreateReservationView: View {
-    @Bindable private var viewModel: CreateReservationViewModel = .init()
+    @Bindable private var viewModel: CreateReservationViewModel
     @FocusState private var focus: Bool
     @Environment(\.dismiss) private var dismiss
+    
+    init(coordinator: CreateReservationCoordinator?) {
+        self._viewModel = .init(wrappedValue: .init(coordinator: coordinator))
+    }
     
     var body: some View {
         ScrollView {
@@ -97,6 +101,7 @@ struct CreateReservationView: View {
     
     private var barRightButton: some View {
         Button {
+            UIApplication.shared.resignFirstResponder()
             viewModel.reduce(.didTapFinish)
         } label: {
             Text("완료")
@@ -154,7 +159,9 @@ struct CreateReservationView: View {
                             viewModel.reduce(.didSelectCategory(category))
                         } label: {
                             VStack(spacing: 2) {
-                                HGColors.gray50.color.frame(68)
+                                category.graphic.image
+                                    .resizable()
+                                    .frame(68)
                                 Text(category.title)
                                     .setTypo(.body_14_bold)
                                     .foregroundStyle(.gray90)
@@ -266,8 +273,4 @@ struct CreateReservationView: View {
             maxCount: 100
         )
     }
-}
-
-#Preview(traits: .applyFont) {
-    CreateReservationView()
 }

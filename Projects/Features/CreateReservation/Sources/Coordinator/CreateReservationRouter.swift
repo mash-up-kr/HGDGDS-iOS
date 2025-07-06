@@ -15,6 +15,7 @@ public enum CreateReservationRouter {
     
     public enum Screen: Hashable {
         case createReservationMain
+        case shareReservation(reservationId: Int)
     }
     
     public enum FullScreen: String, Identifiable {

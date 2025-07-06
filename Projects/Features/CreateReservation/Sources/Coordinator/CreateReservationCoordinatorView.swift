@@ -9,11 +9,12 @@ import SwiftUI
 import HGDesignSystem
 
 public struct CreateReservationCoordinatorView: View {
-    @State private var coordinator: CreateReservationCoordinator = .init()
+    @Environment(CreateReservationCoordinator.self) var coordinator
 
     public init() { }
     
     public var body: some View {
+        @Bindable var coordinator = coordinator
         NavigationStack(path: $coordinator.path) {
             coordinator.view(.createReservationMain)
                 .navigationDestination(for: CreateReservationCoordinator.Screen.self) {
