@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+import HGCommon
 import ReservationFeatureInterface
 
 public struct ReservationModuleViewProvider: ReservationViewProviderable {
@@ -14,5 +15,21 @@ public struct ReservationModuleViewProvider: ReservationViewProviderable {
     
     public var reservationMainView: AnyView {
         AnyView(ReservationView())
+    }
+    
+    public func reservationShareView(
+        reservationId: Int,
+        type: ShareViewType,
+        coordinator: (any Coordinatorable)
+    ) -> AnyView {
+        AnyView(
+            ShareReservationView(
+                viewModel: .init(
+                    reservationId: reservationId,
+                    shareViewType: type,
+                    coordinator: coordinator
+                )
+            )
+        )
     }
 }
