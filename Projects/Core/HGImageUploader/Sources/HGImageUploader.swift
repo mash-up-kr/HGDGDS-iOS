@@ -18,7 +18,7 @@ public protocol HGImageUploader {
 ### PresignedURL 프로세스
 1. 업로드할 (presignedURL)path 받기
 2. 응답에 filePath들고잇다가 생성시에
-3. 해당 path로 멀티파트통신 (aws)
+3. 해당 path로 업로드통신 (aws)
 4. filePath를 우리서버통신 body에 filePath에 넣어주면됨
 */
 
