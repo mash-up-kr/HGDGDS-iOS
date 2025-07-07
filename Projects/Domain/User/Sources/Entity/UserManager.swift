@@ -39,7 +39,6 @@ public actor UserManager {
     public func requestUserInfo() async {
         do {
             self.user = try await userInfoUseCase.requestUserInfo()
-            print("user:", user)
         } catch {
             print(error)
         }

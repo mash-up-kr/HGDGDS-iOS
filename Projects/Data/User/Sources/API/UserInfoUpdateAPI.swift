@@ -9,7 +9,7 @@ import Foundation
 import HGNetwork
 
 struct UserInfoUpdateAPI: EndPointable {
-    typealias Response = UserInfoDTO
+    typealias Response = HGResponse<HGEmptyResponse>
     
     var baseURL: BaseURL { .host }
     var path: String { "/users/me" }
@@ -36,6 +36,7 @@ struct UserInfoUpdateAPI: EndPointable {
     let profileImageCode: String?
     let isReservationAlarm: Bool?
     let isKokAlarm: Bool?
+    var isNeedAuthorization: Bool { true }
     
     init(
         nickname: String? = nil,
