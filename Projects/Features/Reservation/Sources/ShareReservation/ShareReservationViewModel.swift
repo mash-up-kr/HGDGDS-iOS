@@ -57,10 +57,17 @@ final class ShareReservationViewModel: Reducerable {
         case fetchReservationInfo
         case toggleCardState
         case didTapBottomButton
+        case didTapDismiss(dismiss: ()->Void)
     }
     
     func reduce(_ action: Action) {
         switch action {
+        case .didTapDismiss(let dismiss):
+            if self.shareViewType == .sender {
+                NotificationCenter.default.post(name: .createReservationComplete, object: nil)
+            } else {
+                dismiss()
+            }
         case .fetchReservationInfo:
             Task {
                 do {

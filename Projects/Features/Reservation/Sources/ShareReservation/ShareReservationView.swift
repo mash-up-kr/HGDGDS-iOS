@@ -29,7 +29,7 @@ struct ShareReservationView: View {
             leftButtonType: .none,
             rightButtonView:  {
                 Button {
-                    dismiss()
+                    viewModel.reduce(.didTapDismiss(dismiss: { dismiss() }))
                 } label: {
                     HGIcons.close.image
                         .foregroundStyle(.gray0White)
@@ -70,8 +70,9 @@ struct ShareReservationView: View {
                 switch viewModel.state.cardState {
                 case .front:
                     cardFrontView
-                        .applySwayRepeatAnimation()
+                        .compositingGroup()
                         .transition(.flip)
+                        .applySwayRepeatAnimation()
                 case .back:
                     cardBackView
                         .transition(.reverseFlip)
@@ -131,6 +132,7 @@ struct ShareReservationView: View {
                 .setTypo(.display_32_extraBold)
                 .foregroundStyle(.gray95)
                 .padding(.bottom, 1)
+                .fillMaxWidth(.center)
             HStack(spacing: .zero) {
                 HGIcons.calendar.image
                     .resizable()
@@ -154,7 +156,6 @@ struct ShareReservationView: View {
         .padding(.horizontal, 22)
         .padding(.top, 26)
         .padding(.bottom, 29)
-        .fillMaxWidth(.center)
         .frame(height: 402)
         .background(
             viewModel.reservation.category.card.image
@@ -167,6 +168,7 @@ struct ShareReservationView: View {
             radius: 31,
             linewidth: 3
         )
+        .compositingGroup()
     }
     
     private var cardBackView: some View {

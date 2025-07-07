@@ -81,7 +81,7 @@ extension ReservationDetailDTO {
             reservationId: self.reservationId,
             title: self.title,
             category: .init(rawValue: self.category) ?? .activity,
-            reservationDatetime: self.reservationDatetime.toDate(with: .iso8601),
+            reservationDatetime: self.reservationDatetime.toDate(with: .iso8601ms),
             description: self.description,
             linkUrl: self.linkUrl,
             images: self.images,
@@ -89,8 +89,8 @@ extension ReservationDetailDTO {
             currentUser: self.currentUser.toDomain,
             participantCount: self.participantCount,
             maxParticipants: self.maxParticipants,
-            createdAt: self.createdAt.toDate(with: .iso8601),
-            updatedAt: self.updatedAt.toDate(with: .iso8601)
+            createdAt: self.createdAt.toDate(with: .iso8601ms),
+            updatedAt: self.updatedAt.toDate(with: .iso8601ms)
         )
     }
 }

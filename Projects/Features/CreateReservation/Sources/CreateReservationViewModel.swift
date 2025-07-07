@@ -100,9 +100,16 @@ final class CreateReservationViewModel: Reducerable {
     
     private func createReservation() async {
         do {
+            guard let selectedDate = state.selectedDate,
+                  let selectedTime = state.selectedTime,
+                  let selectedCategory = state.selectedCategory else {
+                await ToastUtils.showToast("선택되지 않은 필수 값이 존재해요")
+                return
+            }
+            
             /// URL 검사
             guard validateURLFormat(self.state.url) else {
-                await ToastUtils.showToast("유효한 URL이 아닙니다.")
+                await ToastUtils.showToast("유효한 URL이 아니에요")
                 return
             }
             
@@ -119,12 +126,13 @@ final class CreateReservationViewModel: Reducerable {
                 return try await group.reduce(into: [String]()) { $0.append($1) }
             }
             
+            
             /// 예약 생성
             let reservationInfo: CreateReservationRequest = .init(
                 title: self.title,
-                category: self.selectedCategory?.rawValue ?? "",
-                date: self.selectedDate ?? .now,
-                time: self.selectedTime ?? .now,
+                category: selectedCategory.rawValue,
+                date: selectedDate,
+                time: selectedTime,
                 linkUrl: self.url,
                 description: self.description,
                 images: imgUrls
