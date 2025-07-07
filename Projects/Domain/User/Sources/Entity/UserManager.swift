@@ -21,12 +21,27 @@ public actor UserManager {
         isReservationAlarm: Bool? = nil,
         isKokAlarm: Bool? = nil
     ) async throws -> Bool {
-        try await userInfoUseCase.requestUpdateUserInfo(
+        let isSuccess = try await userInfoUseCase.requestUpdateUserInfo(
             nickname: nickname,
             profileImageCode: profileImageCode,
             isReservationAlarm: isReservationAlarm,
             isKokAlarm: isKokAlarm
         )
+        guard isSuccess else { return false }
+        if let nickname {
+            user?.nickname = nickname
+        }
+        if let code = profileImageCode,
+           let profileType = ProfileType(rawValue: code) {
+            user?.profileType = profileType
+        }
+        if let isReservationAlarm {
+            user?.isReservationAlarmSetting = isReservationAlarm
+        }
+        if let isKokAlarm {
+            user?.isKokAlarmSetting = isKokAlarm
+        }
+        return isSuccess
     }
     
     public func fetchUser() throws -> UserInfo {
