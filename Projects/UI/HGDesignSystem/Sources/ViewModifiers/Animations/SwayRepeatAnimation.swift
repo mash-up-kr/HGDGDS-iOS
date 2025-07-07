@@ -22,7 +22,9 @@ struct SwayRepeatAnimation: ViewModifier {
                 value: sway
             )
             .onAppear {
-                sway.toggle()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    sway.toggle()
+                }
             }
     }
 }

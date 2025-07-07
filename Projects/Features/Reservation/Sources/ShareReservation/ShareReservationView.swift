@@ -14,6 +14,7 @@ import ReservationFeatureInterface
 
 struct ShareReservationView: View {
     @Bindable var viewModel: ShareReservationViewModel
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         VStack(spacing: .zero) {
@@ -28,7 +29,7 @@ struct ShareReservationView: View {
             leftButtonType: .none,
             rightButtonView:  {
                 Button {
-                    viewModel.reduce(.didTapDismiss)
+                    viewModel.reduce(.didTapDismiss(dismiss: { dismiss() }))
                 } label: {
                     HGIcons.close.image
                         .foregroundStyle(.gray0White)
@@ -44,9 +45,16 @@ struct ShareReservationView: View {
         .background(
             ActivityView(
                 isPresented: $viewModel.state.isPresentedShareSheet,
-                items: ["kokkok://invite?reservationId=\(viewModel.reservationId)"] // TODO: 임시 URL
+                items: ["kokkok://invite?reservationId=\(viewModel.reservationId)"]
             )
         )
+        .onAppear {
+            viewModel.reduce(.fetchReservationInfo)
+        }
+        .fullScreenCover(isPresented: $viewModel.state.isPresentedImageViewer, content: {
+            ImageSwipeView(showIndex: viewModel.selectedImageIndex, images: viewModel.uiImages)
+        })
+        .isLoading(viewModel.isLoading)
     }
     
     private var cardView: some View {
@@ -65,8 +73,9 @@ struct ShareReservationView: View {
                 switch viewModel.state.cardState {
                 case .front:
                     cardFrontView
-                        .applySwayRepeatAnimation()
+                        .compositingGroup()
                         .transition(.flip)
+                        .applySwayRepeatAnimation()
                 case .back:
                     cardBackView
                         .transition(.reverseFlip)
@@ -126,13 +135,14 @@ struct ShareReservationView: View {
                 .setTypo(.display_32_extraBold)
                 .foregroundStyle(.gray95)
                 .padding(.bottom, 1)
+                .fillMaxWidth(.center)
             HStack(spacing: .zero) {
                 HGIcons.calendar.image
                     .resizable()
                     .frame(16)
                     .foregroundStyle(.gray50)
                     .padding(.trailing, 2)
-                Text(viewModel.reservation.reservationDatetime.formatted(with: .yyyyMMddKorean))
+                Text(viewModel.reservation.reservationDatetime?.formatted(with: .yyyyMMddKorean) ?? "-")
                     .foregroundStyle(.gray70)
                     .padding(.trailing, 4)
                 
@@ -141,7 +151,7 @@ struct ShareReservationView: View {
                     .frame(16)
                     .foregroundStyle(.gray50)
                     .padding(.trailing, 2)
-                Text(viewModel.reservation.reservationDatetime.formatted(with: .ahhmmKorean))
+                Text(viewModel.reservation.reservationDatetime?.formatted(with: .ahhmmKorean) ?? "-")
                     .foregroundStyle(.gray70)
             }
             .setTypo(.body_14_medium)
@@ -149,7 +159,6 @@ struct ShareReservationView: View {
         .padding(.horizontal, 22)
         .padding(.top, 26)
         .padding(.bottom, 29)
-        .fillMaxWidth(.center)
         .frame(height: 402)
         .background(
             viewModel.reservation.category.card.image
@@ -162,6 +171,7 @@ struct ShareReservationView: View {
             radius: 31,
             linewidth: 3
         )
+        .compositingGroup()
     }
     
     private var cardBackView: some View {
@@ -194,8 +204,21 @@ struct ShareReservationView: View {
                     .setRadius(10)
             } else {
                 HStack(spacing: .zero) {
-                    ForEach(viewModel.reservation.images, id: \.self) { url in
-                        imageBox(url)
+                    ForEach(viewModel.uiImages.indices, id: \.self) { i in
+                        let uiImage = viewModel.uiImages[i]
+                        Button {
+                            viewModel.reduce(.didTapImage(i))
+                        } label: {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(87)
+                                .strokeBorder(
+                                    HGColors.gray20.color,
+                                    radius: 15,
+                                    linewidth: 1
+                                )
+                        }
                         Spacer()
                     }
                 }
@@ -218,6 +241,7 @@ struct ShareReservationView: View {
             } else {
                 Text(viewModel.reservation.description)
                     .setTypo(.body_14_regular)
+                    .fillMaxWidth()
                     .foregroundStyle(.gray80)
                     .multilineTextAlignment(.leading)
                     .lineLimit(4)
@@ -241,6 +265,9 @@ struct ShareReservationView: View {
         Text(viewModel.shareViewType.title).padding(.top, 17)
             .setTypo(.heading_24_bold)
             .foregroundStyle(.gray0White)
+            .onTapGesture {
+                viewModel.reduce(.fetchReservationInfo)
+            }
     }
     
     private var bottomArea: some View {
@@ -293,7 +320,7 @@ struct ShareReservationView: View {
             if let image = state.image {
                 image
                     .resizable()
-                    .scaledToFit()
+                    .scaledToFill()
                     .frame(87)
                     .strokeBorder(
                         HGColors.gray20.color,

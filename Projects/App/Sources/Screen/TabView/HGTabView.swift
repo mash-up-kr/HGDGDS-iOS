@@ -54,6 +54,9 @@ struct HGTabView: View {
             let deepLink = try? DeepLinkPhaser.phase(url)
             self.deepLinkItem = deepLink
         }
+        .onReceive(NotificationCenter.default.publisher(for: .createReservationComplete)) { _ in
+            self.showCreateView = false
+        }
     }
     
     // MARK: - 탭바

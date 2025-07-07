@@ -14,6 +14,7 @@ struct UpdateFcmAPI: EndPointable {
     var baseURL: BaseURL { .host }
     var method: HGHTTPMethod { .patch }
     var path: String { "/users/fcm-token" }
-    var headers: HGHTTPHeaders? { ["Content-Type": "application/json"] }
+    var headers: HGHTTPHeaders?
     var parameters: HGParameters?
+    var isNeedAuthorization: Bool { true }
 }

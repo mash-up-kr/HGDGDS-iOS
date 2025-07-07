@@ -33,11 +33,11 @@ struct CoordinatorFactory {
     }
     
     var createReservationRootView: some View {
-        CreateReservationCoordinatorView()
-    }
-    
-    var reservationRootView: some View {
-        ReservationCoordinatorView()
+        let coordinator = CreateReservationCoordinator(
+            reservationViewProvider: ReservationModuleViewProvider()
+        )
+        return CreateReservationCoordinatorView()
+            .environment(coordinator)
     }
     
     func reservationShareView(reservationId: Int, type: ShareViewType) -> some View {
