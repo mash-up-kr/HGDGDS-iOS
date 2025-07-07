@@ -83,8 +83,8 @@ final class CreateReservationViewModel: Reducerable {
             self.state.selectedCategory = category
         case .didTapFinish:
             Task {
-                await self.event.debounce(delay: 1) {
-                    await self.createReservation()
+                await self.event.debounce(delay: 1) { [weak self] in
+                    await self?.createReservation()
                 }
             }
         case .didTapDatePicker:

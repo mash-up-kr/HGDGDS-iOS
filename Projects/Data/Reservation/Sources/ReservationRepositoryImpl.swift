@@ -34,4 +34,22 @@ public final class ReservationRepositoryImpl: ReservationRepository {
             throw HGError.networkError(error)
         }
     }
+    
+    public func joinReservation(reservationId: Int) async throws {
+        let api = JoinReservationAPI(reservationId: reservationId)
+        
+        do {
+            guard let _ = try await network.send(api) else {
+                throw HGError.domainError("dto model is nil")
+            }
+        } catch let error as NetworkError {
+            if case let .customError(statusCode) = error, statusCode == 2006 {
+                throw ReservationError.alreadyParticipated
+            } else {
+                throw HGError.networkError(error)
+            }
+        } catch {
+            throw HGError.networkError(error)
+        }
+    }
 }

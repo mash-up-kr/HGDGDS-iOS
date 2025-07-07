@@ -59,15 +59,16 @@ private extension NetworkClient {
             return model
         case let .failure(error):
             guard let statusCode = response.response?.statusCode else {
-                throw mapToNetworkError(error)
+                throw mapToNetworkError(error, errorModel: nil)
             }
+            var errorModel: HGErrorResponse?
+            
             if !(200...299).contains(statusCode),
-               let errorData = response.data,
-               let errorModel = try? jsonDecoder.decode(HGErrorResponse.self, from: errorData) {
-                print(errorModel)
-                // TODO: 에러 로깅
+               let errorData = response.data {
+                errorModel = try? jsonDecoder.decode(HGErrorResponse.self, from: errorData)
             }
-            throw mapToNetworkError(error)
+            
+            throw mapToNetworkError(error, errorModel: errorModel)
         }
     }
     
@@ -107,7 +108,7 @@ private extension NetworkClient {
         .response
     }
     
-    func mapToNetworkError(_ error: Error) -> NetworkError {
+    func mapToNetworkError(_ error: Error, errorModel: HGErrorResponse?) -> NetworkError {
         if let afError = error as? AFError {
             switch afError {
             case .sessionTaskFailed(let underlyingError):
@@ -128,6 +129,8 @@ private extension NetworkClient {
                 case .unacceptableStatusCode(let code):
                     if code == 401 {
                         return .unauthorized
+                    } else if let errorModel {
+                        return .customError(statusCode: errorModel.code)
                     } else {
                         return .requestFailed(statusCode: code)
                     }

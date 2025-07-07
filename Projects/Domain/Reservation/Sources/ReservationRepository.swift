@@ -9,4 +9,5 @@ import Foundation
 
 public protocol ReservationRepository {
     func getReservationDetail(reservationId: Int) async throws -> ReservationDetail
+    func joinReservation(reservationId: Int) async throws
 }

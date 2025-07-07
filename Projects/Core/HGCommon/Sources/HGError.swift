@@ -14,7 +14,7 @@ public enum HGError: Error {
     case imageUploadFailed
     case imageLoadFailed
     
-    var errorMessage: String {
+    public var errorMessage: String {
         switch self {
         case let .domainError(message):
             message

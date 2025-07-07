@@ -9,6 +9,7 @@ import Foundation
 
 public protocol ReservationUseCase {
     func getReservationDetail(reservationId: Int) async throws -> ReservationDetail
+    func joinReservation(reservationId: Int) async throws
 }
 
 public class ReservationUseCaseImpl: ReservationUseCase {
@@ -20,5 +21,9 @@ public class ReservationUseCaseImpl: ReservationUseCase {
     
     public func getReservationDetail(reservationId: Int) async throws -> ReservationDetail {
         try await reservationRepo.getReservationDetail(reservationId: reservationId)
+    }
+    
+    public func joinReservation(reservationId: Int) async throws {
+        try await reservationRepo.joinReservation(reservationId: reservationId)
     }
 }

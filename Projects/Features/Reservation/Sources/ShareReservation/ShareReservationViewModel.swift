@@ -11,6 +11,7 @@ import HGCommon
 import HGLogger
 import ReservationDomain
 import ReservationFeatureInterface
+import HGDesignSystem
 
 @Observable
 final class ShareReservationViewModel: Reducerable {
@@ -32,6 +33,8 @@ final class ShareReservationViewModel: Reducerable {
         case .sender: "예약 일정 공유하기"
         }
     }
+    
+    private let event: Debouncer = .init()
     
     init(
         reservationId: Int,
@@ -80,10 +83,25 @@ final class ShareReservationViewModel: Reducerable {
             self.state.cardState.toggleState()
         case .didTapBottomButton:
             if shareViewType == .receiver {
-                // TODO: 함께하기 API Call
+                Task {
+                    await self.event.debounce(delay: 1) { [weak self] in
+                        await self?.joinReservation()
+                    }
+                }
             } else {
                 state.isPresentedShareSheet = true
             }
+        }
+    }
+    
+    private func joinReservation() async {
+        do {
+            try await usecase.joinReservation(reservationId: reservationId)
+            await ToastUtils.showToast("예약에 참여했어요!")
+        } catch let error as ReservationError {
+            await ToastUtils.showToast(error.errorMessage)
+        } catch {
+            await ToastUtils.showToast("예약 참여 요청이 실패했어요")
         }
     }
     
