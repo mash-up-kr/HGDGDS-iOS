@@ -86,7 +86,7 @@ final class ShareReservationViewModel: Reducerable {
         case .didTapBottomButton:
             if shareViewType == .receiver {
                 Task {
-                    await self.event.debounce(delay: 1) { [weak self] in
+                    await self.event.debounce(delay: 0.4) { [weak self] in
                         await self?.joinReservation()
                     }
                 }
