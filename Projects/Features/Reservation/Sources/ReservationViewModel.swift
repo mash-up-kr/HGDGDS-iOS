@@ -11,6 +11,7 @@ import HGCommon
 import ReservationDomain
 import HGDesignSystem
 import HGLogger
+import HomeFeature
 
 @Observable
 final class ReservationViewModel: Reducerable {
@@ -20,6 +21,8 @@ final class ReservationViewModel: Reducerable {
     @Dependency var reservationUsecase: ReservationUsecase
     
     enum Action {
+        case onAppear
+        
         case readyButtonTapped
         case inviteButtonTapped
         case kokButtonTapped(_ id: Int)
@@ -32,11 +35,13 @@ final class ReservationViewModel: Reducerable {
     }
     
     struct State {
+        var countDownTimer: CountDownTimerManager = .init()
+        
         var reservation: ReservationDetail = ReservationDetail(
             reservationId: 42,
             title: "오아시스를 직접 본다니",
             category: .performance,
-            reservationDatetime: ISO8601DateFormatter().date(from: "2025-07-05T19:00:00+09:00") ?? .distantFuture,
+            reservationDatetime: ISO8601DateFormatter().date(from: "2025-07-10T19:00:00+09:00") ?? .distantFuture,
             description: "1순위로 E열 선정하기. 만약에 안되면 H도 괜찮아요",
             linkUrl: "https://example.com/reservation-link",
             images: [
@@ -89,6 +94,10 @@ final class ReservationViewModel: Reducerable {
     
     func reduce(_ action: Action) {
         switch action {
+        case .onAppear:
+            Task { @MainActor in
+               await getReservationDetail(reservationId: 1)
+            }
         case .readyButtonTapped:
             print("readyButtonTapped")
             state.isReady.toggle()
@@ -117,6 +126,8 @@ final class ReservationViewModel: Reducerable {
         do {
             let reservation = try await reservationUsecase.reqeustReservationDetail(id: reservationId)
             state.reservation = reservation
+            state.countDownTimer.setupTime(endDate: reservation.reservationDatetime)
+            state.countDownTimer.start()
         } catch {
             LoggerUtil.log(error, level: .error)
         }

@@ -100,19 +100,20 @@ final class HomeViewModel: Reducerable {
     func reduce(_ action: Action) {
         switch action {
         case .setUpAllTimers:
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-                self.state.timerManagers = self.state.mainReservationInfos.map { info in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) { [weak self] in
+                self?.state.timerManagers = self?.state.mainReservationInfos.map { info in
                     let timer = CountDownTimerManager()
                     timer.setupTime(endDate: info.reservationDatetime)
                     return timer
-                }
-                self.reduce(.startTimer(self.state.selectedReservationIndex))
+                } ?? []
+                self?.reduce(.startTimer(self?.state.selectedReservationIndex ?? 0))
             }
         case .startTimer(let index):
             state.timerManagers[safe: index]?.start()
         case .stopTimer(let index):
             state.timerManagers[safe: index]?.stop()
         case .removeAllTimers:
+            print(state.timerManagers)
             for timer in state.timerManagers {
                 timer.stop()
             }

@@ -10,6 +10,7 @@ import SwiftUI
 import HGCommon
 import ReservationDomain
 import HGDesignSystem
+import HomeFeature
 
 struct ReservationView: View {
     private let innerPadding: CGFloat = 16
@@ -163,7 +164,7 @@ struct ReservationView: View {
             Spacer().frame(height: 8)
             HStack(spacing: 4) {
                 TimerView(
-                    time: countDownTimer.hours,
+                    time: viewModel.countDownTimer.hours,
                     description: "시간",
                     backgroundColor: HGColors.opacityPurple4.color
                 )
@@ -171,7 +172,7 @@ struct ReservationView: View {
                     .setTypo(.display_32_extraBold)
                     .foregroundStyle(.opacityWhite60)
                 TimerView(
-                    time: countDownTimer.minutes,
+                    time: viewModel.countDownTimer.minutes,
                     description: "분",
                     backgroundColor: HGColors.opacityPurple4.color
                 )
@@ -179,7 +180,7 @@ struct ReservationView: View {
                     .setTypo(.display_32_extraBold)
                     .foregroundStyle(.opacityWhite60)
                 TimerView(
-                    time: countDownTimer.seconds,
+                    time: viewModel.countDownTimer.seconds,
                     description: "초",
                     backgroundColor: HGColors.opacityPurple4.color
                 )
@@ -187,11 +188,11 @@ struct ReservationView: View {
         }
         .colorScheme(.light)
         .onAppear {
-            countDownTimer.setupTime(endDate: viewModel.reservation.reservationDatetime)
-            countDownTimer.start()
+            viewModel.countDownTimer.setupTime(endDate: viewModel.reservation.reservationDatetime)
+            viewModel.countDownTimer.start()
         }
         .onDisappear {
-            countDownTimer.stop()
+            viewModel.countDownTimer.stop()
         }
     }
     
