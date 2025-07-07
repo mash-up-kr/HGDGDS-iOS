@@ -24,7 +24,7 @@ public final class CreateReservationRepositoryImpl: CreateReservationRepository 
             "category" : entity.category,
             "linkUrl": entity.linkUrl,
             "description" : entity.description ?? "",
-            "images": [entity.images]
+            "images": entity.images
         ]
         
         if let reservationDate = entity.reservationDate {

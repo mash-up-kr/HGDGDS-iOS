@@ -12,6 +12,8 @@ import HGLogger
 import ReservationDomain
 import ReservationFeatureInterface
 import HGDesignSystem
+import SwiftUI
+import Nuke
 
 @Observable
 final class ShareReservationViewModel: Reducerable {
@@ -22,6 +24,9 @@ final class ShareReservationViewModel: Reducerable {
     /// 예약장을 받는 사람 보내는 사람의 액션을 구분하기 위함
     let shareViewType: ShareViewType
     let reservationId: Int
+    
+    @ObservationIgnored
+    var selectedImageIndex = 0
     
     @ObservationIgnored
     @Dependency var usecase: ReservationUseCase
@@ -50,10 +55,13 @@ final class ShareReservationViewModel: Reducerable {
         var reservation: ReservationDetail = .mockData
         var cardState: CardState = .front
         var isPresentedShareSheet: Bool = false
+        var isPresentedImageViewer: Bool = false
         var isLoading: Bool = false
+        var uiImages: [UIImage] = []
     }
     
     enum Action {
+        case didTapImage(Int)
         case fetchReservationInfo
         case toggleCardState
         case didTapBottomButton
@@ -62,6 +70,9 @@ final class ShareReservationViewModel: Reducerable {
     
     func reduce(_ action: Action) {
         switch action {
+        case let .didTapImage(index):
+            selectedImageIndex = index
+            state.isPresentedImageViewer = true
         case .didTapDismiss(let dismiss):
             if self.shareViewType == .sender {
                 NotificationCenter.default.post(name: .createReservationComplete, object: nil)
@@ -75,6 +86,18 @@ final class ShareReservationViewModel: Reducerable {
                     let reservationDetail = try await usecase.getReservationDetail(
                         reservationId: self.reservationId
                     )
+                    let urls = reservationDetail.images.compactMap { URL(string: $0) }
+
+                    /// 이미지 다운로드
+                    self.state.uiImages = try await withThrowingTaskGroup(of: UIImage.self) { group in
+                        for url in urls {
+                            group.addTask {
+                                return try await ImagePipeline.shared.image(for: url)
+                            }
+                        }
+
+                        return try await group.reduce(into: [UIImage]()) { $0.append($1) }
+                    }
                     
                     await MainActor.run {
                         self.state.isLoading = false

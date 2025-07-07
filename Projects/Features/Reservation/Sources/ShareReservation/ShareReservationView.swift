@@ -51,6 +51,9 @@ struct ShareReservationView: View {
         .onAppear {
             viewModel.reduce(.fetchReservationInfo)
         }
+        .fullScreenCover(isPresented: $viewModel.state.isPresentedImageViewer, content: {
+            ImageSwipeView(showIndex: viewModel.selectedImageIndex, images: viewModel.uiImages)
+        })
         .isLoading(viewModel.isLoading)
     }
     
@@ -201,8 +204,21 @@ struct ShareReservationView: View {
                     .setRadius(10)
             } else {
                 HStack(spacing: .zero) {
-                    ForEach(viewModel.reservation.images, id: \.self) { url in
-                        imageBox(url)
+                    ForEach(viewModel.uiImages.indices, id: \.self) { i in
+                        let uiImage = viewModel.uiImages[i]
+                        Button {
+                            viewModel.reduce(.didTapImage(i))
+                        } label: {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(87)
+                                .strokeBorder(
+                                    HGColors.gray20.color,
+                                    radius: 15,
+                                    linewidth: 1
+                                )
+                        }
                         Spacer()
                     }
                 }
@@ -304,7 +320,7 @@ struct ShareReservationView: View {
             if let image = state.image {
                 image
                     .resizable()
-                    .scaledToFit()
+                    .scaledToFill()
                     .frame(87)
                     .strokeBorder(
                         HGColors.gray20.color,
