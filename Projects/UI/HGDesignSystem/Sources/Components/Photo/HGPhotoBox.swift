@@ -40,7 +40,7 @@ public struct HGPhotoBox: View {
         } else {
             HGColors.gray15.color
                 .frame(80)
-                .task {
+                .task { @MainActor in
                     self.image = await photosPickerItem.loadImage()
                 }
         }

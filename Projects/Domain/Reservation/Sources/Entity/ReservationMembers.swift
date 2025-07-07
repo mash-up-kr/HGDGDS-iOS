@@ -40,14 +40,6 @@ public struct ReservationMember {
          self.isHost = isHost
      }
 }
-
-public enum UserReservationStatus: String {
-    case `default` = "DEFAULT"
-    case ready = "READY"
-    case fail = "FAIL"
-    case success = "SUCCESS"
-}
-
 public enum ProfileImageCode: String {
     case purple = "PURPLE"
     case orange = "Orange"

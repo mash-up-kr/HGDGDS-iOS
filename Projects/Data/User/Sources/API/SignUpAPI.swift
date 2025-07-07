@@ -14,6 +14,6 @@ struct SignUpAPI: EndPointable {
     var baseURL: BaseURL { .host }
     var method: HGHTTPMethod { .post }
     var path: String { "/auth/signup" }
-    var headers: HGHTTPHeaders? { ["Content-Type": "application/json"] }
+    var headers: HGHTTPHeaders? 
     var parameters: HGParameters?
 }

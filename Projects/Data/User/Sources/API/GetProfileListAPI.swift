@@ -14,6 +14,6 @@ struct GetProfileListAPI: EndPointable {
     var baseURL: BaseURL { .host }
     var method: HGHTTPMethod { .get }
     var path: String { "/codes/profile-image-code" }
-    var headers: HGHTTPHeaders? { ["Content-Type": "application/json"] }
+    var headers: HGHTTPHeaders? 
     var parameters: HGParameters?
 }

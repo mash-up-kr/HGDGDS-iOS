@@ -14,5 +14,12 @@ public let defaultPlist: [String: Plist.Value] = [
     ],
     "UIUserInterfaceStyle": "Light",
     "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
-    "UISupportedInterfaceOrientations~ipad": ["UIInterfaceOrientationPortrait"]
+    "UISupportedInterfaceOrientations~ipad": ["UIInterfaceOrientationPortrait"],
+    "CFBundleURLTypes": [
+        [
+            "CFBundleTypeRole": "Editor",
+            "CFBundleURLName": "com.kokkok.app",
+            "CFBundleURLSchemes": ["kokkok"]
+        ]
+    ]
 ]

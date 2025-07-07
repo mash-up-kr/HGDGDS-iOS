@@ -36,11 +36,19 @@ final class NetworkClient: Networkable {
     }
 
     // MARK: - Upload
-    func upload<T:MultipartRequestable & Sendable>(
+    func uploadPresignURL<T:PresignedUploadable & Sendable>(
         _ request: T
     ) async throws(NetworkError) -> T.Response? {
-        let response = try await _upload(request)
-        return try handleResponse(response)
+        do {
+            let response = try await _uploadPresignURL(request)
+            return try handleResponse(response)
+        } catch {
+            if case .none = error {
+                return nil
+            } else {
+                throw error
+            }
+        }
     }
 }
 
@@ -51,15 +59,16 @@ private extension NetworkClient {
             return model
         case let .failure(error):
             guard let statusCode = response.response?.statusCode else {
-                throw mapToNetworkError(error)
+                throw mapToNetworkError(error, errorModel: nil)
             }
+            var errorModel: HGErrorResponse?
+            
             if !(200...299).contains(statusCode),
-               let errorData = response.data,
-               let errorModel = try? jsonDecoder.decode(HGErrorResponse.self, from: errorData) {
-                print(errorModel)
-                // TODO: 에러 로깅
+               let errorData = response.data {
+                errorModel = try? jsonDecoder.decode(HGErrorResponse.self, from: errorData)
             }
-            throw mapToNetworkError(error)
+            
+            throw mapToNetworkError(error, errorModel: errorModel)
         }
     }
     
@@ -82,36 +91,24 @@ private extension NetworkClient {
             .response
     }
     
-    func _upload<T: MultipartRequestable>(_ request: T) async throws(NetworkError) -> DataResponse<T.Response, AFError> {
+    func _uploadPresignURL<T: PresignedUploadable>(_ request: T) async throws(NetworkError) -> DataResponse<T.Response, AFError> {
         guard let url = request.url else {
             throw .invalidURL
         }
-        
-        return await session
-            .upload(
-                multipartFormData: { multipart in
-                    request.files.forEach { file in
-                        multipart.append(
-                            file.data,
-                            withName: file.name,
-                            fileName: file.filename,
-                            mimeType: file.mimeType
-                        )
-                    }
-                    request.parameters?.forEach { key, value in
-                        let stringValue = String(describing: value)
-                        multipart.append(Data(stringValue.utf8), withName: key)
-                    }
-                },
-                to: url,
-                method: request.method.toAFMethod,
-                headers: request.requestHeaders.toAFHeaders
-            )
-            .serializingDecodable(T.Response.self, decoder: jsonDecoder)
-            .response
+       
+        return await session.upload(
+            request.data,
+            to: url,
+            method: request.method.toAFMethod,
+            headers: request.headers?.toAFHeaders,
+            interceptor: nil
+        )
+        .validate()
+        .serializingDecodable(T.Response.self, decoder: jsonDecoder)
+        .response
     }
     
-    func mapToNetworkError(_ error: Error) -> NetworkError {
+    func mapToNetworkError(_ error: Error, errorModel: HGErrorResponse?) -> NetworkError {
         if let afError = error as? AFError {
             switch afError {
             case .sessionTaskFailed(let underlyingError):
@@ -132,6 +129,8 @@ private extension NetworkClient {
                 case .unacceptableStatusCode(let code):
                     if code == 401 {
                         return .unauthorized
+                    } else if let errorModel {
+                        return .customError(statusCode: errorModel.code)
                     } else {
                         return .requestFailed(statusCode: code)
                     }
@@ -143,6 +142,8 @@ private extension NetworkClient {
                 switch reason {
                 case .decodingFailed(let decodeError):
                     return .decodingFailed(decodeError)
+                case .inputDataNilOrZeroLength:
+                    return .none
                 default:
                     return .decodingFailed(afError)
                 }

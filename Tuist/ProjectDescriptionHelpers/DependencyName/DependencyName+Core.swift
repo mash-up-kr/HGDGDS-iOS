@@ -14,5 +14,6 @@ public extension DependencyName {
         case hgLogger = "HGLogger"
         case hgCommon = "HGCommon"
         case hgThridParty = "HGThridParty"
+        case hgImageUploader = "HGImageUploader"
     }
 }

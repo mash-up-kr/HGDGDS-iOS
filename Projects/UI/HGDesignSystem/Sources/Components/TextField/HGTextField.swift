@@ -82,6 +82,7 @@ public struct HGTextField: View {
                 .foregroundStyle(.gray95)
                 .setTypo(size.font)
                 .frame(height: 24)
+                .multilineTextAlignment(.leading)
                 .background(alignment: .leading) {
                     if text.isEmpty {
                         Text(placeholder)

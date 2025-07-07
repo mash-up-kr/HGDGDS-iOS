@@ -10,8 +10,13 @@ import SwiftUI
 import HGDesignSystem
 
 struct CreateReservationView: View {
-    @Bindable private var viewModel: CreateReservationViewModel = .init()
+    @Bindable private var viewModel: CreateReservationViewModel
     @FocusState private var focus: Bool
+    @Environment(\.dismiss) private var dismiss
+    
+    init(coordinator: CreateReservationCoordinator?) {
+        self._viewModel = .init(wrappedValue: .init(coordinator: coordinator))
+    }
     
     var body: some View {
         ScrollView {
@@ -38,9 +43,18 @@ struct CreateReservationView: View {
             }
             .padding(.top, 16)
             .padding(.bottom, 56)
+            .background(.gray0White)
+            .endEditing()
         }
         .scrollIndicators(.hidden)
-        .applyNavigationBar(title: "예약 일정 생성", leftButtonType: .close, rightButtonView:  {
+        .applyNavigationBar(
+            title: "예약 일정 생성",
+            backgroundColor: HGColors.gray0White.color,
+            leftButtonType: .close,
+            leftAction: {
+                viewModel.reduce(.didTapDismiss)
+            },
+            rightButtonView:  {
             barRightButton
         })
         .sheet(isPresented: $viewModel.state.showDatePicker) {
@@ -50,6 +64,7 @@ struct CreateReservationView: View {
                     get: { viewModel.selectedDate ?? .now },
                     set: { viewModel.reduce(.didSelectDate($0)) }
                 ),
+                in: Date.now...,
                 displayedComponents: [.date]
             )
             .datePickerStyle(.wheel)
@@ -64,6 +79,7 @@ struct CreateReservationView: View {
                         get: { viewModel.selectedTime ?? .now },
                         set: { viewModel.reduce(.didSelectTime($0)) }
                     ),
+                    in: Date.now...,
                     displayedComponents: [.hourAndMinute]
                 )
                 .datePickerStyle(.wheel)
@@ -71,12 +87,22 @@ struct CreateReservationView: View {
                 .frame(width: 200)
             }
         }
+        .dialog(
+            isPresented: $viewModel.state.isShowDialog,
+            title: "예약 생성을 중단하시겠어요?",
+            description: "지금 나가시면 생성 중인 예약 일정이 초기화돼요",
+            okTitle: "네",
+            okAction: { dismiss() },
+            cancelTitle: "취소"
+        )
+        .isLoading(viewModel.isLoading)
     }
     
     // MARK: - navigationRightButton
     
     private var barRightButton: some View {
         Button {
+            UIApplication.shared.resignFirstResponder()
             viewModel.reduce(.didTapFinish)
         } label: {
             Text("완료")
@@ -110,6 +136,7 @@ struct CreateReservationView: View {
             title: "제목",
             text: $viewModel.state.title,
             placeholder: "제목을 입력해주세요",
+            maxCount: 11,
             required: true
         )
     }
@@ -133,7 +160,9 @@ struct CreateReservationView: View {
                             viewModel.reduce(.didSelectCategory(category))
                         } label: {
                             VStack(spacing: 2) {
-                                HGColors.gray50.color.frame(68)
+                                category.graphic.image
+                                    .resizable()
+                                    .frame(68)
                                 Text(category.title)
                                     .setTypo(.body_14_bold)
                                     .foregroundStyle(.gray90)
@@ -202,33 +231,7 @@ struct CreateReservationView: View {
                 placeholder: "예약이 진행되는 링크를 첨부해주세요",
                 required: true
             )
-
-            Button {
-                viewModel.reduce(.toggleLinkTitleEnabled)
-            } label: {
-                HStack(spacing: .zero) {
-                    let icon = viewModel.isLinkTitleEnabled ? HGIcons.checkOnInBox : HGIcons.checkOffInBox
-                    
-                    icon.image
-                        .resizable()
-                        .frame(20)
-                    Text("맞춤 제목 설정")
-                        .setTypo(.body_14_medium)
-                        .foregroundStyle(.gray80)
-                        .padding(.leading, 4)
-                    
-                    if viewModel.isLinkTitleEnabled {
-                        HGTextField(
-                            text: $viewModel.state.linkTitle,
-                            placeholder: "링크 제목 입력"
-                        )
-                        .padding(.leading, 16)
-                    }
-                }
-            }
-            .frame(height: 30)
         }
-        .animation(.spring, value: viewModel.isLinkTitleEnabled)
     }
     
     // MARK: - PhotoArea
@@ -271,8 +274,4 @@ struct CreateReservationView: View {
             maxCount: 100
         )
     }
-}
-
-#Preview(traits: .applyFont) {
-    CreateReservationView()
 }

@@ -43,7 +43,6 @@ public struct HGPhotoPickerView: View {
 }
 
 public extension PhotosPickerItem {
-    @MainActor
     func loadImage() async -> UIImage? {
         guard let imageData = try? await self.loadTransferable(type: Data.self),
               let uiImage = UIImage(data: imageData) else {
