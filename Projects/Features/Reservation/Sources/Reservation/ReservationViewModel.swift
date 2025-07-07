@@ -17,7 +17,7 @@ final class ReservationViewModel: Reducerable {
     var state: State = .init()
     
     @ObservationIgnored
-    @Dependency var reservationUsecase: ReservationUseCase
+    @Dependency var reservationUseCase: ReservationUseCase
     
     enum Action {
         case onAppear
@@ -71,7 +71,7 @@ final class ReservationViewModel: Reducerable {
         var rivalCount: Int = 14
         var isReady: Bool = false
         var isWithin24Hours: Bool {
-            let interval = reservation.reservationDatetime?.timeIntervalSince(Date()) ?? 1000
+            let interval = reservation.reservationDatetime?.timeIntervalSince(Date()) ?? 0
             return interval > 0 && interval <= 86400 // 60 * 60 * 24
         }
         
@@ -110,7 +110,7 @@ final class ReservationViewModel: Reducerable {
     @MainActor
     func getReservationDetail(reservationId: Int) async {
         do {
-            let reservation = try await reservationUsecase.getReservationDetail(reservationId: reservationId)
+            let reservation = try await reservationUseCase.getReservationDetail(reservationId: reservationId)
             state.reservation = reservation
             state.countDownTimer.setupTime(endDate: reservation.reservationDatetime ?? Date())
             state.countDownTimer.start()
@@ -122,7 +122,7 @@ final class ReservationViewModel: Reducerable {
     @MainActor
     func getReservationMembers(reservationId: Int) async {
         do {
-            let members = try await reservationUsecase.getReservationMembers(id: reservationId)
+            let members = try await reservationUseCase.getReservationMembers(id: reservationId)
             state.members = members.members
             state.me = members.me
         } catch {
@@ -133,7 +133,7 @@ final class ReservationViewModel: Reducerable {
     @MainActor
     func updateReadyStatus(reservationId: Int, status: UserReservationStatus) async {
         do {
-            try await reservationUsecase.updateReadyStatus(id: reservationId, status: status)
+            try await reservationUseCase.updateReadyStatus(id: reservationId, status: status)
             state.isReady = status == .ready
         } catch {
             LoggerUtil.log(error, level: .error)
@@ -142,7 +142,7 @@ final class ReservationViewModel: Reducerable {
     
     func kok(reservationId: Int, userId: Int) async {
         do {
-            try await reservationUsecase.kok(reservationId: reservationId, userId: userId)
+            try await reservationUseCase.kok(reservationId: reservationId, userId: userId)
         } catch {
             LoggerUtil.log(error, level: .error)
         }
