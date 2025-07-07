@@ -11,7 +11,7 @@ public struct ReservationDetail: Equatable {
     public let reservationId: Int
     public let title: String
     public let category: ReservationCategoryType
-    public let reservationDatetime: Date
+    public let reservationDatetime: Date?
     public let description: String
     public let linkUrl: String
     public let images: [String]
@@ -19,14 +19,14 @@ public struct ReservationDetail: Equatable {
     public let currentUser: CurrentUser
     public let participantCount: Int
     public let maxParticipants: Int
-    public let createdAt: Date
-    public let updatedAt: Date
+    public let createdAt: Date?
+    public let updatedAt: Date?
     
     public init(
         reservationId: Int,
         title: String,
         category: ReservationCategoryType,
-        reservationDatetime: Date,
+        reservationDatetime: Date?,
         description: String,
         linkUrl: String,
         images: [String],
@@ -34,8 +34,8 @@ public struct ReservationDetail: Equatable {
         currentUser: CurrentUser,
         participantCount: Int,
         maxParticipants: Int,
-        createdAt: Date,
-        updatedAt: Date
+        createdAt: Date?,
+        updatedAt: Date?
     ) {
         self.reservationId = reservationId
         self.title = title

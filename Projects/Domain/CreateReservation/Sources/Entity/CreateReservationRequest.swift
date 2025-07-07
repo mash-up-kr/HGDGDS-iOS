@@ -16,7 +16,7 @@ public struct CreateReservationRequest {
     public let description: String?
     public let images: [String]
     
-    public var reservationDate: Date {
+    public var reservationDate: Date? {
         let calendar = Calendar.current
         let timeComponents = calendar.dateComponents([.hour, .minute, .second], from: time)
         
@@ -25,7 +25,7 @@ public struct CreateReservationRequest {
             minute: timeComponents.minute ?? 0,
             second: timeComponents.second ?? 0,
             of: date
-        ) ?? .now
+        )
     }
     
     public init(

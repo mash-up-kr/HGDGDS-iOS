@@ -19,15 +19,17 @@ public final class CreateReservationRepositoryImpl: CreateReservationRepository 
     }
     
     public func createReservation(entity: CreateReservationRequest) async throws -> CreateReservationResponse {
-        let parameters: HGParameters = [
+        var parameters: HGParameters = [
             "title" : entity.title,
             "category" : entity.category,
-            "reservationDatetime" : entity.reservationDate.ISO8601Format(),
             "linkUrl": entity.linkUrl,
             "description" : entity.description ?? "",
-            "images": [entity.images] // TODO: 추후 s3링크 전달
+            "images": [entity.images]
         ]
         
+        if let reservationDate = entity.reservationDate {
+            parameters.updateValue(reservationDate.ISO8601Format(), forKey: "reservationDatetime")
+        }
 
         let api = CreateReservationAPI(parameters: parameters)
         

@@ -137,7 +137,7 @@ struct ShareReservationView: View {
                     .frame(16)
                     .foregroundStyle(.gray50)
                     .padding(.trailing, 2)
-                Text(viewModel.reservation.reservationDatetime.formatted(with: .yyyyMMddKorean))
+                Text(viewModel.reservation.reservationDatetime?.formatted(with: .yyyyMMddKorean) ?? "-")
                     .foregroundStyle(.gray70)
                     .padding(.trailing, 4)
                 
@@ -146,7 +146,7 @@ struct ShareReservationView: View {
                     .frame(16)
                     .foregroundStyle(.gray50)
                     .padding(.trailing, 2)
-                Text(viewModel.reservation.reservationDatetime.formatted(with: .ahhmmKorean))
+                Text(viewModel.reservation.reservationDatetime?.formatted(with: .ahhmmKorean) ?? "-")
                     .foregroundStyle(.gray70)
             }
             .setTypo(.body_14_medium)
