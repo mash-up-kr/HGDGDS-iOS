@@ -66,12 +66,12 @@ public struct ReservationDetail: Equatable {
     
     public struct CurrentUser: Equatable {
         public let userId: Int
-        public let status: UserResevationStatus
+        public let status: UserReservationStatus
         public let isHost: Bool
         public let canEdit: Bool
         public let canJoin: Bool
         
-        public init(userId: Int, status: UserResevationStatus, isHost: Bool, canEdit: Bool, canJoin: Bool) {
+        public init(userId: Int, status: UserReservationStatus, isHost: Bool, canEdit: Bool, canJoin: Bool) {
             self.userId = userId
             self.status = status
             self.isHost = isHost

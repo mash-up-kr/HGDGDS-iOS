@@ -75,7 +75,9 @@ final class ShareReservationViewModel: Reducerable {
                     }
                 } catch {
                     // TODO: 에러처리 화면 필요
-                    self.state.isLoading = false
+                    await MainActor.run {
+                        self.state.isLoading = false
+                    }
                 }
             }
             

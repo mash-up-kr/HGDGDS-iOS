@@ -15,7 +15,7 @@ extension ReservationCategoryType {
         switch self {
         case .restaurant: .categoryRestaurant
         case .sports: .categorySports
-        case .performance: .categoryPerformace
+        case .performance: .categoryPerformance
         case .activity: .categoryActivity
         case .etc: .categoryETC
         }

@@ -101,7 +101,7 @@ final class CreateReservationViewModel: Reducerable {
     private func createReservation() async {
         do {
             /// URL 검사
-            guard validateURLFormat(self.url) else {
+            guard validateURLFormat(self.state.url) else {
                 await ToastUtils.showToast("유효한 URL이 아닙니다.")
                 return
             }
@@ -122,7 +122,7 @@ final class CreateReservationViewModel: Reducerable {
             /// 예약 생성
             let reservationInfo: CreateReservationRequest = .init(
                 title: self.title,
-                cateogry: self.selectedCategory?.rawValue ?? "",
+                category: self.selectedCategory?.rawValue ?? "",
                 date: self.selectedDate ?? .now,
                 time: self.selectedTime ?? .now,
                 linkUrl: self.url,

@@ -36,7 +36,7 @@ public enum NetworkError: Error, LocalizedError {
         case .underlying(let error):
             return error.localizedDescription
         case .customError(let statusCode):
-            return "요청이 실패했습니다. (code: \(statusCode)"
+            return "요청이 실패했습니다. (code: \(statusCode))"
         case .none:
             return nil
         }

@@ -9,7 +9,7 @@ import Foundation
 
 public struct CreateReservationRequest {
     public let title: String
-    public let cateogry: String
+    public let category: String
     public let date: Date
     public let time: Date
     public let linkUrl: String
@@ -30,7 +30,7 @@ public struct CreateReservationRequest {
     
     public init(
         title: String,
-        cateogry: String,
+        category: String,
         date: Date,
         time: Date,
         linkUrl: String,
@@ -38,7 +38,7 @@ public struct CreateReservationRequest {
         images: [String]
     ) {
         self.title = title
-        self.cateogry = cateogry
+        self.category = category
         self.date = date
         self.time = time
         self.linkUrl = linkUrl

@@ -21,7 +21,7 @@ public final class CreateReservationRepositoryImpl: CreateReservationRepository 
     public func createReservation(entity: CreateReservationRequest) async throws -> CreateReservationResponse {
         let parameters: HGParameters = [
             "title" : entity.title,
-            "category" : entity.cateogry,
+            "category" : entity.category,
             "reservationDatetime" : entity.reservationDate.ISO8601Format(),
             "linkUrl": entity.linkUrl,
             "description" : entity.description ?? "",

@@ -15,7 +15,7 @@ extension ReservationCategoryType {
         switch self {
         case .restaurant: HGImages.categoryRestaurant.image
         case .sports: HGImages.categorySports.image
-        case .performance: HGImages.categoryPerformace.image
+        case .performance: HGImages.categoryPerformance.image
         case .activity: HGImages.categoryActivity.image
         case .etc: HGImages.categoryETC.image
         }

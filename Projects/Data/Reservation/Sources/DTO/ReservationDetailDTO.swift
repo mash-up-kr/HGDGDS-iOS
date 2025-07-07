@@ -57,7 +57,7 @@ extension ReservationDetailDTO.CurrentUserDTO {
     var toDomain: ReservationDetail.CurrentUser {
         .init(
             userId: self.userId,
-            status: UserResevationStatus(rawValue: self.status) ?? .default,
+            status: UserReservationStatus(rawValue: self.status) ?? .default,
             isHost: self.isHost,
             canEdit: self.canEdit,
             canJoin: self.canJoin
