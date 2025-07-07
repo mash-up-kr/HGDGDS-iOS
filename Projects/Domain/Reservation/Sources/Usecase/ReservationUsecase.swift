@@ -19,7 +19,7 @@ public protocol ReservationUsecase {
 public final class ReservationUsecaseImpl: ReservationUsecase {
     private let reservationRepo: ReservationRepository
     
-    init(reservationRepo: ReservationRepository) {
+    public init(reservationRepo: ReservationRepository) {
         self.reservationRepo = reservationRepo
     }
     

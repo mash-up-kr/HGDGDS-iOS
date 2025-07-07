@@ -22,7 +22,9 @@ struct RootView: View {
                 .coordinatorFactory
                 .onboardingCoordinatorRootView
         case .mainTab:
-            HGTabView()
+            viewModel
+                .coordinatorFactory
+                .homeCoordinatorRootView
         case .splash:
             Color.clear
         }
