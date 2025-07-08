@@ -35,13 +35,14 @@ final class SelectProfileImageViewModel: Reducerable {
     }
     
     struct State {
-        var selectedProfile: ProfileEntity?
-        var profileList: [ProfileEntity] = []
+        var selectedProfile: KokProfile?
+        var profileList: [KokProfile] = []
+        var isLoading: Bool = false
     }
     
     enum Action {
         case setup
-        case selectImage(ProfileEntity)
+        case selectImage(KokProfile)
         case didTapNextButton
     }
     
@@ -67,28 +68,52 @@ final class SelectProfileImageViewModel: Reducerable {
             
             let deviceId = await UIDevice.current.identifierForVendor?.uuidString ?? ""
             
+            await MainActor.run { state.isLoading = true }
+            
             try await usecase.signUp(
                 deviceId: deviceId,
                 nickname: nickname,
                 profileType: selectedProfile.type
             )
             
-            NotificationCenter.default.post(name: .signUpComplete, object: nil)
-            
+            await MainActor.run {
+                state.isLoading = false
+                NotificationCenter.default.post(name: .signUpComplete, object: nil)
+            }
         } catch {
-            print("회원가입 실패") // TODO: 토스트 처리
+            await MainActor.run { state.isLoading = false }
+            await ToastUtils.showToast("회원가입이 실패했어요")
         }
     }
     
-    private func getProfileImage() async -> [ProfileEntity] {
+    private func getProfileImage() async -> [KokProfile] {
         let profileList = try? await usecase.getProfileList()
         return profileList ?? []
     }
 }
 
 /// Profile Picker 사용을 위해 채택
-extension ProfileEntity: @retroactive ProfileImagePickable, @retroactive Equatable {
-    public static func == (lhs: ProfileEntity, rhs: ProfileEntity) -> Bool {
+extension KokProfile: @retroactive ProfileImagePickable, @retroactive Equatable {
+    public var image: Image {
+        switch self.type {
+        case .purple:
+            HGImages.purpleCharacter.image
+        case .orange:
+            HGImages.orangeCharacter.image
+        case .green:
+            HGImages.greenCharacter.image
+        case .blue:
+            HGImages.blueCharacter.image
+        case .pink:
+            HGImages.pinkCharacter.image
+        }
+    }
+    
+    public static func == (lhs: KokProfile, rhs: KokProfile) -> Bool {
         lhs.id == rhs.id
     }
+}
+
+extension ProfileType {
+    
 }

@@ -48,12 +48,9 @@ struct OnboardingSlidesView: View {
                         .foregroundStyle(.gray50)
                         .multilineTextAlignment(.center)
                         .padding(.bottom, 19)
-                    HGColors.gray10.color
+                    tab.image.image
                         .fillMaxSize(.center)
                         .ignoresSafeArea()
-                        .overlay {
-                            Text("이미지 영역")
-                        }
                 }
                 .tag(tab)
             }
@@ -116,6 +113,14 @@ struct OnboardingSlidesView: View {
                 return "다음"
             case .third:
                 return "콕콕 시작하기"
+            }
+        }
+        
+        var image: HGImages {
+            switch self {
+            case .first: .onboardingFirst
+            case .second: .onboardingSecond
+            case .third: . onboardingThrid
             }
         }
     }

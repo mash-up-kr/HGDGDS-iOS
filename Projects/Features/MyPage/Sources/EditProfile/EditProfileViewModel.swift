@@ -8,7 +8,9 @@
 import Foundation
 
 import HGCommon
+import HGDesignSystem
 import UserDomain
+import SwiftUI
 
 @Observable
 final class EditProfileViewModel: Reducerable {
@@ -68,18 +70,12 @@ final class EditProfileViewModel: Reducerable {
     private func getProfileImages() async -> [KokProfile] {
         do {
             let profileList = try await userUseCase.getProfileList()
-            let kokProfiles = mapToKokProfile(entities: profileList)
-            state.candidateProfiles = kokProfiles
-            return kokProfiles
+
+            state.candidateProfiles = profileList
+            return profileList
         } catch {
             print(error)
             return []
-        }
-    }
-    
-    private func mapToKokProfile(entities: [ProfileEntity]) -> [KokProfile] {
-        entities.compactMap { entity in
-            KokProfile(id: entity.id, type: entity.type, imageUrl: entity.imageUrl)
         }
     }
     
@@ -108,6 +104,27 @@ final class EditProfileViewModel: Reducerable {
         } catch {
             print(error)
             state.isUpdateSuccess = false
+        }
+    }
+}
+
+extension KokProfile: @retroactive ProfileImagePickable, @retroactive Equatable {
+    public static func == (lhs: KokProfile, rhs: KokProfile) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    public var image: Image {
+        switch self.type {
+        case .purple:
+            HGImages.purpleCharacter.image
+        case .orange:
+            HGImages.orangeCharacter.image
+        case .green:
+            HGImages.greenCharacter.image
+        case .blue:
+            HGImages.blueCharacter.image
+        case .pink:
+            HGImages.pinkCharacter.image
         }
     }
 }

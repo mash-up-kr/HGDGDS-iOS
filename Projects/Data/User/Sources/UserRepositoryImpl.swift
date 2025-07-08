@@ -60,7 +60,7 @@ public final class UserRepositoryImpl: UserRepository {
         }
     }
     
-    public func getProfileList() async throws -> [ProfileEntity] {
+    public func getProfileList() async throws -> [KokProfile] {
         let api = GetProfileListAPI(parameters: nil)
         
         do {
