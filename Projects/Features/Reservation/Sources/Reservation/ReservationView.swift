@@ -37,10 +37,12 @@ struct ReservationView: View {
                     title: isHiddenNavigationBar ? "" : "예약 상세",
                     isHiddenBackground: isHiddenNavigationBar,
                     backgroundColor: .ultraThinMaterial,
-                    leftButtonType: .whiteBack,
-                    rightButtonView: { navigationRightButton }
+                    leftButtonType: .whiteBack
                 )
                 .colorScheme(.dark)
+        }
+        .onAppear {
+            viewModel.reduce(.onAppear)
         }
         .dialog(
             isPresented: $viewModel.state.isShowEditPermissionDialog,
@@ -62,7 +64,7 @@ struct ReservationView: View {
                 timerView
                 Spacer().frame(height: 91)
                 LazyVStack(spacing: 8) {
-                    if !viewModel.isWithin24Hours {
+                    if !viewModel.isWithinOneHours {
                         readyTipMessage
                     }
                     profileSectionView
@@ -75,21 +77,6 @@ struct ReservationView: View {
             .padding(.horizontal, outsidePadding)
         }
         .contentMargins(.bottom, 88)
-    }
-    
-    private var navigationRightButton: some View {
-        Button {
-            if !viewModel.me.isHost {
-                viewModel.reduce(.showEditPermissionDialog(true))
-            } else {
-                //TODO: 에약 수정 화면 이동
-            }
-        } label: {
-            HGIcons.edit.image
-                .resizable()
-                .frame(24)
-                .foregroundStyle(.gray0White)
-        }
     }
     
     private var background: some View {
@@ -247,11 +234,11 @@ struct ReservationView: View {
                         .padding(.vertical, 5)
                         .background(viewModel.isReady ? .orange500Main : .gray30)
                         .clipShape(Capsule())
-                        .disabled(!viewModel.isWithin24Hours)
                 }
+                .disabled(!viewModel.isWithinOneHours)
             }
             .overlay(alignment: .topTrailing) {
-                if !viewModel.isWithin24Hours {
+                if !viewModel.isWithinOneHours {
                     makeReadyTipBubleView
                         .padding(.trailing, 12)
                         .offset(y: -8)
@@ -419,6 +406,7 @@ struct ReservationView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .strokeBorder(HGColors.gray20.color, radius: 14)
             }
         }

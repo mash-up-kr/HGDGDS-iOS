@@ -15,9 +15,10 @@ struct ReservationDetailAPI: EndPointable {
     var baseURL: BaseURL { .host }
     var method: HGHTTPMethod { .get }
     var path: String { "/reservations/\(reservationId)" }
-    var headers: HGHTTPHeaders? { ["Content-Type": "application/json"] }
+    var headers: HGHTTPHeaders?
     var encoding: HGParameterEncoding { .urlEncoding }
     var parameters: HGParameters?
+    var isNeedAuthorization: Bool = true
     
     let reservationId: Int
     

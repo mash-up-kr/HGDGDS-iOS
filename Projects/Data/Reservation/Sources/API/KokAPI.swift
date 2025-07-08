@@ -10,14 +10,15 @@ import Foundation
 import HGNetwork
 
 struct KokAPI: EndPointable {
-    typealias Response = HGResponse<String?>
+    typealias Response = HGResponse<HGEmptyResponse>
     
     var baseURL: BaseURL { .host }
     var method: HGHTTPMethod { .post }
     var path: String { "/reservations/\(reservationId)/kok/\(userId)" }
-    var headers: HGHTTPHeaders? { ["Content-Type": "application/json"] }
+    var headers: HGHTTPHeaders?
     var encoding: HGParameterEncoding { .urlEncoding }
     var parameters: HGParameters?
+    var isNeedAuthorization: Bool = true
     
     let reservationId: Int
     let userId: Int

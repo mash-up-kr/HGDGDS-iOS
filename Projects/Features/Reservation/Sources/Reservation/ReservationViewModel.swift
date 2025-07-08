@@ -32,7 +32,7 @@ final class ReservationViewModel: Reducerable {
         
         case readyButtonTapped
         case inviteButtonTapped
-        case kokButtonTapped(_ id: Int)
+        case kokButtonTapped(_ userid: Int)
         case refreshButtonTapped
         case editButtonTapped
         case linkButtonTapped
@@ -76,9 +76,9 @@ final class ReservationViewModel: Reducerable {
         
         var rivalCount: Int = 14
         var isReady: Bool = false
-        var isWithin24Hours: Bool {
+        var isWithinOneHours: Bool {
             let interval = reservation.reservationDatetime?.timeIntervalSince(Date()) ?? 0
-            return interval > 0 && interval <= 86400 // 60 * 60 * 24
+            return interval > 0 && interval <= 3600 // 60 * 60
         }
         
         var isShowEditPermissionDialog: Bool = false
@@ -88,17 +88,21 @@ final class ReservationViewModel: Reducerable {
         switch action {
         case .onAppear:
             Task { @MainActor in
-               await getReservationDetail(reservationId: 1)
+                await getReservationDetail(reservationId: reservationId)
+                await getReservationMembers(reservationId: reservationId)
             }
         case .readyButtonTapped:
-            print("readyButtonTapped")
-            state.isReady.toggle()
+            Task { @MainActor in
+                await updateReadyStatus(
+                    reservationId: reservationId,
+                    status: state.isReady ? .default : .ready
+                )
+            }
         case .inviteButtonTapped:
             print("inviteButtonTapped")
-        case let .kokButtonTapped(id):
-            print("kokButtonTapped \(id)")
+        case let .kokButtonTapped(userId):
             Task { @MainActor in
-                ToastUtils.showToast("친구를 콕 찔러 알림을 보냈어요", icon: .checkInCircle)
+                await kok(reservationId: reservationId, userId: userId)
             }
         case .editButtonTapped:
             print("editButtonTapped")
@@ -146,9 +150,11 @@ final class ReservationViewModel: Reducerable {
         }
     }
     
+    @MainActor
     func kok(reservationId: Int, userId: Int) async {
         do {
             try await reservationUseCase.kok(reservationId: reservationId, userId: userId)
+            ToastUtils.showToast("친구를 콕 찔러 알림을 보냈어요", icon: .checkInCircle)
         } catch {
             LoggerUtil.log(error, level: .error)
         }
@@ -160,7 +166,7 @@ public extension ReservationDetail {
         reservationId: 42,
         title: "오아시스를 직접 본다니",
         category: .performance,
-        reservationDatetime: ISO8601DateFormatter().date(from: "2025-07-10T19:00:00+09:00") ?? .distantFuture,
+        reservationDatetime: ISO8601DateFormatter().date(from: "2025-07-09T02:09:09+09:00") ?? .distantFuture,
         description: "1순위로 E열 선정하기. 만약에 안되면 H도 괜찮아요",
         linkUrl: "https://example.com/reservation-link",
         images: [

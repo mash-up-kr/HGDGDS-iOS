@@ -11,16 +11,17 @@ import ReservationDomain
 import HGNetwork
 
 struct ReadyAPI: EndPointable {
-    typealias Response = HGResponse<String?>
+    typealias Response = HGResponse<HGEmptyResponse>
     
     var baseURL: BaseURL { .host }
-    var method: HGHTTPMethod { .post }
+    var method: HGHTTPMethod { .patch }
     var path: String { "/reservations/\(reservationId)/users/status" }
-    var headers: HGHTTPHeaders? { ["Content-Type": "application/json"] }
+    var headers: HGHTTPHeaders?
     var encoding: HGParameterEncoding { .jsonEncoding }
     var parameters: HGParameters? {
         ["status": status.rawValue]
     }
+    var isNeedAuthorization: Bool = true
     
     let reservationId: Int
     let status: UserReservationStatus
