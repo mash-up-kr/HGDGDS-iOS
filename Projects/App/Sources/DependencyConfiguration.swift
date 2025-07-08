@@ -47,6 +47,7 @@ enum DependencyConfiguration {
         DIContainer.shared.registerAssembly(
             assembly: [
                 UserAssembly(),
+                HomeAssembly(),
                 CreateReservationAssembly(),
                 ReservationAssembly()
             ]

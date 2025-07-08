@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol HomeRepository {
-
+    func getReservationList(request: ReservationListRequest) async throws -> ReservationList
 }

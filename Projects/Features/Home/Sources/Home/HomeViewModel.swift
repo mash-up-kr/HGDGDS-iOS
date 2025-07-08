@@ -9,13 +9,22 @@ import Foundation
 import UIKit
 
 import HGCommon
+import HomeData
 import HomeDomain
 import ReservationDomain
 import HGDesignSystem
+import HGLogger
 
 @Observable
 final class HomeViewModel: Reducerable {
+    var state: State = .init()
+    
+    @ObservationIgnored
+    @Dependency var homeUseCase: HomeUseCase
+    
     enum Action {
+        case onAppear
+        
         case setUpAllTimers
         case startTimer(Int)
         case stopTimer(Int)
@@ -95,10 +104,12 @@ final class HomeViewModel: Reducerable {
         ]
     }
     
-    var state: State = .init()
-    
     func reduce(_ action: Action) {
         switch action {
+        case .onAppear:
+            Task { @MainActor in
+                await getReservationList(page: 1, status: .before)
+            }
         case .setUpAllTimers:
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
                 self.state.timerManagers = self.state.mainReservationInfos.map { info in
@@ -117,6 +128,46 @@ final class HomeViewModel: Reducerable {
                 timer.stop()
             }
             state.timerManagers.removeAll()
+        }
+    }
+    
+    @MainActor
+    private func getReservationList(page: Int, status: ReservationListRequest.Status) async {
+        do {
+            let request: ReservationListRequest = .init(page: page, status: status)
+            let list = try await homeUseCase.getReservationList(request: request)
+            switch status {
+            case .before:
+                updateReservationInfos(with: list.reservations)
+            case .after:
+                state.completedReservationInfos += list.reservations
+            }
+        } catch {
+            LoggerUtil.log("홈화면: 예약 리스트 불러오기 실패")
+        }
+    }
+    
+    //TODO: getMembers 구현 - Reservation merge 되면
+    
+    private func updateReservationInfos(with reservations: [ReservationInfo]) {
+        let now = Date()
+        let oneDayLater = now.addingTimeInterval(60 * 60 * 24)
+
+        for reservation in reservations {
+            if reservation.reservationDatetime >= now
+                && reservation.reservationDatetime <= oneDayLater {
+                state.mainReservationInfos.append(reservation)
+            } else {
+                state.scheduledReservationInfos.append(reservation)
+            }
+        }
+
+        // mainReservationInfos가 비어 있으면 첫 번째 예약을 추가
+        if state.mainReservationInfos.isEmpty, let first = reservations.first {
+            state.mainReservationInfos.append(first)
+
+            // 중복 방지: scheduledReservationInfos에서 제거
+            state.scheduledReservationInfos.removeAll { $0.reservationId == first.reservationId }
         }
     }
 }

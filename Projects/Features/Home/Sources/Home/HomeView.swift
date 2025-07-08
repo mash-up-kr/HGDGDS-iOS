@@ -43,6 +43,9 @@ struct HomeView: View {
         }
         .animation(.easeOut(duration: 0.35), value: viewModel.selectedStatusTab)
         .animation(.easeInOut(duration: 0.25), value: viewModel.selectedReservationIndex)
+        .onAppear {
+            viewModel.reduce(.onAppear)
+        }
     }
     
     @ViewBuilder
