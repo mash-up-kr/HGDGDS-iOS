@@ -75,6 +75,10 @@ struct ReservationView: View {
                 }
             }
             .padding(.horizontal, outsidePadding)
+            .background(alignment: .top) {
+                viewModel.reservation.category.image
+                    .padding(.top, 145)
+            }
         }
         .contentMargins(.bottom, 88)
     }
