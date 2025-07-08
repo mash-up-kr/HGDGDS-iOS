@@ -113,7 +113,3 @@ extension KokProfile: @retroactive ProfileImagePickable, @retroactive Equatable 
         lhs.id == rhs.id
     }
 }
-
-extension ProfileType {
-    
-}

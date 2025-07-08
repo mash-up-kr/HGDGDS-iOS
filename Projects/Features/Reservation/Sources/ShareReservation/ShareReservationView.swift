@@ -265,9 +265,6 @@ struct ShareReservationView: View {
         Text(viewModel.shareViewType.title).padding(.top, 17)
             .setTypo(.heading_24_bold)
             .foregroundStyle(.gray0White)
-            .onTapGesture {
-                viewModel.reduce(.fetchReservationInfo)
-            }
     }
     
     private var bottomArea: some View {

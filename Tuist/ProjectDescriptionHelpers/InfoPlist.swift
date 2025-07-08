@@ -8,6 +8,7 @@
 import ProjectDescription
 
 public let defaultPlist: [String: Plist.Value] = [
+    "CFBundleDisplayName": "KokKok",
     "UIUserInterfaceStyle": "Light",
     "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
     "UISupportedInterfaceOrientations~ipad": ["UIInterfaceOrientationPortrait"],

@@ -120,7 +120,7 @@ struct OnboardingSlidesView: View {
             switch self {
             case .first: .onboardingFirst
             case .second: .onboardingSecond
-            case .third: . onboardingThrid
+            case .third: .onboardingThird
             }
         }
     }

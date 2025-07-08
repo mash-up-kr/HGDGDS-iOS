@@ -24,7 +24,7 @@ struct RootView: View {
         case .mainTab:
             HGTabView()
                 .onAppear {
-                    viewModel.reduce(.onSplashAppear)
+                    viewModel.reduce(.validateAccessToken)
                 }
         case .splash:
             SplashView()
