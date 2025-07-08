@@ -6,8 +6,10 @@
 //
 
 import HGDesignSystem
+import UserDomain
 
 struct KokProfile: ProfileImagePickable, Equatable {
     var id: String
+    var type: ProfileType
     var imageUrl: String
 }

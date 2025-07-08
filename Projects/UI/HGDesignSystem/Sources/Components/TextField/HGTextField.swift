@@ -79,6 +79,8 @@ public struct HGTextField: View {
         return HStack(spacing: 8) {
             TextField("", text: $text)
                 .focused($isFocused)
+                .autocorrectionDisabled()
+                .textInputAutocapitalization(.never)
                 .foregroundStyle(.gray95)
                 .setTypo(size.font)
                 .frame(height: 24)

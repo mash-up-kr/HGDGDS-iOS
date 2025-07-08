@@ -50,4 +50,14 @@ extension ProfileType {
         case .pink: HGColors.pinkLight
         }
     }
+    
+    var profileImage: Image {
+        switch self {
+        case .purple: HGImages.profilePurple.image
+        case .orange: HGImages.profileOrange.image
+        case .green: HGImages.profileGreen.image
+        case .blue: HGImages.profileBlue.image
+        case .pink: HGImages.profilePink.image
+        }
+    }
 }
