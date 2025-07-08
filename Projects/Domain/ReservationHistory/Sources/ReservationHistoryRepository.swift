@@ -8,5 +8,11 @@
 import Foundation
 
 public protocol ReservationHistoryRepository {
-
+    func requestRegisterReservationResult(
+        reservationId: Int,
+        resultType: ReservationResultType,
+        imagePaths: [String],
+        successDateTime: Date,
+        description: String
+    ) async throws -> Bool
 }

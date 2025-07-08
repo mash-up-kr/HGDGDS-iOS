@@ -8,6 +8,9 @@
 import SwiftUI
 import HGCommon
 import PhotosUI
+import ReservationHistoryDomain
+import HGImageUploader
+import HGDesignSystem
 
 @Observable
 final class ReservationResultInputViewModel: Reducerable {
@@ -42,6 +45,13 @@ final class ReservationResultInputViewModel: Reducerable {
     
     var state: State = .init()
     
+    init() { }
+    
+    @ObservationIgnored
+    @Dependency private var imageUploader: HGImageUploader
+    @ObservationIgnored
+    @Dependency private var reservationHistoryUseCase: any ReservationHistoryUseCase
+    
     func reduce(_ action: Action) {
         switch action {
         case let .didTapResultButton(type):
@@ -64,7 +74,9 @@ final class ReservationResultInputViewModel: Reducerable {
         case let .didTapRemovePhotoItemIndex(index):
             removePhotoItemIndex(index)
         case .didTapDoneButton:
-            done()
+            Task {
+                await done()
+            }
         }
     }
     
@@ -77,7 +89,63 @@ final class ReservationResultInputViewModel: Reducerable {
         state.photoItems.remove(at: index)
     }
     
-    private func done() {
+    private func done() async {
+        guard let successReservationDate = state.successReservationDate,
+              let resultType = state.selectedReservationResult else {
+            return
+        }
+        let reservationID: Int = 1 // TODO: 실제 id로 매칭
+        var successDateTime = successReservationDate
+        if let successReservationTime = state.successReservationTime {
+            successDateTime = successDateTime.combineWith(time: successReservationTime)
+        }
+            
+        let description: String = state.explainString
         
+        do {
+            let imageData = try await encode(photoItems: state.photoItems)
+            let paths: [String] = try await withThrowingTaskGroup(of: String.self) { group in
+                for datum in imageData {
+                    group.addTask { [weak self] in
+                        guard let self else {
+                            throw HGError.domainError("self nil")
+                        }
+                        let path = try await self.uploadImage(data: datum)
+                        return path
+                    }
+                }
+                var tempPaths: [String] = []
+                for try await value in group {
+                    tempPaths.append(value)
+                }
+                return tempPaths
+            }
+            
+            let isSuccess = try await reservationHistoryUseCase.requestRegisterReservationResult(
+                reservationId: reservationID,
+                resultType: resultType,
+                imagePaths: paths,
+                successDateTime: successDateTime,
+                description: description
+            )
+            print(isSuccess)
+        } catch {
+            print(error)
+        }
+    }
+    
+    private func encode(photoItems: [PhotosPickerItem]) async throws -> [Data] {
+        var imageData: [Data] = []
+        for item in state.photoItems {
+            if let image = await item.loadImage(), let datum = image.jpegData(compressionQuality: 0.7) {
+                imageData.append(datum)
+                throw HGError.imageConversionFailed
+            }
+        }
+        return imageData
+    }
+    
+    private func uploadImage(data: Data) async throws -> String {
+        try await imageUploader.uploadImage(type: .result, imageData: data)
     }
 }

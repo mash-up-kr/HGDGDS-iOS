@@ -7,12 +7,15 @@
 
 import SwiftUI
 import HGDesignSystem
+import ReservationHistoryDomain
 
-struct ReservationResultInputView: View {
+public struct ReservationResultInputView: View {
     @State private var viewModel: ReservationResultInputViewModel = .init()
     @FocusState private var isFocused: Bool
     
-    var body: some View {
+    public init() { }
+    
+    public var body: some View {
         ScrollView {
             VStack(spacing: 0) {
                 if viewModel.isShowSectionTitleView {
@@ -185,10 +188,7 @@ struct ReservationResultInputView: View {
                         selectedItems: $viewModel.state.photoItems,
                         maxSelectCount: 3
                     )
-                    ForEach(
-                        Array(viewModel.photoItems.enumerated()),
-                        id: \.element.hashValue
-                    ) { (index, item) in
+                    ForEach(viewModel.photoItems.indices, id: \.self) { index in
                         HGPhotoBox(
                             item: viewModel.photoItems[index],
                             action: { _ in
