@@ -13,8 +13,10 @@ import ReservationFeatureInterface
 public struct ReservationModuleViewProvider: ReservationViewProviderable {
     public init() { }
     
-    public var reservationMainView: AnyView {
-        AnyView(ReservationView())
+    public func reservationMainView(reservationId: Int) -> AnyView {
+        AnyView(
+            ReservationView(reservationId: reservationId)
+        )
     }
     
     public func reservationShareView(

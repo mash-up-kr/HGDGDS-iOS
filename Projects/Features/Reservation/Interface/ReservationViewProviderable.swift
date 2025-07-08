@@ -10,7 +10,7 @@ import HGCommon
 
 @MainActor
 public protocol ReservationViewProviderable {
-    var reservationMainView: AnyView { get }
+    func reservationMainView(reservationId: Int) -> AnyView
     
     func reservationShareView(
         reservationId: Int,

@@ -10,7 +10,9 @@ import ProjectDescriptionHelpers
 let interface = Target.makeDynamicFrameworkTarget(
     name: "ReservationFeatureInterface",
     sources: ["Interface/**"],
-    dependencies: [],
+    dependencies: [
+        .coreProject(with: .hgCommon)
+    ],
     hasResources: false
 )
 

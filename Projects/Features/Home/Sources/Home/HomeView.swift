@@ -12,7 +12,7 @@ import HomeDomain
 import HGDesignSystem
 
 struct HomeView: View {
-    @Bindable private var viewModel: HomeViewModel = .init()
+    @State private var viewModel: HomeViewModel = .init()
     
     private var backgroundGradientHeight: CGFloat {
         /// Screen height - TabBar height - Bottom padding - 91(카드뷰 height 절반)

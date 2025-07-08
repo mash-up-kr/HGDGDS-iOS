@@ -16,8 +16,16 @@ import HGLogger
 final class ReservationViewModel: Reducerable {
     var state: State = .init()
     
+    let reservationId: Int
+    
+    init(reservationId: Int) {
+        self.reservationId = reservationId
+    }
+    
     @ObservationIgnored
     @Dependency var reservationUseCase: ReservationUseCase
+    
+    private(set) var countDownTimer: CountDownTimerManager = .init()
     
     enum Action {
         case onAppear
@@ -34,8 +42,6 @@ final class ReservationViewModel: Reducerable {
     }
     
     struct State {
-        var countDownTimer: CountDownTimerManager = .init()
-        
         var reservation: ReservationDetail = .mockData
         var members: [ReservationMember] = [
             ReservationMember(
@@ -112,8 +118,8 @@ final class ReservationViewModel: Reducerable {
         do {
             let reservation = try await reservationUseCase.getReservationDetail(reservationId: reservationId)
             state.reservation = reservation
-            state.countDownTimer.setupTime(endDate: reservation.reservationDatetime ?? Date())
-            state.countDownTimer.start()
+            countDownTimer.setupTime(endDate: reservation.reservationDatetime ?? Date())
+            countDownTimer.start()
         } catch {
             LoggerUtil.log(error, level: .error)
         }

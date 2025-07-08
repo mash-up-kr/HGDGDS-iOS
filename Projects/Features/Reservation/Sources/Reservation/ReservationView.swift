@@ -21,8 +21,11 @@ struct ReservationView: View {
     }
     @State private var isHiddenNavigationBar = true
     
-    @Bindable var viewModel: ReservationViewModel = .init()
-    @State private var countDownTimer: CountDownTimerManager = .init()
+    @Bindable var viewModel: ReservationViewModel
+    
+    init(reservationId: Int) {
+        self.viewModel = .init(reservationId: reservationId)
+    }
     
     var dDay: Int { viewModel.reservation.reservationDatetime?.dDayValue() ?? 0 }
     
@@ -196,29 +199,34 @@ struct ReservationView: View {
     }
     
     private var readyTipMessage: some View {
-        HStack(spacing: 11) {
-            HGImages.readyBell.image
-                .resizable()
-                .frame(40)
-            Text("에약 1시간 전부터\n준비 버튼을 누를 수 있어요!")
-                .setTypo(.body_14_bold)
-                .foregroundStyle(.gray95)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            HGIcons.arrowRight.image
-                .foregroundStyle(.gray40)
+        NavigationLink {
+            ReadyTipView()
+        } label: {
+            HStack(spacing: 11) {
+                HGImages.readyBell.image
+                    .resizable()
+                    .frame(40)
+                Text("예약 1시간 전부터\n준비 버튼을 누를 수 있어요!")
+                    .setTypo(.body_14_bold)
+                    .foregroundStyle(.gray95)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .multilineTextAlignment(.leading)
+                HGIcons.arrowRight.image
+                    .foregroundStyle(.gray40)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 15)
+            .background(
+                RoundedRectangle(cornerRadius: 22)
+                    .fill(.ultraThinMaterial)
+            )
+            .overlay {
+                RoundedRectangle(cornerRadius: 22)
+                    .stroke(viewModel.reservation.category.widthGradient, lineWidth: 1)
+            }
+            .shadow(color: HGColors.purpleDark.color.opacity(0.15), radius: 20, x: 0, y: 2)
+            .colorScheme(.light)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 15)
-        .background(
-            RoundedRectangle(cornerRadius: 22)
-                .fill(.ultraThinMaterial)
-        )
-        .overlay {
-            RoundedRectangle(cornerRadius: 22)
-                .stroke(viewModel.reservation.category.widthGradient, lineWidth: 1)
-        }
-        .shadow(color: HGColors.purpleDark.color.opacity(0.15), radius: 20, x: 0, y: 2)
-        .colorScheme(.light)
     }
     
     var profileSectionView: some View {
@@ -468,5 +476,5 @@ struct ReservationView: View {
 }
 
 #Preview(traits: .applyFont) {
-    ReservationView()
+    ReservationView(reservationId: 0)
 }
