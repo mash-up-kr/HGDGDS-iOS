@@ -7,12 +7,9 @@
 
 import SwiftUI
 import HGDesignSystem
+import ReservationHistoryDomain
 
-enum ReservationResultType {
-    case success
-    case ambiguousSuccess
-    case fail
-    
+extension ReservationResultType {
     var image: Image {
         switch self {
         case .success: HGImages.categorySuccess.image

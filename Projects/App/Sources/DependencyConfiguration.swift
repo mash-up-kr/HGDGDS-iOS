@@ -48,7 +48,8 @@ enum DependencyConfiguration {
             assembly: [
                 UserAssembly(),
                 CreateReservationAssembly(),
-                ReservationAssembly()
+                ReservationAssembly(),
+                ReservationHistoryAssembly()
             ]
         )
     }

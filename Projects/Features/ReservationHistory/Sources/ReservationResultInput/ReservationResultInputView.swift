@@ -7,12 +7,19 @@
 
 import SwiftUI
 import HGDesignSystem
+import ReservationHistoryDomain
+import HGCommon
 
-struct ReservationResultInputView: View {
+public struct ReservationResultInputView: View {
     @State private var viewModel: ReservationResultInputViewModel = .init()
     @FocusState private var isFocused: Bool
+    @State private var coordinator: any Coordinatorable
     
-    var body: some View {
+    public init(coordinator: any Coordinatorable) {
+        self.coordinator = coordinator
+    }
+    
+    public var body: some View {
         ScrollView {
             VStack(spacing: 0) {
                 if viewModel.isShowSectionTitleView {
@@ -72,6 +79,11 @@ struct ReservationResultInputView: View {
             .presentationDetents([.height(200)])
             .presentationDragIndicator(.visible)
             .frame(width: 200)
+        }
+        .onChange(of: viewModel.isCompleted) { _, isCompleted in
+            if isCompleted {
+                coordinator.pop()
+            }
         }
     }
         
@@ -185,10 +197,7 @@ struct ReservationResultInputView: View {
                         selectedItems: $viewModel.state.photoItems,
                         maxSelectCount: 3
                     )
-                    ForEach(
-                        Array(viewModel.photoItems.enumerated()),
-                        id: \.element.hashValue
-                    ) { (index, item) in
+                    ForEach(viewModel.photoItems.indices, id: \.self) { index in
                         HGPhotoBox(
                             item: viewModel.photoItems[index],
                             action: { _ in
@@ -210,10 +219,4 @@ struct ReservationResultInputView: View {
             maxCount: 100
         )
     }
-
-    
-}
-
-#Preview(traits: .applyFont) {
-    ReservationResultInputView()
 }
