@@ -29,7 +29,7 @@ struct HomeMainReservationTabView: View {
                 MainReservationView(
                     reservationInfo: info,
                     isShowSubReservationCardList: viewModel.isExistScheduledSubReservations,
-                    countDownTimer: viewModel.state.timerManagers[safe: index]
+                    countDownTimer: viewModel.timerManagers[safe: index]
                 ) {
                     //TODO: 예약 상세 화면 이동
                 }

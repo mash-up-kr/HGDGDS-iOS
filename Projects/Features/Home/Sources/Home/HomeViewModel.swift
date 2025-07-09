@@ -26,6 +26,9 @@ final class HomeViewModel: Reducerable {
     var scheduledReservationPage: Int = 1
     @ObservationIgnored
     var completedReservationPage: Int = 1
+
+    var timerManagers: [CountDownTimerManager] = []
+    
     enum Action {
         case onAppear
         
@@ -44,6 +47,8 @@ final class HomeViewModel: Reducerable {
         var isExistScheduledMainReservation: Bool { !mainReservationInfos.isEmpty }
         var isExistScheduledSubReservations: Bool { !scheduledReservationInfos.isEmpty }
         var isExistCompleteReservation: Bool { !completedReservationInfos.isEmpty }
+
+        var mainReservationInfos: [ReservationInfo] = []
         var scheduledReservationInfos: [ReservationInfo] = []
         var completedReservationInfos: [ReservationInfo] = []
         
@@ -60,23 +65,21 @@ final class HomeViewModel: Reducerable {
                 reduce(.setUpAllTimers)
             }
         case .setUpAllTimers:
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-                self.state.timerManagers = self.state.mainReservationInfos.map { info in
-                    let timer = CountDownTimerManager()
-                    timer.setupTime(endDate: info.reservationDatetime)
-                    return timer
-                }
-                self.reduce(.startTimer(self.state.selectedReservationIndex))
+            self.timerManagers = self.state.mainReservationInfos.map { info in
+                let timer = CountDownTimerManager()
+                timer.setupTime(endDate: info.reservationDatetime)
+                return timer
             }
+            self.reduce(.startTimer(self.state.selectedReservationIndex))
         case .startTimer(let index):
-            state.timerManagers[safe: index]?.start()
+            timerManagers[safe: index]?.start()
         case .stopTimer(let index):
-            state.timerManagers[safe: index]?.stop()
+            timerManagers[safe: index]?.stop()
         case .removeAllTimers:
-            for timer in state.timerManagers {
+            for timer in timerManagers {
                 timer.stop()
             }
-            state.timerManagers.removeAll()
+            timerManagers.removeAll()
         case let .loadMoreReservation(status):
             let page: Int
             switch status {
