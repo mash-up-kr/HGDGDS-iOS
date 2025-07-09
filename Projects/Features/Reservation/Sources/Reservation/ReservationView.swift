@@ -395,23 +395,27 @@ struct ReservationView: View {
     
     private var linkSectionView: some View {
         makeSectionCardView(icon: .link, title: "링크") {
-            Button {
-                viewModel.reduce(.linkButtonTapped)
-            } label: {
-                HStack(spacing: 4) {
-                    HGIcons.linkURL.image
-                        .resizable()
-                        .foregroundStyle(.gray70)
-                        .frame(24)
-                    Text(viewModel.reservation.linkUrl)
-                        .lineLimit(1)
-                        .setTypo(.body_16_bold)
-                        .foregroundStyle(.gray80)
+            HStack(spacing: 4) {
+                HGIcons.linkURL.image
+                    .resizable()
+                    .foregroundStyle(.gray70)
+                    .frame(24)
+                Text(viewModel.reservation.linkUrl)
+                    .lineLimit(1)
+                    .setTypo(.body_16_bold)
+                    .foregroundStyle(.gray80)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .strokeBorder(HGColors.gray20.color, radius: 14)
+            .onTapGesture {
+                guard let url = URL(string: viewModel.reservation.linkUrl),
+                      UIApplication.shared.canOpenURL(url) else {
+                    viewModel.reduce(.showInvalidLinkToast)
+                    return
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .strokeBorder(HGColors.gray20.color, radius: 14)
+                UIApplication.shared.open(url)
             }
         }
     }

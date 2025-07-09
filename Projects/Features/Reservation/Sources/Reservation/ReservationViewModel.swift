@@ -38,6 +38,7 @@ final class ReservationViewModel: Reducerable {
         case linkButtonTapped
         
         case showImageViewer(_ index: Int)
+        case showInvalidLinkToast
     }
     
     struct State {
@@ -117,6 +118,10 @@ final class ReservationViewModel: Reducerable {
                 state.selectedImageIndex = index
                 state.isShowImageViewer = true
             }
+        case .showInvalidLinkToast:
+            Task { @MainActor in
+                ToastUtils.showToast("유효하지 않은 링크입니다!")
+            }
         }
     }
     
@@ -174,20 +179,21 @@ final class ReservationViewModel: Reducerable {
     }
     
     private func fetchImages(urlStrings: [String]) async -> [UIImage] {
-        await withTaskGroup(of: UIImage?.self) { group in
-            for urlString in urlStrings {
+        await withTaskGroup(of: (Int, UIImage?).self) { group in
+            for (index, urlString) in urlStrings.enumerated() {
                 group.addTask {
-                    await self.fetchImage(urlString: urlString)
+                    let image = await self.fetchImage(urlString: urlString)
+                    return (index, image)
                 }
             }
 
-            var results: [UIImage] = []
-
-            for await image in group {
-                results.append(image ?? UIImage())
+            var indexedResults: [(Int, UIImage)] = []
+            for await (index, image) in group {
+                indexedResults.append((index, image ?? UIImage()))
             }
-
-            return results
+            return indexedResults
+                .sorted(by: { $0.0 < $1.0 })
+                .map { $0.1 }
         }
     }
     
