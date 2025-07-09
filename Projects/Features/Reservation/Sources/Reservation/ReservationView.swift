@@ -14,6 +14,9 @@ import UserDomain
 import HGDesignSystem
 
 struct ReservationView: View {
+    @Bindable var viewModel: ReservationViewModel
+    @State private var isHiddenNavigationBar = true
+    
     private let innerPadding: CGFloat = 16
     private let outsidePadding: CGFloat = 16
     private var photoGridSize: CGFloat {
@@ -21,9 +24,6 @@ struct ReservationView: View {
         let spacing: CGFloat = 8
         return ((UIWindow.current?.screen.bounds.width ?? 100) - (padding + spacing) * 2) / 3
     }
-    @State private var isHiddenNavigationBar = true
-    
-    @Bindable var viewModel: ReservationViewModel
     
     init(reservationId: Int) {
         self.viewModel = .init(reservationId: reservationId)
@@ -52,6 +52,12 @@ struct ReservationView: View {
                 images: viewModel.sharedImages
             )
         }
+        .background(
+            ActivityView(
+                isPresented: $viewModel.state.isPresentedShareSheet,
+                items: ["kokkok://invite?reservationId=\(viewModel.reservationId)"]
+            )
+        )
     }
     
     private var contentView: some View {

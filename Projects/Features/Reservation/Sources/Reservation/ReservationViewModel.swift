@@ -43,36 +43,8 @@ final class ReservationViewModel: Reducerable {
     
     struct State {
         var reservation: ReservationDetail = .mockData
-        var members: [ReservationMember] = [
-            ReservationMember(
-                userId: 2,
-                nickname: "지윤",
-                profileImageCode: "ORNAGE",
-                status: .default,
-                isHost: false
-            ),
-            ReservationMember(
-                userId: 3,
-                nickname: "태현",
-                profileImageCode: "GREEN",
-                status: .default,
-                isHost: false
-            ),
-            ReservationMember(
-                userId: 4,
-                nickname: "예린",
-                profileImageCode: "PINK",
-                status: .ready,
-                isHost: false
-            )
-        ]
-        var me: ReservationMember = ReservationMember(
-            userId: 1,
-            nickname: "김파디",
-            profileImageCode: "",
-            status: .default,
-            isHost: true
-        )
+        var members: [ReservationMember] = []
+        var me: ReservationMember = ReservationMember()
         
         var rivalCount: Int = 14
         var isReady: Bool = false
@@ -84,6 +56,8 @@ final class ReservationViewModel: Reducerable {
         var isShowImageViewer: Bool = false
         var selectedImageIndex: Int? = nil
         var sharedImages: [UIImage] = []
+        
+        var isPresentedShareSheet: Bool = false
     }
     
     func reduce(_ action: Action) {
@@ -101,17 +75,19 @@ final class ReservationViewModel: Reducerable {
                 )
             }
         case .inviteButtonTapped:
-            print("inviteButtonTapped")
+            state.isPresentedShareSheet = true
         case let .kokButtonTapped(userId):
             Task { @MainActor in
                 await kok(reservationId: reservationId, userId: userId)
             }
         case .linkButtonTapped:
-            print("linkButtonTapped")
+            state.isShowImageViewer = true
         case .refreshButtonTapped:
-            print("refreshButtonTapped")
+            Task { @MainActor in
+                await getReservationDetail(reservationId: reservationId)
+                await getReservationMembers(reservationId: reservationId)
+            }
         case let .showImageViewer(index):
-            print("showImageViewer \(index)")
             Task {
                 state.sharedImages = await fetchImages(urlStrings: state.reservation.images)
                 state.selectedImageIndex = index

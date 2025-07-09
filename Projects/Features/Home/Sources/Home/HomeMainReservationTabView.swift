@@ -32,7 +32,7 @@ struct HomeMainReservationTabView: View {
                     isShowSubReservationCardList: viewModel.isExistScheduledSubReservations,
                     countDownTimer: viewModel.state.timerManagers[safe: index]
                 ) {
-                    coordinator.push(.upcomingReservationDetail(reservationId: info.reservationId))
+                    coordinator.push(.upcomingReservationDetail(reservationId: 30))
                 }
                 .padding(.bottom, HomeUIConstans.bottomPadding)
                 .tag(index)
