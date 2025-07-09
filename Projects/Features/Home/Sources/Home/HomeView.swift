@@ -121,7 +121,7 @@ struct HomeView: View {
                     viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.category.image
                         .resizable()
                         .frame(354)
-                        .offset(y: viewModel.isExistScheduledSubReservations ? 20 : 96)
+                        .offset(y: viewModel.isExistScheduledSubReservations ? 32 : 96)
                         .transition(.move(edge: .leading).combined(with: .opacity))
                 }
             }
