@@ -91,6 +91,7 @@ final class ReservationViewModel: Reducerable {
             Task { @MainActor in
                 await getReservationDetail(reservationId: reservationId)
                 await getReservationMembers(reservationId: reservationId)
+//                await rivalCount(reservationId: reservationId) API 구현 X
             }
         case .readyButtonTapped:
             Task { @MainActor in
@@ -159,6 +160,16 @@ final class ReservationViewModel: Reducerable {
             ToastUtils.showToast("친구를 콕 찔러 알림을 보냈어요", icon: .checkInCircle)
         } catch {
             LoggerUtil.log("콕찌르기 실패: \(error)", level: .error)
+        }
+    }
+    
+    @MainActor
+    private func rivalCount(reservationId: Int) async {
+        do {
+            let rivalCount = try await reservationUseCase.rivalCount(reservationId: reservationId)
+            state.rivalCount = rivalCount
+        } catch {
+            LoggerUtil.log("라이벌 수 불러오기 실패: \(error)", level: .error)
         }
     }
     

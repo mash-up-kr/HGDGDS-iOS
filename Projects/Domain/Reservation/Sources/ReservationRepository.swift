@@ -14,4 +14,5 @@ public protocol ReservationRepository {
     func reqeustReservationMembers(id: Int) async throws -> ReservationMembers
     func updateReadyStatus(id: Int, status: UserReservationStatus) async throws
     func kok(reservationId: Int, userId: Int) async throws
+    func rivalCount(reservationId: Int) async throws -> Int
 }

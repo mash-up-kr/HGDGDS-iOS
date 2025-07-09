@@ -14,6 +14,7 @@ public protocol ReservationUseCase {
     func getReservationMembers(id: Int) async throws -> ReservationMembers
     func updateReadyStatus(id: Int, status: UserReservationStatus) async throws
     func kok(reservationId: Int, userId: Int) async throws
+    func rivalCount(reservationId: Int) async throws -> Int
 }
 
 public class ReservationUseCaseImpl: ReservationUseCase {
@@ -41,5 +42,9 @@ public class ReservationUseCaseImpl: ReservationUseCase {
     
     public func kok(reservationId: Int, userId: Int) async throws {
         try await reservationRepo.kok(reservationId: reservationId, userId: userId)
+    }
+    
+    public func rivalCount(reservationId: Int) async throws -> Int {
+        try await reservationRepo.rivalCount(reservationId: reservationId)
     }
 }

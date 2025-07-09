@@ -93,4 +93,17 @@ public final class ReservationRepositoryImpl: ReservationRepository {
             throw HGError.networkError(error)
         }
     }
+    
+    public func rivalCount(reservationId: Int) async throws -> Int {
+        let api = RivalCountAPI(reservationId: reservationId)
+        do {
+            guard let dtoModel = try await network.send(api),
+                  let data = dtoModel.data else {
+                throw HGError.domainError("dto model is nil")
+            }
+            return data.rivalCount
+        } catch {
+            throw HGError.networkError(error)
+        }
+    }
 }
