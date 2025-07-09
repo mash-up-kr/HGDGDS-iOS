@@ -15,11 +15,12 @@ let project = Project(
             name: "HomeFeature",
             dependencies: [
                 .domainProject(with: .home),
+                .domainProject(with: .reservation),
+                .domainProject(with: .user),
                 .coreProject(with: .hgCommon),
                 .coreProject(with: .hgLogger),
                 .uiProject(with: .hgDesignSystem),
                 .interfaceProject(with: .reservation),
-                .domainProject(with: .reservation),
             ],
             hasResources: false
         )

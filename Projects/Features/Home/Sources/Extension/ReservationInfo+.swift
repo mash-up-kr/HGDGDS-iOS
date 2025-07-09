@@ -9,15 +9,14 @@ import Foundation
 
 import HomeDomain
 import ReservationDomain
-
-extension ReservationCategoryType {
-    init?(rawValueFrom info: ReservationInfo) {
-        self.init(rawValue: info.category)
-    }
-}
+import UserDomain
 
 extension ReservationInfo {
     var categoryType: ReservationCategoryType {
         ReservationCategoryType(rawValue: self.category) ?? .etc
+    }
+    
+    var profileImageTypeList: [ProfileType] {
+        profileImageCodeList.compactMap { ProfileType(rawValue: $0) }
     }
 }

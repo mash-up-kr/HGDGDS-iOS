@@ -39,7 +39,7 @@ struct MainReservationCard: View {
     private var header: some View {
         HStack(spacing: 0) {
             OffsetImageStack(
-                imageURLStrings: reservationInfo.profileImageCodeList,
+                images: reservationInfo.profileImageTypeList.map { $0.image },
                 imageLength: 28,
                 spacing: 20,
                 maxVisibleCount: 3
