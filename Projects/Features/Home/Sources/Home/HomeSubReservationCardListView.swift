@@ -87,17 +87,9 @@ struct SubReservationCard: View {
     
     private var content: some View {
         HStack(spacing: 12) {
-            LazyImage(url: URL(string: reservationInfo.images.first ?? "")) { state in
-                if let image = state.image {
-                    image
-                        .resizable()
-                        .scaledToFit()
-                } else {
-                    HGColors.opacityBlack10.color
-                }
-            }
-            .frame(width: 64, height: 64)
-            .setRadius(16)
+            reservationInfo.category.thumbnail
+                .frame(width: 64, height: 64)
+                .setRadius(16)
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(reservationInfo.title)
