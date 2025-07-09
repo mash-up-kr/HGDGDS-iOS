@@ -8,12 +8,16 @@
 import SwiftUI
 import HGDesignSystem
 import ReservationHistoryDomain
+import HGCommon
 
 public struct ReservationResultInputView: View {
     @State private var viewModel: ReservationResultInputViewModel = .init()
     @FocusState private var isFocused: Bool
+    @State private var coordinator: any Coordinatorable
     
-    public init() { }
+    public init(coordinator: any Coordinatorable) {
+        self.coordinator = coordinator
+    }
     
     public var body: some View {
         ScrollView {
@@ -75,6 +79,11 @@ public struct ReservationResultInputView: View {
             .presentationDetents([.height(200)])
             .presentationDragIndicator(.visible)
             .frame(width: 200)
+        }
+        .onChange(of: viewModel.isCompleted) { _, isCompleted in
+            if isCompleted {
+                coordinator.pop()
+            }
         }
     }
         
@@ -210,10 +219,4 @@ public struct ReservationResultInputView: View {
             maxCount: 100
         )
     }
-
-    
-}
-
-#Preview(traits: .applyFont) {
-    ReservationResultInputView()
 }

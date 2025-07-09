@@ -41,6 +41,8 @@ final class ReservationResultInputViewModel: Reducerable {
         var isShowSuccessInfoView: Bool = false
         
         var isDisableDoneButton: Bool = true
+        var isLoading: Bool = false
+        var isCompleted: Bool = false
     }
     
     var state: State = .init()
@@ -94,15 +96,17 @@ final class ReservationResultInputViewModel: Reducerable {
     }
     
     private func done() async {
+        guard !state.isLoading else { return }
         guard let resultType = state.selectedReservationResult else {
             return
         }
+        state.isLoading = true
+        
         let reservationID: Int = 1 // TODO: 실제 id로 매칭
         let successReservationDate = state.successReservationDate
         let successDateTime = successReservationDate?.combineWith(time: state.successReservationTime)
-            
         let description: String = state.explainString
-        
+
         do {
             let imageData = try await encode(photoItems: state.photoItems)
             let paths: [String] = try await withThrowingTaskGroup(of: String.self) { group in
@@ -129,10 +133,11 @@ final class ReservationResultInputViewModel: Reducerable {
                 successDateTime: successDateTime,
                 description: description
             )
-            print(isSuccess)
+            state.isCompleted = isSuccess
         } catch {
             print(error)
         }
+        state.isLoading = false
     }
     
     private func encode(photoItems: [PhotosPickerItem]) async throws -> [Data] {
