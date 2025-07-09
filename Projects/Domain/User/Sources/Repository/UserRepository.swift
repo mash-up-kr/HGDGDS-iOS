@@ -20,7 +20,7 @@ public protocol UserRepository {
         fcmToken: String
     ) async throws
     
-    func getProfileList() async throws -> [ProfileEntity]
+    func getProfileList() async throws -> [KokProfile]
     func requestUserInfo() async throws -> UserInfo
     func requestUpdateUserInfo(
         nickname: String?,

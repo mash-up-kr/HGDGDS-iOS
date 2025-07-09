@@ -14,7 +14,7 @@ struct ProfileDTO: Decodable {
 }
 
 extension ProfileDTO {
-    var toDomain: ProfileEntity {
+    var toDomain: KokProfile {
         .init(
             type: ProfileType(rawValue: profileImageCodeName) ?? .blue,
             imageUrl: imageUrl

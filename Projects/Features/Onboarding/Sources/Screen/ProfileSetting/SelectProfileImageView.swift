@@ -60,6 +60,7 @@ struct SelectProfileImageView: View {
         .task {
             viewModel.reduce(.setup)
         }
+        .isLoading(viewModel.isLoading)
     }
 }
 
