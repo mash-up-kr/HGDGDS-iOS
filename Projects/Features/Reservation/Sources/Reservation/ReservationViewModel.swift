@@ -84,7 +84,6 @@ final class ReservationViewModel: Reducerable {
             state.isShowImageViewer = true
         case .refreshButtonTapped:
             Task { @MainActor in
-                await getReservationDetail(reservationId: reservationId)
                 await getReservationMembers(reservationId: reservationId)
             }
         case let .showImageViewer(index):
