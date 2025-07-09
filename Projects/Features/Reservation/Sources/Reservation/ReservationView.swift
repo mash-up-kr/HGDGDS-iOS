@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+import NukeUI
 import HGCommon
 import ReservationDomain
 import HGDesignSystem
@@ -44,13 +45,12 @@ struct ReservationView: View {
         .onAppear {
             viewModel.reduce(.onAppear)
         }
-        .dialog(
-            isPresented: $viewModel.state.isShowEditPermissionDialog,
-            title: "예약을 만든 주최자만\n편집 가능해요",
-            description: "주최자에게 편집을 요청하세요",
-            image: .categorySuccess,
-            okTitle: "확인"
-        )
+        .fullScreenCover(isPresented: $viewModel.state.isShowImageViewer) {
+            ImageSwipeView(
+                showIndex: viewModel.selectedImageIndex ?? 0,
+                images: viewModel.sharedImages
+            )
+        }
     }
     
     private var contentView: some View {
@@ -419,14 +419,21 @@ struct ReservationView: View {
     private var sharedPhotosSectionView: some View {
         makeSectionCardView(icon: .cameraShare, title: "공유된 사진") {
             HStack(spacing: 5) {
-                ForEach(Array(viewModel.reservation.images.enumerated()), id: \.offset) { index, image in
+                ForEach(Array(viewModel.reservation.images.enumerated()), id: \.offset) { index, imageURLString in
                     Button {
                         viewModel.reduce(.showImageViewer(index))
                     } label: {
-                        Color.red
-                            .frame(photoGridSize)
-                            .setRadius(16)
-                            .strokeBorder(HGColors.gray20.color, radius: 16, linewidth: 1)
+                        LazyImage(url: URL(string: imageURLString)) { state in
+                            if let image = state.image {
+                                image
+                                    .resizable()
+                            } else {
+                                HGColors.opacityBlack10.color
+                            }
+                        }
+                        .frame(photoGridSize)
+                        .setRadius(16)
+                        .strokeBorder(HGColors.gray20.color, radius: 16, linewidth: 1)
                     }
                 }
             }

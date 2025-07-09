@@ -5,8 +5,9 @@
 //  Created by 박병호 on 7/4/25.
 //
 
-import Foundation
+import SwiftUI
 
+import Nuke
 import HGCommon
 import ReservationDomain
 import HGDesignSystem
@@ -34,11 +35,9 @@ final class ReservationViewModel: Reducerable {
         case inviteButtonTapped
         case kokButtonTapped(_ userid: Int)
         case refreshButtonTapped
-        case editButtonTapped
         case linkButtonTapped
         
         case showImageViewer(_ index: Int)
-        case showEditPermissionDialog(Bool)
     }
     
     struct State {
@@ -81,7 +80,9 @@ final class ReservationViewModel: Reducerable {
             return interval > 0 && interval <= 3600 // 60 * 60
         }
         
-        var isShowEditPermissionDialog: Bool = false
+        var isShowImageViewer: Bool = false
+        var selectedImageIndex: Int? = nil
+        var sharedImages: [UIImage] = []
     }
     
     func reduce(_ action: Action) {
@@ -104,60 +105,96 @@ final class ReservationViewModel: Reducerable {
             Task { @MainActor in
                 await kok(reservationId: reservationId, userId: userId)
             }
-        case .editButtonTapped:
-            print("editButtonTapped")
         case .linkButtonTapped:
             print("linkButtonTapped")
         case .refreshButtonTapped:
             print("refreshButtonTapped")
         case let .showImageViewer(index):
             print("showImageViewer \(index)")
-        case let .showEditPermissionDialog(show):
-            state.isShowEditPermissionDialog = show
+            Task {
+                state.sharedImages = await fetchImages(urlStrings: state.reservation.images)
+                state.selectedImageIndex = index
+                state.isShowImageViewer = true
+            }
         }
     }
     
     @MainActor
-    func getReservationDetail(reservationId: Int) async {
+    private func getReservationDetail(reservationId: Int) async {
         do {
             let reservation = try await reservationUseCase.getReservationDetail(reservationId: reservationId)
             state.reservation = reservation
             countDownTimer.setupTime(endDate: reservation.reservationDatetime ?? Date())
             countDownTimer.start()
         } catch {
-            LoggerUtil.log(error, level: .error)
+            LoggerUtil.log("예약 상세 정보 가져오기 실패: \(error)", level: .error)
         }
     }
     
     @MainActor
-    func getReservationMembers(reservationId: Int) async {
+    private func getReservationMembers(reservationId: Int) async {
         do {
             let members = try await reservationUseCase.getReservationMembers(id: reservationId)
             state.members = members.members
             state.me = members.me
         } catch {
-            LoggerUtil.log(error, level: .error)
+            LoggerUtil.log("예약 멤버 가져오기 실패: \(error)", level: .error)
         }
     }
     
     @MainActor
-    func updateReadyStatus(reservationId: Int, status: UserReservationStatus) async {
+    private func updateReadyStatus(reservationId: Int, status: UserReservationStatus) async {
         do {
             try await reservationUseCase.updateReadyStatus(id: reservationId, status: status)
             state.isReady = status == .ready
         } catch {
-            LoggerUtil.log(error, level: .error)
+            LoggerUtil.log("준비완료 실패: \(error)", level: .error)
         }
     }
     
     @MainActor
-    func kok(reservationId: Int, userId: Int) async {
+    private func kok(reservationId: Int, userId: Int) async {
         do {
             try await reservationUseCase.kok(reservationId: reservationId, userId: userId)
             ToastUtils.showToast("친구를 콕 찔러 알림을 보냈어요", icon: .checkInCircle)
         } catch {
-            LoggerUtil.log(error, level: .error)
+            LoggerUtil.log("콕찌르기 실패: \(error)", level: .error)
         }
+    }
+    
+    private func fetchImages(urlStrings: [String]) async -> [UIImage] {
+        await withTaskGroup(of: UIImage?.self) { group in
+            for urlString in urlStrings {
+                group.addTask {
+                    await self.fetchImage(urlString: urlString)
+                }
+            }
+
+            var results: [UIImage] = []
+
+            for await image in group {
+                results.append(image ?? UIImage())
+            }
+
+            return results
+        }
+    }
+    
+    private func fetchImage(urlString: String) async -> UIImage? {
+        guard let url = URL(string: urlString) else {
+            print("이미지 로드 실패: 유효한 URL이 아닙니다")
+            LoggerUtil.log("이미지 로드 실패: 유효한 URL이 아닙니다", level: .error)
+             return nil
+         }
+         let request = ImageRequest(url: url)
+        
+         do {
+             return try await ImagePipeline.shared.image(for: request)
+         } catch {
+             print("이미지 로드 실패: \(error)")
+             LoggerUtil.log("이미지 로드 실패: \(error)", level: .error)
+             return nil
+         }
     }
 }
 
@@ -170,8 +207,9 @@ public extension ReservationDetail {
         description: "1순위로 E열 선정하기. 만약에 안되면 H도 괜찮아요",
         linkUrl: "https://example.com/reservation-link",
         images: [
-            "https://s3.amazonaws.com/bucket/image1.jpg",
-            "https://s3.amazonaws.com/bucket/image2.jpg"
+            "https://i.pravatar.cc/150?img=4",
+            "https://i.pravatar.cc/150?img=4",
+            "https://i.pravatar.cc/150?img=3",
         ],
         host: .init(
             hostId: -1,
