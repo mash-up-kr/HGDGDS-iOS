@@ -16,7 +16,7 @@ public struct ReservationListRequest: Equatable {
     public init(
         page: Int = 1,
         limit: Int = 10,
-        order: Order = .desc,
+        order: Order = .asc,
         status: Status
     ) {
         self.page = page

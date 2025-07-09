@@ -112,20 +112,20 @@ final class HomeViewModel: Reducerable {
         let now = Date()
         let oneDayLater = now.addingTimeInterval(60 * 60 * 24)
 
-        for reservation in reservations {
-            if reservation.reservationDatetime >= now
-                && reservation.reservationDatetime <= oneDayLater {
-                state.mainReservationInfos.append(reservation)
-            } else {
-                state.scheduledReservationInfos.append(reservation)
-            }
+        // 미래 예약만 필터링
+        let futureReservations = reservations.filter { $0.reservationDatetime >= now }
+
+        // 1. 24시간 이내 예약은 main, 그 외는 scheduled
+        state.mainReservationInfos = futureReservations.filter {
+            $0.reservationDatetime <= oneDayLater
+        }
+        state.scheduledReservationInfos = futureReservations.filter {
+            $0.reservationDatetime > oneDayLater
         }
 
-        // mainReservationInfos가 비어 있으면 첫 번째 예약을 추가
-        if state.mainReservationInfos.isEmpty, let first = reservations.first {
-            state.mainReservationInfos.append(first)
-
-            // 중복 방지: scheduledReservationInfos에서 제거
+        // 2. main이 비어 있다면 가장 가까운 예약을 하나 main에 넣고 scheduled에서 제거
+        if state.mainReservationInfos.isEmpty, let first = futureReservations.first {
+            state.mainReservationInfos = [first]
             state.scheduledReservationInfos.removeAll { $0.reservationId == first.reservationId }
         }
     }
