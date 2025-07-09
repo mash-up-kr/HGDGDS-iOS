@@ -13,6 +13,7 @@ import ReservationDomain
 import HGDesignSystem
 
 struct HomeMainReservationTabView: View {
+    @Environment(HomeCoordinator.self) var coordinator
     @Bindable var viewModel: HomeViewModel
     
     private var mainReservationTabViewHeight: CGFloat {
@@ -28,10 +29,10 @@ struct HomeMainReservationTabView: View {
             ) { index, info in
                 MainReservationView(
                     reservationInfo: info,
-                    isShowSubReservationCardList: viewModel.isExistScheduledSubReservations,
-                    countDownTimer: viewModel.timerManagers[safe: index]
+                    isShowSubReservationCardList: viewModel.isExistScheduledSubReservations
                 ) {
                     //TODO: 예약 상세 화면 이동
+                    coordinator.push(.upcomingReservationDetail(reservationId: info.reservationId))
                 }
                 .padding(.bottom, HomeUIConstans.bottomPadding)
                 .tag(index)
@@ -43,13 +44,6 @@ struct HomeMainReservationTabView: View {
             if viewModel.mainReservationInfos.count > 1 {
                 indicator
             }
-        }
-        .onDisappear {
-            viewModel.reduce(.removeAllTimers)
-        }
-        .onChange(of: self.viewModel.selectedReservationIndex) { previousIndex, currentIndex in
-            viewModel.reduce(.stopTimer(previousIndex))
-            viewModel.reduce(.startTimer(currentIndex))
         }
     }
     
@@ -70,8 +64,9 @@ struct HomeMainReservationTabView: View {
 private struct MainReservationView: View {
     let reservationInfo: ReservationInfo
     let isShowSubReservationCardList: Bool
-    var countDownTimer: CountDownTimerManager?
     let action: () -> Void
+    
+    @State var countDownTimer: CountDownTimerManager = .init()
     
     var dDay: Int { reservationInfo.reservationDatetime.dDayValue() }
 
@@ -88,9 +83,9 @@ private struct MainReservationView: View {
             ReservationTimerView(
                 category: reservationInfo.category,
                 dDay: dDay,
-                hours: countDownTimer?.hours ?? "",
-                minutes: countDownTimer?.minutes ?? "",
-                seconds: countDownTimer?.seconds ?? ""
+                hours: countDownTimer.hours,
+                minutes: countDownTimer.minutes,
+                seconds: countDownTimer.seconds,
             )
             
             Spacer().frame(minHeight: 33)
@@ -101,6 +96,13 @@ private struct MainReservationView: View {
         }
         .padding(.top, isShowSubReservationCardList ? 20 : 44)
         .padding(.horizontal, 16)
+        .onAppear {
+            countDownTimer.setupTime(endDate: reservationInfo.reservationDatetime)
+            countDownTimer.start()
+        }
+        .onDisappear {
+            countDownTimer.stop()
+        }
     }
     
     private var headerText: some View {

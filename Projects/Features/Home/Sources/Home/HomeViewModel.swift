@@ -27,15 +27,8 @@ final class HomeViewModel: Reducerable {
     @ObservationIgnored
     var completedReservationPage: Int = 1
 
-    var timerManagers: [CountDownTimerManager] = []
-    
     enum Action {
         case onAppear
-        
-        case setUpAllTimers
-        case startTimer(Int)
-        case stopTimer(Int)
-        case removeAllTimers
         
         case loadMoreReservation(status: ReservationListRequest.Status)
     }
@@ -61,25 +54,9 @@ final class HomeViewModel: Reducerable {
         case .onAppear:
             Task { @MainActor in
                 await getReservationList(page: 1, status: .before)
+                print("!!!! aaa")
                 await getReservationList(page: 1, status: .after)
-                reduce(.setUpAllTimers)
             }
-        case .setUpAllTimers:
-            self.timerManagers = self.state.mainReservationInfos.map { info in
-                let timer = CountDownTimerManager()
-                timer.setupTime(endDate: info.reservationDatetime)
-                return timer
-            }
-            self.reduce(.startTimer(self.state.selectedReservationIndex))
-        case .startTimer(let index):
-            timerManagers[safe: index]?.start()
-        case .stopTimer(let index):
-            timerManagers[safe: index]?.stop()
-        case .removeAllTimers:
-            for timer in timerManagers {
-                timer.stop()
-            }
-            timerManagers.removeAll()
         case let .loadMoreReservation(status):
             let page: Int
             switch status {
