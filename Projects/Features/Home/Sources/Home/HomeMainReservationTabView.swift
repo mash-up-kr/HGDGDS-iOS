@@ -15,7 +15,6 @@ import HGDesignSystem
 struct HomeMainReservationTabView: View {
     @Environment(HomeCoordinator.self) var coordinator
     @Bindable var viewModel: HomeViewModel
-    @Environment(HomeCoordinator.self) var coordinator
     
     private var mainReservationTabViewHeight: CGFloat {
         viewModel.isExistScheduledSubReservations ? HomeUIConstans.defaultTabViewHeight
