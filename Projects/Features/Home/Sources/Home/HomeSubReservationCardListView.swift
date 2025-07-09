@@ -79,9 +79,9 @@ struct SubReservationCard: View {
             
             HGTagView(
                 style: .small,
-                title: reservationInfo.category.title,
-                textColor: reservationInfo.category.mainColor,
-                backgroundColor: reservationInfo.category.lightColor
+                title: reservationInfo.categoryType.title,
+                textColor: reservationInfo.categoryType.mainColor,
+                backgroundColor: reservationInfo.categoryType.lightColor
             )
         }
     }
@@ -94,7 +94,7 @@ struct SubReservationCard: View {
     
     private var content: some View {
         HStack(spacing: 12) {
-            reservationInfo.category.thumbnail
+            reservationInfo.categoryType.thumbnail
                 .frame(width: 64, height: 64)
                 .setRadius(16)
             

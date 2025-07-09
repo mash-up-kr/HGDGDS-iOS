@@ -55,9 +55,9 @@ struct MainReservationCard: View {
             
             HGTagView(
                 style: .medium,
-                title: reservationInfo.category.title,
-                textColor: reservationInfo.category.mainColor,
-                backgroundColor: reservationInfo.category.lightColor
+                title: reservationInfo.categoryType.title,
+                textColor: reservationInfo.categoryType.mainColor,
+                backgroundColor: reservationInfo.categoryType.lightColor
             )
         }
         .padding(.leading, 4)
@@ -103,7 +103,7 @@ struct MainReservationCard: View {
             .init(
                 reservationId: 0,
                 title: "남수와 함께하는 클라이밍",
-                category: .activity,
+                category: "Activity",
                 reservationDatetime: Date(),
                 participantCount: 4,
                 maxParticipants: 6,

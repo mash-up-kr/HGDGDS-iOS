@@ -9,6 +9,7 @@ import SwiftUI
 
 import HGCommon
 import HomeDomain
+import ReservationDomain
 import HGDesignSystem
 
 struct HomeView: View {
@@ -107,7 +108,7 @@ struct HomeView: View {
     @ViewBuilder
     private var backgroundGradient: some View {
         if viewModel.isExistScheduledMainReservation {
-            viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.category.gradient
+            viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.categoryType.gradient
                 .frame(height: backgroundGradientHeight)
         } else {
             HGGradient.orangeSub
@@ -119,7 +120,7 @@ struct HomeView: View {
         TransitionTabSwitcherView(selectedTab: viewModel.selectedStatusTab) {
             Group {
                 if viewModel.isExistScheduledMainReservation {
-                    viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.category.image
+                    viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.categoryType.image
                         .resizable()
                         .frame(354)
                         .offset(y: viewModel.isExistScheduledSubReservations ? 32 : 96)

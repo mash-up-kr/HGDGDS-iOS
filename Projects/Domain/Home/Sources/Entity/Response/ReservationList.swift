@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import ReservationDomain
 
 public struct ReservationList: Equatable {
     public let reservations: [ReservationInfo]
@@ -21,7 +20,7 @@ public struct ReservationList: Equatable {
 public struct ReservationInfo: Equatable {
     public let reservationId: Int
     public let title: String
-    public let category: ReservationCategoryType
+    public let category: String
     public let reservationDatetime: Date
     public let participantCount: Int
     public let maxParticipants: Int
@@ -35,7 +34,7 @@ public struct ReservationInfo: Equatable {
     public init(
         reservationId: Int,
         title: String,
-        category: ReservationCategoryType,
+        category: String,
         reservationDatetime: Date,
         participantCount: Int,
         maxParticipants: Int,

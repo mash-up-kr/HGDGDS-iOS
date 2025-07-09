@@ -81,7 +81,7 @@ private struct MainReservationView: View {
             }
             
             ReservationTimerView(
-                category: reservationInfo.category,
+                category: reservationInfo.categoryType,
                 dDay: dDay,
                 hours: countDownTimer.hours,
                 minutes: countDownTimer.minutes,
@@ -109,7 +109,7 @@ private struct MainReservationView: View {
         Text("가장 가까운 예약까지")
             .setTypo(.body_16_medium)
             .foregroundStyle(.gray0White)
-            .shadow(color: reservationInfo.category.darkColor.color, radius: 20)
+            .shadow(color: reservationInfo.categoryType.darkColor.color, radius: 20)
     }
 }
 

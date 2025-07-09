@@ -50,7 +50,7 @@ extension ReservationListResponseDTO.ReservationDTO {
         .init(
             reservationId: reservationId,
             title: title,
-            category: ReservationCategoryType(rawValue: category) ?? .etc,
+            category: category,
             reservationDatetime: reservationDatetime,
             participantCount: participantCount,
             maxParticipants: maxParticipants,
