@@ -12,7 +12,7 @@ public protocol ReservationHistoryRepository {
         reservationId: Int,
         resultType: ReservationResultType,
         imagePaths: [String],
-        successDateTime: Date,
+        successDateTime: Date?,
         description: String
     ) async throws -> Bool
 }

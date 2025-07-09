@@ -16,13 +16,16 @@ struct ReservationResultRegisterAPI: EndPointable {
     var method: HGHTTPMethod { .post }
     var parameters: HGParameters? {
         var parameters: HGParameters = [
-            "status": resultStatus,
-            "successDatetime": successDateTime
+            "status": resultStatus
         ]
-        if let imagePaths {
+        if let successDateTime {
+            let dateTimeString = successDateTime.formatted(.iso8601)
+            parameters.updateValue(dateTimeString, forKey: "successDatetime")
+        }
+        if let imagePaths, imagePaths.isNotEmpty {
             parameters.updateValue(imagePaths, forKey: "images")
         }
-        if let description {
+        if let description, description.isNotEmpty {
             parameters.updateValue(description, forKey: "description")
         }
         return parameters
@@ -33,6 +36,6 @@ struct ReservationResultRegisterAPI: EndPointable {
     let reservationId: Int
     let resultStatus: String
     let imagePaths: [String]?
-    let successDateTime: Date
+    let successDateTime: Date?
     let description: String?
 }

@@ -12,7 +12,7 @@ public protocol ReservationHistoryUseCase {
         reservationId: Int,
         resultType: ReservationResultType,
         imagePaths: [String],
-        successDateTime: Date,
+        successDateTime: Date?,
         description: String
     ) async throws -> Bool
 }
@@ -28,15 +28,25 @@ public final class ReservationHistoryUseCaseImpl: ReservationHistoryUseCase {
         reservationId: Int,
         resultType: ReservationResultType,
         imagePaths: [String],
-        successDateTime: Date,
+        successDateTime: Date?,
         description: String
     ) async throws -> Bool {
-        try await repository.requestRegisterReservationResult(
-            reservationId: reservationId,
-            resultType: resultType,
-            imagePaths: imagePaths,
-            successDateTime: successDateTime,
-            description: description
-        )
+        if resultType == .fail {
+            return try await repository.requestRegisterReservationResult(
+                reservationId: reservationId,
+                resultType: resultType,
+                imagePaths: [],
+                successDateTime: nil,
+                description: ""
+            )
+        } else {
+           return try await repository.requestRegisterReservationResult(
+                reservationId: reservationId,
+                resultType: resultType,
+                imagePaths: imagePaths,
+                successDateTime: successDateTime,
+                description: description
+            )
+        }
     }
 }

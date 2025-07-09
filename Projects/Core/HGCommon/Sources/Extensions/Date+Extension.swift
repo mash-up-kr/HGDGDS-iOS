@@ -20,15 +20,26 @@ public extension Date {
     }
     
     /// 기존Date에 hms를 합성해서 ymdhms가 필요한 경우 사용합니다
-    func combineWith(time: Date) -> Date {
-        let calendar = Calendar.current
-        let timeComponents = calendar.dateComponents([.hour, .minute, .second], from: time)
-        
-        return calendar.date(
-            bySettingHour: timeComponents.hour ?? 0,
-            minute: timeComponents.minute ?? 0,
-            second: timeComponents.second ?? 0,
-            of: self
-        ) ?? self
+    func combineWith(time: Date?) -> Date {
+        var calendar = Calendar.current
+        calendar.timeZone = .current
+        if let time{
+            let timeComponents = calendar.dateComponents([.hour, .minute, .second], from: time)
+            
+            return calendar.date(
+                bySettingHour: timeComponents.hour ?? 0,
+                minute: timeComponents.minute ?? 0,
+                second: timeComponents.second ?? 0,
+                of: self
+            ) ?? self
+            
+        } else {
+            return calendar.date(
+                bySettingHour: 0,
+                minute: 0,
+                second: 0,
+                of: self
+            ) ?? self
+        }
     }
 }

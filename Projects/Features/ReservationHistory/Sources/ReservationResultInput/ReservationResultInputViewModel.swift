@@ -58,6 +58,7 @@ final class ReservationResultInputViewModel: Reducerable {
             state.selectedReservationResult = type
             state.isShowSuccessInfoView = type == .success || type == .ambiguousSuccess
             state.isShowSectionTitleView = type == .fail
+            checkValidationDoneButton()
         case .didTapReservationDateButton:
             state.isPresentedDatePicker = true
         case .didTapReservationHourButton:
@@ -65,7 +66,7 @@ final class ReservationResultInputViewModel: Reducerable {
         case let .didChangeDate(date):
             state.successReservationDate = date
             state.successReservationDateString = date.formatted(with: .yyyyMMddEEKorean)
-            validationDoneButton()
+            checkValidationDoneButton()
         case let .didChangeTime(time):
             state.successReservationTime = time
             state.successReservationTimeString = time.formatted(with: .ahhmmKorean)
@@ -80,9 +81,12 @@ final class ReservationResultInputViewModel: Reducerable {
         }
     }
     
-    private func validationDoneButton() {
-        let isDisable = state.successReservationDate.isNil
-        reduce(.updateDisableDoneButton(isDisable))
+    private func checkValidationDoneButton() {
+        if state.selectedReservationResult == .fail {
+            reduce(.updateDisableDoneButton(false))
+        } else {
+            reduce(.updateDisableDoneButton(state.successReservationDate.isNil))
+        }
     }
     
     private func removePhotoItemIndex(_ index: Int) {
@@ -90,15 +94,12 @@ final class ReservationResultInputViewModel: Reducerable {
     }
     
     private func done() async {
-        guard let successReservationDate = state.successReservationDate,
-              let resultType = state.selectedReservationResult else {
+        guard let resultType = state.selectedReservationResult else {
             return
         }
         let reservationID: Int = 1 // TODO: 실제 id로 매칭
-        var successDateTime = successReservationDate
-        if let successReservationTime = state.successReservationTime {
-            successDateTime = successDateTime.combineWith(time: successReservationTime)
-        }
+        let successReservationDate = state.successReservationDate
+        let successDateTime = successReservationDate?.combineWith(time: state.successReservationTime)
             
         let description: String = state.explainString
         
@@ -137,10 +138,11 @@ final class ReservationResultInputViewModel: Reducerable {
     private func encode(photoItems: [PhotosPickerItem]) async throws -> [Data] {
         var imageData: [Data] = []
         for item in state.photoItems {
-            if let image = await item.loadImage(), let datum = image.jpegData(compressionQuality: 0.7) {
-                imageData.append(datum)
+            guard let image = await item.loadImage(),
+                  let datum = image.jpegData(compressionQuality: 0.7) else {
                 throw HGError.imageConversionFailed
             }
+            imageData.append(datum)
         }
         return imageData
     }

@@ -20,7 +20,7 @@ public final class ReservationHistoryRepositoryImpl: ReservationHistoryRepositor
         reservationId: Int,
         resultType: ReservationResultType,
         imagePaths: [String],
-        successDateTime: Date,
+        successDateTime: Date?,
         description: String
     ) async throws -> Bool {
         let api = ReservationResultRegisterAPI(
