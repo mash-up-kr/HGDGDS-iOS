@@ -9,11 +9,11 @@ import Foundation
 
 public struct UserInfo {
     public let userId: Int
-    public let nickname: String
-    public let profileType: ProfileType
+    public var nickname: String
+    public var profileType: ProfileType
     public let profileImageURL: String
-    public let isReservationAlarmSetting: Bool
-    public let isKokAlarmSetting: Bool
+    public var isReservationAlarmSetting: Bool
+    public var isKokAlarmSetting: Bool
     
     public let totalReservationCount: Int
     public let successReservationCount: Int

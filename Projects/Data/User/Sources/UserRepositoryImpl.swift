@@ -60,7 +60,7 @@ public final class UserRepositoryImpl: UserRepository {
         }
     }
     
-    public func getProfileList() async throws -> [ProfileEntity] {
+    public func getProfileList() async throws -> [KokProfile] {
         let api = GetProfileListAPI(parameters: nil)
         
         do {
@@ -103,7 +103,7 @@ public final class UserRepositoryImpl: UserRepository {
             guard let dtoModel = try await network.send(api) else {
                 throw HGError.domainError("dto model is nil")
             }
-            return 200
+            return dtoModel.code
         } catch NetworkError.requestFailed(let statusCode) {
             return statusCode
         }

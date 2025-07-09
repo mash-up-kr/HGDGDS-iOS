@@ -11,6 +11,6 @@ import HGLogger
 
 public protocol UserUseCase {
     func signUp(deviceId: String, nickname: String, profileType: ProfileType) async throws
-    func getProfileList() async throws -> [ProfileEntity]
+    func getProfileList() async throws -> [KokProfile]
     func validateNickname(nickname: String) -> Bool
 }

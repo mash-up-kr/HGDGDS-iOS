@@ -9,9 +9,6 @@ struct RootView: View {
             .onReceive(NotificationCenter.default.publisher(for: .signUpComplete)) { _ in
                 viewModel.reduce(.signUpComplete)
             }
-            .onAppear {
-                viewModel.reduce(.onAppear)
-            }
     }
     
     @ViewBuilder
@@ -21,12 +18,19 @@ struct RootView: View {
             viewModel
                 .coordinatorFactory
                 .onboardingCoordinatorRootView
+                .onAppear {
+                    viewModel.reduce(.validateAccessToken)
+                }
         case .mainTab:
-            viewModel
-                .coordinatorFactory
-                .homeCoordinatorRootView
+            HGTabView()
+                .onAppear {
+                    viewModel.reduce(.validateAccessToken)
+                }
         case .splash:
-            Color.clear
+            SplashView()
+                .onAppear {
+                    viewModel.reduce(.onSplashAppear)
+                }
         }
     }
 }

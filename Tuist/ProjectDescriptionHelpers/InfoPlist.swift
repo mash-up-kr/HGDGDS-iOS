@@ -8,10 +8,7 @@
 import ProjectDescription
 
 public let defaultPlist: [String: Plist.Value] = [
-    "UILaunchScreen": [
-        "UIColorName": "",
-        "UIImageName": ""
-    ],
+    "CFBundleDisplayName": "KokKok",
     "UIUserInterfaceStyle": "Light",
     "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
     "UISupportedInterfaceOrientations~ipad": ["UIInterfaceOrientationPortrait"],
@@ -21,5 +18,6 @@ public let defaultPlist: [String: Plist.Value] = [
             "CFBundleURLName": "com.kokkok.app",
             "CFBundleURLSchemes": ["kokkok"]
         ]
-    ]
+    ],
+    "UILaunchStoryboardName": "LaunchScreen"
 ]

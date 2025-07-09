@@ -36,6 +36,7 @@ public struct ImageSwipeView: View {
                 }
                 .padding(.horizontal, 16)
                 .frame(height: 56)
+                .background(.opacityBlack60)
             }
     }
 }
