@@ -24,8 +24,6 @@ struct HomeView: View {
         ZStack(alignment: .top) {
             background
                 .ignoresSafeArea()
-            
-            categoryImage
 
             ScrollView {
                 VStack(spacing: 0) {
@@ -39,6 +37,9 @@ struct HomeView: View {
                 }
                 .padding(.bottom, UIConstant.tabBarHeight)
                 .fillMaxSize(.top)
+                .background(alignment: .top) {
+                    categoryImage
+                }
             }
         }
         .animation(.easeOut(duration: 0.35), value: viewModel.selectedStatusTab)
@@ -120,7 +121,7 @@ struct HomeView: View {
                     viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.category.image
                         .resizable()
                         .frame(354)
-                        .offset(y: HomeUIConstans.screenHeight * 0.15)
+                        .offset(y: viewModel.isExistScheduledSubReservations ? 20 : 96)
                         .transition(.move(edge: .leading).combined(with: .opacity))
                 }
             }

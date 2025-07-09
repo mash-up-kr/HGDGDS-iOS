@@ -105,7 +105,7 @@ private struct MainReservationView: View {
     
     private var headerText: some View {
         Text("가장 가까운 예약까지")
-            .setTypo(.title_20_bold)
+            .setTypo(.body_16_medium)
             .foregroundStyle(.gray0White)
             .shadow(color: reservationInfo.category.darkColor.color, radius: 20)
     }

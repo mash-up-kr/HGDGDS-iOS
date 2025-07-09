@@ -20,9 +20,8 @@ struct HomeEmptyReservationView: View {
 private struct NoReservationCard: View {
     var body: some View {
         VStack(spacing: 0) {
-            //TODO: 이미지 자리
-            Rectangle()
-                .foregroundStyle(.gray20)
+            HGImages.noScheduledReservation.image
+                .resizable()
                 .frame(250)
             
             Spacer().frame(height: 36)
