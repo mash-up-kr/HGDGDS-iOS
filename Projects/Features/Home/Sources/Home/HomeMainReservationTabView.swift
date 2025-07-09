@@ -13,6 +13,7 @@ import ReservationDomain
 import HGDesignSystem
 
 struct HomeMainReservationTabView: View {
+    @Environment(HGTabViewManager.self) var tabManager
     @Environment(HomeCoordinator.self) var coordinator
     @Bindable var viewModel: HomeViewModel
     
@@ -31,6 +32,7 @@ struct HomeMainReservationTabView: View {
                     reservationInfo: info,
                     isShowSubReservationCardList: viewModel.isExistScheduledSubReservations
                 ) {
+                    tabManager.setTabBarHidden(true)
                     coordinator.push(.upcomingReservationDetail(reservationId: info.reservationId))
                 }
                 .padding(.bottom, HomeUIConstans.bottomPadding)

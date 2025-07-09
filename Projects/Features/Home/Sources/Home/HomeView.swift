@@ -13,8 +13,9 @@ import ReservationDomain
 import HGDesignSystem
 
 struct HomeView: View {
-    @State private var viewModel: HomeViewModel = .init()
     @Environment(HomeCoordinator.self) var coordinator
+    @Environment(HGTabViewManager.self) var tabManager
+    @State private var viewModel: HomeViewModel = .init()
     
     private var backgroundGradientHeight: CGFloat {
         /// Screen height - TabBar height - Bottom padding - 91(카드뷰 height 절반)
@@ -47,6 +48,7 @@ struct HomeView: View {
         .animation(.easeOut(duration: 0.35), value: viewModel.selectedStatusTab)
         .animation(.easeInOut(duration: 0.25), value: viewModel.selectedReservationIndex)
         .onAppear {
+            tabManager.setTabBarHidden(false)
             viewModel.reduce(.onAppear)
         }
     }
