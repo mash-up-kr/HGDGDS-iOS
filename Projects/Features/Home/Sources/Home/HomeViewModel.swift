@@ -26,7 +26,6 @@ final class HomeViewModel: Reducerable {
     var scheduledReservationPage: Int = 1
     @ObservationIgnored
     var completedReservationPage: Int = 1
-
     enum Action {
         case onAppear
         
@@ -54,7 +53,6 @@ final class HomeViewModel: Reducerable {
         case .onAppear:
             Task { @MainActor in
                 await getReservationList(page: 1, status: .before)
-                print("!!!! aaa")
                 await getReservationList(page: 1, status: .after)
             }
         case let .loadMoreReservation(status):

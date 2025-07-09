@@ -15,6 +15,7 @@ import HGDesignSystem
 struct HomeMainReservationTabView: View {
     @Environment(HomeCoordinator.self) var coordinator
     @Bindable var viewModel: HomeViewModel
+    @Environment(HomeCoordinator.self) var coordinator
     
     private var mainReservationTabViewHeight: CGFloat {
         viewModel.isExistScheduledSubReservations ? HomeUIConstans.defaultTabViewHeight
@@ -31,7 +32,6 @@ struct HomeMainReservationTabView: View {
                     reservationInfo: info,
                     isShowSubReservationCardList: viewModel.isExistScheduledSubReservations
                 ) {
-                    //TODO: 예약 상세 화면 이동
                     coordinator.push(.upcomingReservationDetail(reservationId: info.reservationId))
                 }
                 .padding(.bottom, HomeUIConstans.bottomPadding)

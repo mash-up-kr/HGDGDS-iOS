@@ -81,7 +81,6 @@ public struct ReservationDetail: Equatable {
     }
 }
 
-
 // TODO: 테스트용 실제 API연결 후 지우기
 public extension ReservationDetail {
     static let mockData: Self = .init(
