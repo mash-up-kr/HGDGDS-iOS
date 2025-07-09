@@ -10,6 +10,7 @@ import SwiftUI
 import NukeUI
 import HGCommon
 import ReservationDomain
+import UserDomain
 import HGDesignSystem
 
 struct ReservationView: View {
@@ -60,7 +61,7 @@ struct ReservationView: View {
                     .onScrollVisibilityChange(threshold: 0.7) { isHiddenNavigationBar in
                         self.isHiddenNavigationBar = isHiddenNavigationBar
                     }
-                Spacer().frame(height: 49)
+                Spacer().frame(height: 46)
                 timerView
                 Spacer().frame(height: 91)
                 LazyVStack(spacing: 8) {
@@ -77,7 +78,7 @@ struct ReservationView: View {
             .padding(.horizontal, outsidePadding)
             .background(alignment: .top) {
                 viewModel.reservation.category.image
-                    .padding(.top, 145)
+                    .padding(.top, 109)
             }
         }
         .contentMargins(.bottom, 88)
@@ -91,8 +92,10 @@ struct ReservationView: View {
         .ignoresSafeArea()
     }
     
-    private func profileImageView() -> some View {
-        Color.red.frame(62)
+    private func profileImageView(type: ProfileType) -> some View {
+        type.image
+            .resizable()
+            .frame(62)
             .strokeBorder(
                 HGColors.gray0White.color,
                 radius: 24,
@@ -129,23 +132,25 @@ struct ReservationView: View {
                     .foregroundStyle(.opacityWhite60)
             }
             Spacer().frame(height: 8)
-            HStack(spacing: 0) {
-                HGIcons.fire.image
-                    .resizable()
-                    .frame(18)
-                
-                Group {
-                    Text("같은 예약에 ")
-                    Text("\(viewModel.rivalCount)명").foregroundStyle(.orange700)
-                    Text(" 도전중")
-                }
-                .setTypo(.caption_12_medium)
-                .foregroundStyle(.gray90)
-            }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 5)
-            .background(.opacityWhite60)
-            .clipShape(Capsule())
+            
+            //TODO: - 아래 주석은 2차 배포에 포함
+//            HStack(spacing: 0) {
+//                HGIcons.fire.image
+//                    .resizable()
+//                    .frame(18)
+//                
+//                Group {
+//                    Text("같은 예약에 ")
+//                    Text("\(viewModel.rivalCount)명").foregroundStyle(.orange700)
+//                    Text(" 도전중")
+//                }
+//                .setTypo(.caption_12_medium)
+//                .foregroundStyle(.gray90)
+//            }
+//            .padding(.horizontal, 10)
+//            .padding(.vertical, 5)
+//            .background(.opacityWhite60)
+//            .clipShape(Capsule())
         }
     }
     
@@ -223,7 +228,7 @@ struct ReservationView: View {
     var profileSectionView: some View {
         makeSectionCardView(icon: .person, title: "내 프로필") {
             HStack(spacing: 12) {
-                profileImageView()
+                profileImageView(type: ProfileType(rawValue: viewModel.me.profileImageCode) ?? .purple)
                 Text(viewModel.me.nickname)
                     .setTypo(.body_16_bold)
                     .foregroundStyle(.gray95)
@@ -345,7 +350,7 @@ struct ReservationView: View {
                 }
                 .frame(height: 158)
                 VStack(spacing: 6) {
-                    profileImageView()
+                    profileImageView(type: ProfileType(rawValue: member.profileImageCode) ?? .purple)
                     Text(member.nickname)
                         .setTypo(.body_16_bold)
                         .foregroundStyle(.gray95)

@@ -29,7 +29,7 @@ extension MemberDTO {
         .init(
             userId: userId,
             nickname: nickname,
-            profileImageCode: ProfileImageCode(rawValue: profileImageCode) ?? .blue,
+            profileImageCode: profileImageCode,
             status: UserReservationStatus(rawValue: status) ?? .default,
             isHost: isHost
         )

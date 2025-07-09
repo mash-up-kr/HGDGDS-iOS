@@ -16,6 +16,7 @@ let project = Project(
             name: "ReservationData",
             dependencies: [
                 .domainProject(with: .reservation),
+                .domainProject(with: .user),
                 .coreProject(with: .hgNetwork)
             ],
             hasResources: false

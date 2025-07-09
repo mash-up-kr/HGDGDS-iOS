@@ -47,21 +47,21 @@ final class ReservationViewModel: Reducerable {
             ReservationMember(
                 userId: 2,
                 nickname: "지윤",
-                profileImageCode: .green,
+                profileImageCode: "ORNAGE",
                 status: .default,
                 isHost: false
             ),
             ReservationMember(
                 userId: 3,
                 nickname: "태현",
-                profileImageCode: .blue,
+                profileImageCode: "GREEN",
                 status: .default,
                 isHost: false
             ),
             ReservationMember(
                 userId: 4,
                 nickname: "예린",
-                profileImageCode: .pink,
+                profileImageCode: "PINK",
                 status: .ready,
                 isHost: false
             )
@@ -69,7 +69,7 @@ final class ReservationViewModel: Reducerable {
         var me: ReservationMember = ReservationMember(
             userId: 1,
             nickname: "김파디",
-            profileImageCode: .purple,
+            profileImageCode: "",
             status: .default,
             isHost: true
         )
@@ -92,7 +92,6 @@ final class ReservationViewModel: Reducerable {
             Task { @MainActor in
                 await getReservationDetail(reservationId: reservationId)
                 await getReservationMembers(reservationId: reservationId)
-//                await rivalCount(reservationId: reservationId) API 구현 X
             }
         case .readyButtonTapped:
             Task { @MainActor in

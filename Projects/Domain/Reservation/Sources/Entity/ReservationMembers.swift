@@ -22,14 +22,14 @@ public struct ReservationMembers {
 public struct ReservationMember {
     public let userId: Int
     public let nickname: String
-    public let profileImageCode: ProfileImageCode
+    public let profileImageCode: String
     public let status: UserReservationStatus
     public let isHost: Bool
     
     public init(
          userId: Int = 0,
          nickname: String = "",
-         profileImageCode: ProfileImageCode = .purple,
+         profileImageCode: String = "",
          status: UserReservationStatus = .default,
          isHost: Bool = false
      ) {
@@ -40,10 +40,11 @@ public struct ReservationMember {
          self.isHost = isHost
      }
 }
-public enum ProfileImageCode: String {
-    case purple = "PURPLE"
-    case orange = "Orange"
-    case green = "GREEN"
-    case blue = "BLUE"
-    case pink = "PINK"
-}
+
+//public enum ProfileImageCode: String {
+//    case purple = "PURPLE"
+//    case orange = "Orange"
+//    case green = "GREEN"
+//    case blue = "BLUE"
+//    case pink = "PINK"
+//}
