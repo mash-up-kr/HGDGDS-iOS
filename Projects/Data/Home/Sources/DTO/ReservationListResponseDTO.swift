@@ -26,6 +26,7 @@ struct ReservationListResponseDTO: Decodable {
         let images: [String]
         let userStatus: String
         let isHost: Bool
+        let profileImageCodeList: [String]
     }
 
     struct MetadataDTO: Decodable {
@@ -57,7 +58,8 @@ extension ReservationListResponseDTO.ReservationDTO {
             hostNickname: hostNickname,
             images: images,
             userStatus: userStatus,
-            isHost: isHost
+            isHost: isHost,
+            profileImageCodeList: profileImageCodeList
         )
     }
 }

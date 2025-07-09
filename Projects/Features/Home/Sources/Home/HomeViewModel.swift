@@ -22,6 +22,10 @@ final class HomeViewModel: Reducerable {
     @ObservationIgnored
     @Dependency var homeUseCase: HomeUseCase
     
+    @ObservationIgnored
+    var scheduledReservationPage: Int = 1
+    @ObservationIgnored
+    var completedReservationPage: Int = 1
     enum Action {
         case onAppear
         
@@ -29,6 +33,8 @@ final class HomeViewModel: Reducerable {
         case startTimer(Int)
         case stopTimer(Int)
         case removeAllTimers
+        
+        case loadMoreReservation(status: ReservationListRequest.Status)
     }
 
     struct State {
@@ -38,70 +44,11 @@ final class HomeViewModel: Reducerable {
         var isExistScheduledMainReservation: Bool { !mainReservationInfos.isEmpty }
         var isExistScheduledSubReservations: Bool { !scheduledReservationInfos.isEmpty }
         var isExistCompleteReservation: Bool { !completedReservationInfos.isEmpty }
+        var scheduledReservationInfos: [ReservationInfo] = []
+        var completedReservationInfos: [ReservationInfo] = []
         
-        var timerManagers: [CountDownTimerManager] = []
-        
-        // TODO: API 구현 후 샘플 데이터 삭제
-        var mainReservationInfos: [ReservationInfo] = [
-            .init(
-                reservationId: 0, title: "남수와 함께하는 클라이밍", category: .restaurant,
-                reservationDatetime: Date().addingTimeInterval(72800), participantCount: 4,
-                maxParticipants: 6, hostId: 11, hostNickname: "남수", images: [
-                    "https://i.pravatar.cc/150?img=4",
-                    "https://i.pravatar.cc/300",
-                    "https://i.pravatar.cc/150?img=3",
-                ],
-                userStatus: "가자", isHost: true
-            ),
-            .init(
-                reservationId: 1, title: "남수와 함께하는 클라이밍", category: .activity,
-                reservationDatetime: Date().addingTimeInterval(300000), participantCount: 4,
-                maxParticipants: 6, hostId: 11, hostNickname: "남수", images: [
-                    "https://i.pravatar.cc/150?img=4",
-                    "https://i.pravatar.cc/300",
-                    "https://i.pravatar.cc/150?img=3",
-                ],
-                userStatus: "가자", isHost: true
-            ),
-        ]
-        var scheduledReservationInfos: [ReservationInfo] = [
-            .init(
-                reservationId: 0, title: "남수와 함께하는 클라이밍", category: .restaurant,
-                reservationDatetime: Date().addingTimeInterval(300), participantCount: 4,
-                maxParticipants: 6, hostId: 11, hostNickname: "남수", images: [
-                    "https://i.pravatar.cc/150?img=4",
-                    "https://i.pravatar.cc/300",
-                    "https://i.pravatar.cc/150?img=3",
-                ],
-                userStatus: "가자", isHost: true
-            ),
-            .init(
-                reservationId: 1, title: "남수와 함께하는 클라이밍", category: .restaurant,
-                reservationDatetime: Date().addingTimeInterval(300), participantCount: 4,
-                maxParticipants: 6, hostId: 11, hostNickname: "남수", images: [
-                    "https://i.pravatar.cc/150?img=4",
-                    "https://i.pravatar.cc/300",
-                    "https://i.pravatar.cc/150?img=3",
-                ],
-                userStatus: "가자", isHost: true
-            ),
-        ]
-        var completedReservationInfos: [ReservationInfo] = [
-            .init(reservationId: 0, title: "남수와 함께하는 클라이밍", category: .activity,
-                  reservationDatetime: Date(), participantCount: 4, maxParticipants: 6,
-                  hostId: 11, hostNickname: "남수", images: [
-                    "https://i.pravatar.cc/150?img=4",
-                    "https://i.pravatar.cc/300",
-                    "https://i.pravatar.cc/150?img=3",
-                  ], userStatus: "가자", isHost: true),
-            .init(reservationId: 1, title: "남수와 함께하는 클라이밍", category: .activity,
-                  reservationDatetime: Date(), participantCount: 4, maxParticipants: 6,
-                  hostId: 11, hostNickname: "남수", images: [
-                    "https://i.pravatar.cc/150?img=4",
-                    "https://i.pravatar.cc/300",
-                    "https://i.pravatar.cc/150?img=3",
-                  ], userStatus: "가자", isHost: true),
-        ]
+        var scheduledPaginationMetadata: Metadata = .init()
+        var completedPaginationMetadata: Metadata = .init()
     }
     
     func reduce(_ action: Action) {
@@ -109,6 +56,8 @@ final class HomeViewModel: Reducerable {
         case .onAppear:
             Task { @MainActor in
                 await getReservationList(page: 1, status: .before)
+                await getReservationList(page: 1, status: .after)
+                reduce(.setUpAllTimers)
             }
         case .setUpAllTimers:
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
@@ -128,26 +77,56 @@ final class HomeViewModel: Reducerable {
                 timer.stop()
             }
             state.timerManagers.removeAll()
+        case let .loadMoreReservation(status):
+            let page: Int
+            switch status {
+            case .before:
+                scheduledReservationPage += 1
+                page = scheduledReservationPage
+            case .after:
+                completedReservationPage += 1
+                page = completedReservationPage
+            }
+
+            Task { @MainActor in
+                await getReservationList(page: page, status: status)
+            }
         }
     }
     
     @MainActor
     private func getReservationList(page: Int, status: ReservationListRequest.Status) async {
+        guard shouldLoadMore(for: status) else { return }
+
         do {
-            let request: ReservationListRequest = .init(page: page, status: status)
+            let request = ReservationListRequest(page: page, status: status)
             let list = try await homeUseCase.getReservationList(request: request)
-            switch status {
-            case .before:
-                updateReservationInfos(with: list.reservations)
-            case .after:
-                state.completedReservationInfos += list.reservations
-            }
+
+            applyReservationList(status: status, list: list)
         } catch {
-            LoggerUtil.log("홈화면: 예약 리스트 불러오기 실패")
+            LoggerUtil.log("홈화면: 예약 리스트 불러오기 실패 – \(error)")
         }
     }
     
-    //TODO: getMembers 구현 - Reservation merge 되면
+    private func shouldLoadMore(for status: ReservationListRequest.Status) -> Bool {
+        switch status {
+        case .before: return state.scheduledPaginationMetadata.hasNext
+        case .after:  return state.completedPaginationMetadata.hasNext
+        }
+    }
+
+    @MainActor
+    private func applyReservationList(status: ReservationListRequest.Status, list: ReservationList) {
+        switch status {
+        case .before:
+            updateReservationInfos(with: list.reservations)
+            state.scheduledPaginationMetadata = list.metadata
+            
+        case .after:
+            state.completedReservationInfos += list.reservations
+            state.completedPaginationMetadata = list.metadata
+        }
+    }
     
     private func updateReservationInfos(with reservations: [ReservationInfo]) {
         let now = Date()

@@ -14,6 +14,8 @@ import NukeUI
 struct HomeSubReservationCardListView: View {
     let statusTab: ReservationStatusTab
     let reservations: [ReservationInfo]
+    let totalCount: Int
+    let lastItemAction: () -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -22,7 +24,7 @@ struct HomeSubReservationCardListView: View {
                     .setTypo(.subTitle_18_bold)
                     .foregroundStyle(.gray80)
                 
-                Text("\(reservations.count)")
+                Text(statusTab == .scheduled ? "\(totalCount-1)" : "\(totalCount)")
                     .setTypo(.subTitle_18_bold)
                     .foregroundStyle(.orange500Main)
             }
@@ -30,6 +32,11 @@ struct HomeSubReservationCardListView: View {
             LazyVStack(spacing: 12) {
                 ForEach(reservations, id: \.reservationId) { info in
                     SubReservationCard(reservationInfo: info)
+                        .onAppear {
+                            if info.reservationId == reservations.last?.reservationId {
+                                lastItemAction()
+                            }
+                        }
                 }
             }
         }
@@ -55,7 +62,7 @@ struct SubReservationCard: View {
     private var header: some View {
         HStack(spacing: 0) {
             OffsetImageStack(
-                imageURLStrings: reservationInfo.images,
+                imageURLStrings: reservationInfo.profileImageCodeList,
                 imageLength: 28,
                 spacing: 20,
                 maxVisibleCount: 3
@@ -129,6 +136,10 @@ struct SubReservationCard: View {
         statusTab: .scheduled,
         reservations: [
             
-        ]
+        ],
+        totalCount: 0,
+        lastItemAction: {
+            
+        }
     )
 }

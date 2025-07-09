@@ -39,7 +39,7 @@ struct MainReservationCard: View {
     private var header: some View {
         HStack(spacing: 0) {
             OffsetImageStack(
-                imageURLStrings: reservationInfo.images,
+                imageURLStrings: reservationInfo.profileImageCodeList,
                 imageLength: 28,
                 spacing: 20,
                 maxVisibleCount: 3
@@ -115,7 +115,8 @@ struct MainReservationCard: View {
                     "https://i.pravatar.cc/150?img=3",
                 ],
                 userStatus: "가자",
-                isHost: true
+                isHost: true,
+                profileImageCodeList: []
             ), action: {
                 
             }

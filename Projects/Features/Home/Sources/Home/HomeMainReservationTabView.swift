@@ -44,9 +44,6 @@ struct HomeMainReservationTabView: View {
                 indicator
             }
         }
-        .onAppear {
-            viewModel.reduce(.setUpAllTimers)
-        }
         .onDisappear {
             viewModel.reduce(.removeAllTimers)
         }

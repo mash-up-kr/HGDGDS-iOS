@@ -30,6 +30,7 @@ public struct ReservationInfo: Equatable {
     public let images: [String]
     public let userStatus: String
     public let isHost: Bool
+    public let profileImageCodeList: [String]
     
     public init(
         reservationId: Int,
@@ -42,7 +43,8 @@ public struct ReservationInfo: Equatable {
         hostNickname: String,
         images: [String],
         userStatus: String,
-        isHost: Bool
+        isHost: Bool,
+        profileImageCodeList: [String]
     ) {
         self.reservationId = reservationId
         self.title = title
@@ -55,15 +57,20 @@ public struct ReservationInfo: Equatable {
         self.images = images
         self.userStatus = userStatus
         self.isHost = isHost
+        self.profileImageCodeList = profileImageCodeList
     }
 }
 
 public struct Metadata: Equatable {
-    public let hasPrev: Bool
-    public let hasNext: Bool
-    public let total: Int
+    public var hasPrev: Bool
+    public var hasNext: Bool
+    public var total: Int
     
-    public init(hasPrev: Bool, hasNext: Bool, total: Int) {
+    public init(
+        hasPrev: Bool = false,
+        hasNext: Bool = true,
+        total: Int = 0
+    ) {
         self.hasPrev = hasPrev
         self.hasNext = hasNext
         self.total = total

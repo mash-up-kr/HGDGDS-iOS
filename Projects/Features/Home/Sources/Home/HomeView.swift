@@ -57,8 +57,11 @@ struct HomeView: View {
                 if viewModel.isExistScheduledSubReservations {
                     HomeSubReservationCardListView(
                         statusTab: .scheduled,
-                        reservations: viewModel.scheduledReservationInfos
-                    )
+                        reservations: viewModel.scheduledReservationInfos,
+                        totalCount: viewModel.scheduledPaginationMetadata.total
+                    ) {
+                        viewModel.reduce(.loadMoreReservation(status: .before))
+                    }
                     .padding(.horizontal, 16)
                 }
             }
@@ -73,8 +76,11 @@ struct HomeView: View {
         if viewModel.isExistCompleteReservation {
             HomeSubReservationCardListView(
                 statusTab: .completed,
-                reservations: viewModel.completedReservationInfos
-            )
+                reservations: viewModel.completedReservationInfos,
+                totalCount: viewModel.completedPaginationMetadata.total
+            ) {
+                viewModel.reduce(.loadMoreReservation(status: .after))
+            }
             .padding(.top, 20)
             .padding(.horizontal, 16)
         } else {
