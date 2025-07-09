@@ -26,23 +26,37 @@ final class RootViewModel: Reducerable {
     }
     
     enum Action {
-        case onAppear
+        case validateAccessToken
         case signUpComplete
+        case onSplashAppear
     }
     
     func reduce(_ action: Action) {
         switch action {
-        case .onAppear:
+        case .validateAccessToken:
             Task {
-                if let _ = try? await keychain.readKeychain(key: .accessToken) {
-                    await UserManager.shared.requestUserInfo()
+                if await validateAccessToken() {
                     state.routeState = .mainTab
                 } else {
                     state.routeState = .onboarding
                 }
             }
+        case .onSplashAppear:
+            Task {
+                try? await Task.sleep(for: .seconds(1))
+                reduce(.validateAccessToken)
+            }
         case .signUpComplete:
             state.routeState = .mainTab
+        }
+    }
+    
+    private func validateAccessToken() async -> Bool {
+        if let _ = try? await keychain.readKeychain(key: .accessToken) {
+            await UserManager.shared.requestUserInfo()
+            return true
+        } else {
+            return false
         }
     }
 }

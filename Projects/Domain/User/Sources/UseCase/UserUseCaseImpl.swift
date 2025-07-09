@@ -45,7 +45,7 @@ public final class UserUseCaseImpl: UserUseCase {
         LoggerUtil.log("FCM 등록 성공 FCM Token: \(fcmToken) ")
     }
     
-    public func getProfileList() async throws -> [ProfileEntity] {
+    public func getProfileList() async throws -> [KokProfile] {
         try await userRepo.getProfileList()
     }
     

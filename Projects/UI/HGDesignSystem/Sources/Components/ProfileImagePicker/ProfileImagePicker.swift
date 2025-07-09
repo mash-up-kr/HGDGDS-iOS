@@ -6,12 +6,10 @@
 //
 
 import SwiftUI
-import NukeUI
-import Nuke
 
 public protocol ProfileImagePickable: Identifiable {
     var id: String { get }
-    var imageUrl: String { get }
+    var image: Image { get }
 }
 
 public struct ProfileImagePicker<Item: ProfileImagePickable & Equatable>: View {
@@ -31,11 +29,11 @@ public struct ProfileImagePicker<Item: ProfileImagePickable & Equatable>: View {
     
     public var body: some View {
         VStack(spacing: .zero) {
-            LazyImage(url: .init(string: selectedItem?.imageUrl ?? "")) { state in
-                if let image = state.image {
+            Group {
+                if let image = selectedItem?.image {
                     image
                         .resizable()
-                        .scaledToFit()
+                        .scaledToFill()
                 } else {
                     HGColors.opacityBlack10.color
                 }
@@ -50,19 +48,12 @@ public struct ProfileImagePicker<Item: ProfileImagePickable & Equatable>: View {
                             Button {
                                 withAnimation(.spring(duration: 0.35)) { selectedItem = item }
                             } label: {
-                                LazyImage(url: .init(string: item.imageUrl)) { state in
-                                    if let image = state.image {
-                                        image
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(thumbnailSize)
-                                    } else {
-                                        HGColors.opacityBlack10.color
-                                    }
-                                }
-                                .setRadius(24)
+                                item.image
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(thumbnailSize)
+                                    .setRadius(24)
                             }
-                            .frame(thumbnailSize)
                             .padding(thumbnailInnerPadding)
                             .strokeBorder(
                                 item.id == selectedItem?.id ? HGColors.orange500Main.color : .clear,
@@ -94,11 +85,11 @@ public struct ProfileImagePicker<Item: ProfileImagePickable & Equatable>: View {
     @Previewable @State var selectedItem: StubProfileInfo?
     var items: [StubProfileInfo] {
         [
-            .init(id: "1", imageUrl: "https://i.pinimg.com/236x/34/ee/4d/34ee4d418a30e5ca3faf307386591fa7.jpg"),
-            .init(id: "2", imageUrl: "https://i.pinimg.com/236x/34/ee/4d/34ee4d418a30e5ca3faf307386591fa7.jpg"),
-            .init(id: "3", imageUrl: "https://i.pinimg.com/236x/34/ee/4d/34ee4d418a30e5ca3faf307386591fa7.jpg"),
-            .init(id: "4", imageUrl: "https://i.pinimg.com/236x/34/ee/4d/34ee4d418a30e5ca3faf307386591fa7.jpg"),
-            .init(id: "5", imageUrl: "https://i.pinimg.com/236x/34/ee/4d/34ee4d418a30e5ca3faf307386591fa7.jpg"),
+            .init(id: "1", image: HGImages.pinkCard.image),
+            .init(id: "2", image: HGImages.blueCard.image),
+            .init(id: "3", image: HGImages.blueCard.image),
+            .init(id: "4", image: HGImages.blueCard.image),
+            .init(id: "5", image: HGImages.blueCard.image),
         ]
     }
     ProfileImagePicker(itemList: items, selectedItem: $selectedItem)
@@ -106,5 +97,5 @@ public struct ProfileImagePicker<Item: ProfileImagePickable & Equatable>: View {
 
 private struct StubProfileInfo: ProfileImagePickable, Equatable {
     var id: String
-    var imageUrl: String
+    var image: Image
 }
