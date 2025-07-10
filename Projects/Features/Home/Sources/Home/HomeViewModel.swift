@@ -30,6 +30,8 @@ public final class HomeViewModel: Reducerable {
     @ObservationIgnored
     var completedPaginationMetadata: Metadata = .init()
     
+    var isInitialFetching = false
+    
     public init() { }
 
     public enum Action {
@@ -54,21 +56,24 @@ public final class HomeViewModel: Reducerable {
         switch action {
         case .onAppear:
             Task { @MainActor in
-                await getReservationList(page: scheduledReservationPage, status: .before)
-                await getReservationList(page: completedReservationPage, status: .after)
+                isInitialFetching = true
+                await getReservationList(page: scheduledReservationPage, status: .after)
+                await getReservationList(page: completedReservationPage, status: .before)
+                isInitialFetching = false
             }
         case let .loadMoreReservation(status):
+            guard !isInitialFetching else { return }
             var page: Int?
             switch status {
             case .before:
-                if scheduledPaginationMetadata.hasNext {
-                    scheduledReservationPage += 1
-                    page = scheduledReservationPage
-                }
-            case .after:
                 if completedPaginationMetadata.hasNext {
                     completedReservationPage += 1
                     page = completedReservationPage
+                }
+            case .after:
+                if scheduledPaginationMetadata.hasNext {
+                    scheduledReservationPage += 1
+                    page = scheduledReservationPage
                 }
             }
 
@@ -96,8 +101,8 @@ public final class HomeViewModel: Reducerable {
     
     private func shouldLoadMore(for status: ReservationListRequest.Status) -> Bool {
         switch status {
-        case .before: return scheduledPaginationMetadata.hasNext
-        case .after:  return completedPaginationMetadata.hasNext
+        case .before: return completedPaginationMetadata.hasNext
+        case .after:  return scheduledPaginationMetadata.hasNext
         }
     }
 
@@ -105,12 +110,12 @@ public final class HomeViewModel: Reducerable {
     private func applyReservationList(status: ReservationListRequest.Status, list: ReservationList) {
         switch status {
         case .before:
-            updateReservationInfos(with: list.reservations)
-            scheduledPaginationMetadata = list.metadata
-            
-        case .after:
             state.completedReservationInfos += list.reservations
             completedPaginationMetadata = list.metadata
+            
+        case .after:
+            updateReservationInfos(with: list.reservations)
+            scheduledPaginationMetadata = list.metadata
         }
     }
     

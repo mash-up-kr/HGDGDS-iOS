@@ -31,7 +31,7 @@ public struct ReservationListRequest: Equatable {
     }
     
     public enum Status: String, Equatable {
-        case before = "before"
-        case after = "after"
+        case before = "BEFORE"
+        case after = "AFTER"
     }
 }

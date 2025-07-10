@@ -70,7 +70,7 @@ struct HomeView: View {
                         totalCount: viewModel.scheduledPaginationMetadata.total,
                         mainReservationCount: viewModel.mainReservationInfos.count
                     ) {
-                        viewModel.reduce(.loadMoreReservation(status: .before))
+                        viewModel.reduce(.loadMoreReservation(status: .after))
                     }
                     .padding(.horizontal, 16)
                 }
@@ -89,7 +89,7 @@ struct HomeView: View {
                 reservations: viewModel.completedReservationInfos,
                 totalCount: viewModel.completedPaginationMetadata.total
             ) {
-                viewModel.reduce(.loadMoreReservation(status: .after))
+                viewModel.reduce(.loadMoreReservation(status: .before))
             }
             .padding(.top, 20)
             .padding(.horizontal, 16)
