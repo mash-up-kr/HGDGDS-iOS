@@ -176,7 +176,6 @@ final class ReservationViewModel: Reducerable {
     
     private func fetchImage(urlString: String) async -> UIImage? {
         guard let url = URL(string: urlString) else {
-            print("이미지 로드 실패: 유효한 URL이 아닙니다")
             LoggerUtil.log("이미지 로드 실패: 유효한 URL이 아닙니다", level: .error)
              return nil
          }
@@ -185,7 +184,6 @@ final class ReservationViewModel: Reducerable {
          do {
              return try await ImagePipeline.shared.image(for: request)
          } catch {
-             print("이미지 로드 실패: \(error)")
              LoggerUtil.log("이미지 로드 실패: \(error)", level: .error)
              return nil
          }

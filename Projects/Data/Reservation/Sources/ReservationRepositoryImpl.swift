@@ -51,7 +51,7 @@ public final class ReservationRepositoryImpl: ReservationRepository {
         }
     }
     
-    public func reqeustReservationMembers(id: Int) async throws(HGError) -> ReservationMembers {
+    public func requestReservationMembers(id: Int) async throws(HGError) -> ReservationMembers {
         let api = ReservationMembersAPI(reservationId: id)
         do {
             guard let dtoModel = try await network.send(api),

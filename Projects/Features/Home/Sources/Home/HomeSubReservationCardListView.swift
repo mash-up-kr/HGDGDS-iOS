@@ -15,7 +15,22 @@ struct HomeSubReservationCardListView: View {
     let statusTab: ReservationStatusTab
     let reservations: [ReservationInfo]
     let totalCount: Int
+    let mainReservationCount: Int
     let lastItemAction: () -> Void
+    
+    init(
+        statusTab: ReservationStatusTab,
+        reservations: [ReservationInfo],
+        totalCount: Int,
+        mainReservationCount: Int = 0,
+        lastItemAction: @escaping () -> Void
+    ) {
+        self.statusTab = statusTab
+        self.reservations = reservations
+        self.totalCount = totalCount
+        self.mainReservationCount = mainReservationCount
+        self.lastItemAction = lastItemAction
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -24,7 +39,7 @@ struct HomeSubReservationCardListView: View {
                     .setTypo(.subTitle_18_bold)
                     .foregroundStyle(.gray80)
                 
-                Text(statusTab == .scheduled ? "\(totalCount-1)" : "\(totalCount)")
+                Text("\(totalCount-mainReservationCount)")
                     .setTypo(.subTitle_18_bold)
                     .foregroundStyle(.orange500Main)
             }
@@ -137,7 +152,8 @@ struct SubReservationCard: View {
         reservations: [
             
         ],
-        totalCount: 0,
+        totalCount: 30,
+        mainReservationCount: 2,
         lastItemAction: {
             
         }

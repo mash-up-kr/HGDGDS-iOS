@@ -67,7 +67,8 @@ struct HomeView: View {
                     HomeSubReservationCardListView(
                         statusTab: .scheduled,
                         reservations: viewModel.scheduledReservationInfos,
-                        totalCount: viewModel.scheduledPaginationMetadata.total
+                        totalCount: viewModel.scheduledPaginationMetadata.total,
+                        mainReservationCount: viewModel.mainReservationInfos.count
                     ) {
                         viewModel.reduce(.loadMoreReservation(status: .before))
                     }

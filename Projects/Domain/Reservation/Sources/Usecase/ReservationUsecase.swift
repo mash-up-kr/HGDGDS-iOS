@@ -33,7 +33,7 @@ public class ReservationUseCaseImpl: ReservationUseCase {
     }
 
     public func getReservationMembers(id: Int) async throws -> ReservationMembers {
-        try await reservationRepo.reqeustReservationMembers(id: id)
+        try await reservationRepo.requestReservationMembers(id: id)
     }
     
     public func updateReadyStatus(id: Int, status: UserReservationStatus) async throws {

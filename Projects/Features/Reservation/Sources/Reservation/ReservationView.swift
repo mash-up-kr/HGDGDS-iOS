@@ -356,7 +356,7 @@ struct ReservationView: View {
                 }
                 .frame(height: 158)
                 VStack(spacing: 6) {
-                    profileImageView(type: viewModel.me.profileType)
+                    profileImageView(type: member.profileType)
                     Text(member.nickname)
                         .setTypo(.body_16_bold)
                         .foregroundStyle(.gray95)
