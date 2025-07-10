@@ -25,8 +25,8 @@ struct ReservationView: View {
         return ((UIWindow.current?.screen.bounds.width ?? 100) - (padding + spacing) * 2) / 3
     }
     
-    init(reservationId: Int, category: ReservationCategoryType) {
-        self.viewModel = .init(reservationId: reservationId, category: category)
+    init(reservation: ReservationDetail) {
+        self.viewModel = .init(reservation: reservation)
     }
     
     var dDay: Int { viewModel.reservation.reservationDatetime?.dDayValue() ?? 0 }
@@ -55,7 +55,7 @@ struct ReservationView: View {
         .background(
             ActivityView(
                 isPresented: $viewModel.state.isPresentedShareSheet,
-                items: ["https://hgdgds.duckdns.org/invite?reservationId=\(viewModel.reservationId)"]
+                items: ["https://hgdgds.duckdns.org/invite?reservationId=\(viewModel.reservation.reservationId)"]
             )
         )
     }
@@ -83,7 +83,7 @@ struct ReservationView: View {
             }
             .padding(.horizontal, outsidePadding)
             .background(alignment: .top) {
-                viewModel.category.image
+                viewModel.reservation.category.image
                     .padding(.top, 109) // 라이벌 생기면 145로 변경
             }
         }
@@ -92,7 +92,7 @@ struct ReservationView: View {
     
     private var background: some View {
         VStack(spacing: 0) {
-            viewModel.category.gradient.frame(height: 637)
+            viewModel.reservation.category.gradient.frame(height: 637)
             HGColors.gray10.color
         }
         .ignoresSafeArea()
@@ -113,7 +113,7 @@ struct ReservationView: View {
         VStack(spacing: 0) {
             HGTagView(
                 style: .medium,
-                title: viewModel.category.title,
+                title: viewModel.reservation.category.title,
                 textColor: .gray10,
                 backgroundColor: HGColors.opacityWhite10
             )
@@ -224,7 +224,7 @@ struct ReservationView: View {
             )
             .overlay {
                 RoundedRectangle(cornerRadius: 22)
-                    .stroke(viewModel.category.widthGradient, lineWidth: 1)
+                    .stroke(viewModel.reservation.category.widthGradient, lineWidth: 1)
             }
             .shadow(color: HGColors.purpleDark.color.opacity(0.15), radius: 20, x: 0, y: 2)
             .colorScheme(.light)
@@ -490,5 +490,5 @@ struct ReservationView: View {
 }
 
 #Preview(traits: .applyFont) {
-    ReservationView(reservationId: 0, category: .activity)
+    ReservationView(reservation: .mockData)
 }

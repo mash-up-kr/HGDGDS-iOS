@@ -55,6 +55,7 @@ struct HomeView: View {
             tabManager.setTabBarHidden(false)
             viewModel.reduce(.onAppear)
         }
+        .isLoading(viewModel.isLoading)
     }
     
     @ViewBuilder

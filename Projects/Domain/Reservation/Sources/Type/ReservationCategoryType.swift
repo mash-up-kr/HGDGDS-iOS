@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ReservationCategoryType: String, CaseIterable {
+public enum ReservationCategoryType: String, CaseIterable, Hashable {
     case restaurant = "FOOD"
     case sports = "SPORTS"
     case performance = "PERFORMANCE"

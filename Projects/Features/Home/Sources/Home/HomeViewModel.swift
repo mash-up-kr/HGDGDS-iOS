@@ -22,6 +22,9 @@ public final class HomeViewModel: Reducerable {
     @Dependency var homeUseCase: HomeUseCase
     
     @ObservationIgnored
+    @Dependency var reservationUseCase: ReservationUseCase
+    
+    @ObservationIgnored
     var scheduledReservationPage: Int = 1
     @ObservationIgnored
     var completedReservationPage: Int = 1
@@ -37,6 +40,8 @@ public final class HomeViewModel: Reducerable {
     public enum Action {
         case onAppear
         case loadMoreReservation(status: ReservationListRequest.Status)
+        case detailButtonTapped(reservationId: Int)
+        case initSelectedReservation
     }
 
     public struct State {
@@ -50,6 +55,9 @@ public final class HomeViewModel: Reducerable {
         var mainReservationInfos: [ReservationInfo] = []
         var scheduledReservationInfos: [ReservationInfo] = []
         var completedReservationInfos: [ReservationInfo] = []
+        
+        var isLoading: Bool = false
+        var selectedReservation: ReservationDetail?
     }
     
     public func reduce(_ action: Action) {
@@ -82,6 +90,20 @@ public final class HomeViewModel: Reducerable {
                     await getReservationList(page: page, status: status)
                 }
             }
+        case let .detailButtonTapped(reservationId):
+            Task {
+                do {
+                    state.isLoading = true
+                    try await state.selectedReservation = getReservationDetail(reservationId: reservationId)
+                    state.isLoading = false
+                } catch {
+                    await MainActor.run {
+                        LoggerUtil.log("예약 상세 정보 가져오기 실패: \(error)", level: .error)
+                    }
+                }
+            }
+        case .initSelectedReservation:
+            state.selectedReservation = nil
         }
     }
     
@@ -97,6 +119,15 @@ public final class HomeViewModel: Reducerable {
         } catch {
             LoggerUtil.log("홈화면: 예약 리스트 불러오기 실패 – \(error)")
         }
+    }
+    
+    private func getReservationDetail(reservationId: Int) async throws -> ReservationDetail {
+//        do {
+            return try await reservationUseCase.getReservationDetail(reservationId: reservationId)
+//            self.reservation = reservation
+//        } catch {
+//            LoggerUtil.log("예약 상세 정보 가져오기 실패: \(error)", level: .error)
+//        }
     }
     
     private func shouldLoadMore(for status: ReservationListRequest.Status) -> Bool {

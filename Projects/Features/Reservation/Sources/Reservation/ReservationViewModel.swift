@@ -17,12 +17,10 @@ import HGLogger
 final class ReservationViewModel: Reducerable {
     var state: State = .init()
     
-    let reservationId: Int
-    let category: ReservationCategoryType
+    let reservation: ReservationDetail
     
-    init(reservationId: Int, category: ReservationCategoryType) {
-        self.reservationId = reservationId
-        self.category = category
+    init(reservation: ReservationDetail) {
+        self.reservation = reservation
     }
     
     @ObservationIgnored
@@ -37,7 +35,6 @@ final class ReservationViewModel: Reducerable {
         case inviteButtonTapped
         case kokButtonTapped(_ userid: Int)
         case refreshButtonTapped
-        case linkButtonTapped
         
         case showImageViewer(_ index: Int)
         case showInvalidLinkToast
@@ -67,13 +64,12 @@ final class ReservationViewModel: Reducerable {
         switch action {
         case .onAppear:
             Task { @MainActor in
-                await getReservationDetail(reservationId: reservationId)
-                await getReservationMembers(reservationId: reservationId)
+                await getReservationMembers(reservationId: reservation.reservationId)
             }
         case .readyButtonTapped:
             Task { @MainActor in
                 await updateReadyStatus(
-                    reservationId: reservationId,
+                    reservationId: reservation.reservationId,
                     status: state.isReady ? .default : .ready
                 )
             }
@@ -81,13 +77,11 @@ final class ReservationViewModel: Reducerable {
             state.isPresentedShareSheet = true
         case let .kokButtonTapped(userId):
             Task { @MainActor in
-                await kok(reservationId: reservationId, userId: userId)
+                await kok(reservationId: reservation.reservationId, userId: userId)
             }
-        case .linkButtonTapped:
-            state.isShowImageViewer = true
         case .refreshButtonTapped:
             Task { @MainActor in
-                await getReservationMembers(reservationId: reservationId)
+                await getReservationMembers(reservationId: reservation.reservationId)
             }
         case let .showImageViewer(index):
             Task {
@@ -99,18 +93,6 @@ final class ReservationViewModel: Reducerable {
             Task { @MainActor in
                 ToastUtils.showToast("유효하지 않은 링크입니다!")
             }
-        }
-    }
-    
-    @MainActor
-    private func getReservationDetail(reservationId: Int) async {
-        do {
-            let reservation = try await reservationUseCase.getReservationDetail(reservationId: reservationId)
-            state.reservation = reservation
-            countDownTimer.setupTime(endDate: reservation.reservationDatetime ?? Date())
-            countDownTimer.start()
-        } catch {
-            LoggerUtil.log("예약 상세 정보 가져오기 실패: \(error)", level: .error)
         }
     }
     

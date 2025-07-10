@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ReservationDetail: Equatable {
+public struct ReservationDetail: Hashable {
     public let reservationId: Int
     public let title: String
     public let category: ReservationCategoryType
@@ -23,19 +23,19 @@ public struct ReservationDetail: Equatable {
     public let updatedAt: Date?
     
     public init(
-        reservationId: Int,
-        title: String,
-        category: ReservationCategoryType,
-        reservationDatetime: Date?,
-        description: String,
-        linkUrl: String,
-        images: [String],
-        host: Host,
-        currentUser: CurrentUser,
-        participantCount: Int,
-        maxParticipants: Int,
-        createdAt: Date?,
-        updatedAt: Date?
+        reservationId: Int = 0,
+        title: String = "",
+        category: ReservationCategoryType = .etc,
+        reservationDatetime: Date? = nil,
+        description: String = "",
+        linkUrl: String = "",
+        images: [String] = [],
+        host: Host = .init(hostId: 0, nickName: "", profileImageName: ""),
+        currentUser: CurrentUser = .init(userId: 0, status: .default, isHost: false, canEdit: false, canJoin: false),
+        participantCount: Int = 0,
+        maxParticipants: Int = 0,
+        createdAt: Date? = nil,
+        updatedAt: Date? = nil
     ) {
         self.reservationId = reservationId
         self.title = title
@@ -52,7 +52,7 @@ public struct ReservationDetail: Equatable {
         self.updatedAt = updatedAt
     }
     
-    public struct Host: Equatable {
+    public struct Host: Hashable {
         public let hostId: Int
         public let nickName: String
         public let profileImageName: String
@@ -64,7 +64,7 @@ public struct ReservationDetail: Equatable {
         }
     }
     
-    public struct CurrentUser: Equatable {
+    public struct CurrentUser: Hashable {
         public let userId: Int
         public let status: UserReservationStatus
         public let isHost: Bool

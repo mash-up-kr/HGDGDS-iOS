@@ -32,8 +32,7 @@ struct HomeMainReservationTabView: View {
                     reservationInfo: info,
                     isShowSubReservationCardList: viewModel.isExistScheduledSubReservations
                 ) {
-                    tabManager.setTabBarHidden(true)
-                    coordinator.push(.upcomingReservationDetail(reservationId: info.reservationId, category: info.categoryType))
+                    viewModel.reduce(.detailButtonTapped(reservationId: info.reservationId))
                 }
                 .padding(.bottom, HomeUIConstans.bottomPadding)
                 .tag(index)
@@ -45,6 +44,13 @@ struct HomeMainReservationTabView: View {
             if viewModel.mainReservationInfos.count > 1 {
                 indicator
             }
+        }
+        .onChange(of: viewModel.selectedReservation) { reservation in
+            guard let reservation else { return }
+            tabManager.setTabBarHidden(true)
+            coordinator.push(
+                .upcomingReservationDetail(reservation: reservation)
+            )
         }
     }
     
