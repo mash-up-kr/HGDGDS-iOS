@@ -16,7 +16,11 @@ struct HGTabView: View {
     
     @State var deepLinkItem: DeepLinkType? = nil
     
-    private let coordinatorFactory: CoordinatorFactory = CoordinatorFactory()
+    private let coordinatorFactory: CoordinatorFactory
+    
+    init(coordinatorFactory: CoordinatorFactory) {
+        self.coordinatorFactory = coordinatorFactory
+    }
     
     private let tabbarHeight: CGFloat = UIConstant.tabBarHeight
     
@@ -124,5 +128,5 @@ struct HGTabView: View {
 }
 
 #Preview {
-    HGTabView()
+    HGTabView(coordinatorFactory: .init())
 }

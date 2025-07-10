@@ -22,7 +22,7 @@ struct RootView: View {
                     viewModel.reduce(.validateAccessToken)
                 }
         case .mainTab:
-            HGTabView()
+            HGTabView(coordinatorFactory: viewModel.coordinatorFactory)
                 .onAppear {
                     viewModel.reduce(.validateAccessToken)
                 }

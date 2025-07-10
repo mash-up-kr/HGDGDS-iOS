@@ -9,15 +9,14 @@ import Foundation
 import UIKit
 
 import HGCommon
-import HomeData
 import HomeDomain
 import ReservationDomain
 import HGDesignSystem
 import HGLogger
 
 @Observable
-final class HomeViewModel: Reducerable {
-    var state: State = .init()
+public final class HomeViewModel: Reducerable {
+    public var state: State = .init()
     
     @ObservationIgnored
     @Dependency var homeUseCase: HomeUseCase
@@ -26,13 +25,19 @@ final class HomeViewModel: Reducerable {
     var scheduledReservationPage: Int = 1
     @ObservationIgnored
     var completedReservationPage: Int = 1
-    enum Action {
+    @ObservationIgnored
+    var scheduledPaginationMetadata: Metadata = .init()
+    @ObservationIgnored
+    var completedPaginationMetadata: Metadata = .init()
+    
+    public init() { }
+
+    public enum Action {
         case onAppear
-        
         case loadMoreReservation(status: ReservationListRequest.Status)
     }
 
-    struct State {
+    public struct State {
         var selectedStatusTab: ReservationStatusTab = .scheduled
         var selectedReservationIndex: Int = 0
         
@@ -43,31 +48,34 @@ final class HomeViewModel: Reducerable {
         var mainReservationInfos: [ReservationInfo] = []
         var scheduledReservationInfos: [ReservationInfo] = []
         var completedReservationInfos: [ReservationInfo] = []
-        
-        var scheduledPaginationMetadata: Metadata = .init()
-        var completedPaginationMetadata: Metadata = .init()
     }
     
-    func reduce(_ action: Action) {
+    public func reduce(_ action: Action) {
         switch action {
         case .onAppear:
             Task { @MainActor in
-                await getReservationList(page: 1, status: .before)
-                await getReservationList(page: 1, status: .after)
+                await getReservationList(page: scheduledReservationPage, status: .before)
+                await getReservationList(page: completedReservationPage, status: .after)
             }
         case let .loadMoreReservation(status):
-            let page: Int
+            var page: Int?
             switch status {
             case .before:
-                scheduledReservationPage += 1
-                page = scheduledReservationPage
+                if scheduledPaginationMetadata.hasNext {
+                    scheduledReservationPage += 1
+                    page = scheduledReservationPage
+                }
             case .after:
-                completedReservationPage += 1
-                page = completedReservationPage
+                if completedPaginationMetadata.hasNext {
+                    completedReservationPage += 1
+                    page = completedReservationPage
+                }
             }
 
-            Task { @MainActor in
-                await getReservationList(page: page, status: status)
+            if let page {
+                Task { @MainActor in
+                    await getReservationList(page: page, status: status)
+                }
             }
         }
     }
@@ -77,7 +85,7 @@ final class HomeViewModel: Reducerable {
         guard shouldLoadMore(for: status) else { return }
 
         do {
-            let request = ReservationListRequest(page: page, status: status)
+            let request = ReservationListRequest(page: page, limit: 10, status: status)
             let list = try await homeUseCase.getReservationList(request: request)
 
             applyReservationList(status: status, list: list)
@@ -88,8 +96,8 @@ final class HomeViewModel: Reducerable {
     
     private func shouldLoadMore(for status: ReservationListRequest.Status) -> Bool {
         switch status {
-        case .before: return state.scheduledPaginationMetadata.hasNext
-        case .after:  return state.completedPaginationMetadata.hasNext
+        case .before: return scheduledPaginationMetadata.hasNext
+        case .after:  return completedPaginationMetadata.hasNext
         }
     }
 
@@ -98,11 +106,11 @@ final class HomeViewModel: Reducerable {
         switch status {
         case .before:
             updateReservationInfos(with: list.reservations)
-            state.scheduledPaginationMetadata = list.metadata
+            scheduledPaginationMetadata = list.metadata
             
         case .after:
             state.completedReservationInfos += list.reservations
-            state.completedPaginationMetadata = list.metadata
+            completedPaginationMetadata = list.metadata
         }
     }
     

@@ -16,12 +16,14 @@ import ReservationFeatureInterface
 
 @MainActor
 struct CoordinatorFactory {
+    private let homeCoordinator = HomeCoordinator(
+        reservationViewProvider: ReservationModuleViewProvider(),
+        homeViewModel: .init()
+    )
+
     var homeCoordinatorRootView: some View {
-        let coordinator = HomeCoordinator(
-            reservationViewProvider: ReservationModuleViewProvider()
-        )
-        return HomeCoordinatorView()
-            .environment(coordinator)
+        HomeCoordinatorView()
+            .environment(homeCoordinator)
     }
     
     var myPageCoordinatorRootView: some View {

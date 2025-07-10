@@ -50,16 +50,17 @@ final class ReservationViewModel: Reducerable {
         
         var rivalCount: Int = 14
         var isReady: Bool = false
-        var isWithinOneHours: Bool {
-            let interval = reservation.reservationDatetime?.timeIntervalSince(Date()) ?? 0
-            return interval > 0 && interval <= 3600 // 60 * 60
-        }
         
         var isShowImageViewer: Bool = false
         var selectedImageIndex: Int? = nil
         var sharedImages: [UIImage] = []
         
         var isPresentedShareSheet: Bool = false
+        
+        var isWithinOneHours: Bool {
+            let interval = reservation.reservationDatetime?.timeIntervalSince(Date()) ?? 0
+            return interval > 0 && interval <= 3600 // 60 * 60
+        }
     }
     
     func reduce(_ action: Action) {
@@ -194,7 +195,7 @@ final class ReservationViewModel: Reducerable {
 public extension ReservationDetail {
     static let mockData: Self = .init(
         reservationId: 42,
-        title: "오아시스를 직접 본다니",
+        title: " ",
         category: .performance,
         reservationDatetime: ISO8601DateFormatter().date(from: "2025-07-09T02:09:09+09:00") ?? .distantFuture,
         description: "1순위로 E열 선정하기. 만약에 안되면 H도 괜찮아요",
