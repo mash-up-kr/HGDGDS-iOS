@@ -13,7 +13,8 @@ import UserDomain
 public struct ReservationResultShareView: View {
     @State private var viewModel: ReservationResultShareViewModel = .init()
     @State private var isHiddenNavigationBar = true
-    
+    @Environment(\.openURL) private var openURL
+ 
     private let innerPadding: CGFloat = 16
     private let outsidePadding: CGFloat = 16
     private var photoGridSize: CGFloat {
@@ -301,7 +302,9 @@ public struct ReservationResultShareView: View {
         if viewModel.reservationURL.isNotEmpty {
             makeSectionCardView(icon: .link, title: "링크") {
                 Button {
-                    viewModel.reduce(.didTapReservationLink)
+                    if let url = URL(string: viewModel.reservationURL) {
+                        openURL(url)
+                    }
                 } label: {
                     HStack(spacing: 4) {
                         HGIcons.linkURL.image
@@ -329,6 +332,7 @@ public struct ReservationResultShareView: View {
                     ForEach(viewModel.reservationPhotoImages.indices, id: \.self) { index in
                         Image(uiImage: viewModel.reservationPhotoImages[index])
                             .resizable()
+                            .aspectRatio(contentMode: .fill)
                             .frame(photoGridSize)
                             .setRadius(16)
                             .strokeBorder(HGColors.gray20.color, radius: 16, linewidth: 1)

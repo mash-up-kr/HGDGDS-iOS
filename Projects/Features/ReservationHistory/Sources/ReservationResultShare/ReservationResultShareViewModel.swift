@@ -25,7 +25,6 @@ final class ReservationResultShareViewModel: Reducerable {
         
         case didTapMemberResult(index: Int)
         case didTapRefreshMemberResult
-        case didTapReservationLink
         case didTapPhotoImage(index: Int)
         
     }
@@ -72,14 +71,12 @@ final class ReservationResultShareViewModel: Reducerable {
         case .didTapShareMyResult:
             print("예약결과 입력하기 연결")
         case let .didTapMemberResult(index):
-            print("결과상세연결 멤버 데이터")
+            print("결과상세연결 멤버 데이터, \(index)")
         case .didTapRefreshMemberResult:
             print("멤버 상태 새로고침")
             Task {
                 await requestMemberReservationResultList()
             }
-        case .didTapReservationLink:
-            print("링크 사파리이동")
         case let .didTapPhotoImage(index):
             state.selectedPhotoIndex = index
             state.isPresentedPhotoDetail = true
@@ -87,8 +84,8 @@ final class ReservationResultShareViewModel: Reducerable {
     }
     
     private func requestReservationResultInfo() async {
-        async let _ = await requestReservationDetail()
-        async let _ = await requestMemberReservationResultList()
+        await requestReservationDetail()
+        await requestMemberReservationResultList()
     }
     
     private func requestMemberReservationResultList() async {

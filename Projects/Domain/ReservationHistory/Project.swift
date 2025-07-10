@@ -14,7 +14,9 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "ReservationHistoryDomain",
-            dependencies: [ ],
+            dependencies: [
+                .domainProject(with: .user)
+            ],
             hasResources: false
         )
     ]
