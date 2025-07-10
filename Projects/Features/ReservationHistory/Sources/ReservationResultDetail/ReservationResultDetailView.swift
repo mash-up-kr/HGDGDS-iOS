@@ -8,6 +8,7 @@
 import SwiftUI
 import HGDesignSystem
 import NukeUI
+import HGCommon
 
 struct ReservationResultDetailView: View {
     @State private var viewModel: ReservationResultDetailViewModel = .init()
@@ -29,6 +30,17 @@ struct ReservationResultDetailView: View {
             .contentMargins(.top, 20)
         }
         .applyNavigationBar(title: "예약 결과 상세")
+        .onAppear {
+            viewModel.reduce(.onAppear)
+        }
+        .fullScreenCover(isPresented: $viewModel.state.isPresentedPhotoDetail) {
+            if let selectedPhotoIndex = viewModel.selectedPhotoIndex {
+                ImageSwipeView(
+                    showIndex: selectedPhotoIndex,
+                    images: viewModel.photoImages
+                )
+            }
+        }
     }
     
     private var profileHeaderView: some View {
@@ -78,23 +90,20 @@ struct ReservationResultDetailView: View {
     @ViewBuilder
     private var sharedPhotoSectionView: some View {
         makeSectionContainerView(title: "사진") {
-            if viewModel.photoURLs.isEmpty {
+            if viewModel.photoImages.isEmpty {
                 makeEmptyView(title: "공유된 사진이 없어요")
             } else {
                 ScrollView(.horizontal) {
                     LazyHStack(spacing: 9) {
-                        ForEach(viewModel.photoURLs.indices, id: \.self) { index in
-                            LazyImage(url: URL(string: viewModel.photoURLs[index])) { state in
-                                if let image = state.image {
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(106)
-                                } else {
-                                    HGColors.gray10.color
+                        ForEach(viewModel.photoImages.indices, id: \.self) { index in
+                            Image(uiImage: viewModel.photoImages[index])
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(106)
+                                .strokeBorder(HGColors.opacityBlack10.color, radius: 15, linewidth: 0.75)
+                                .onTapGesture {
+                                    viewModel.reduce(.didTapPhoto(index: index))
                                 }
-                            }
-                            .strokeBorder(HGColors.opacityBlack10.color, radius: 15, linewidth: 0.75)
                         }
                     }
                 }
