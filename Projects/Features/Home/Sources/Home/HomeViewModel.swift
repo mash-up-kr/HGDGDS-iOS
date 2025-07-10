@@ -29,7 +29,7 @@ public final class HomeViewModel: Reducerable {
     var scheduledPaginationMetadata: Metadata = .init()
     @ObservationIgnored
     var completedPaginationMetadata: Metadata = .init()
-    
+    @ObservationIgnored
     var isInitialFetching = false
     
     public init() { }
