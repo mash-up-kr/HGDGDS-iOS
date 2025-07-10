@@ -18,6 +18,16 @@ import Nuke
 final class ReservationResultShareViewModel: Reducerable {
     enum Action {
         case onAppear
+        
+        // todo
+        case didTapMyResult
+        case didTapShareMyResult
+        
+        case didTapMemberResult(index: Int)
+        case didTapRefreshMemberResult
+        case didTapReservationLink
+        case didTapPhotoImage(index: Int)
+        
     }
     
     struct State {
@@ -36,6 +46,9 @@ final class ReservationResultShareViewModel: Reducerable {
         var reservationPhotoURLs: [String] = []
         var reservationPhotoImages: [UIImage] = []
         var description: String = ""
+        
+        var isPresentedPhotoDetail: Bool = false
+        var selectedPhotoIndex: Int?
     }
     
     var state: State
@@ -54,6 +67,22 @@ final class ReservationResultShareViewModel: Reducerable {
             Task {
                 await requestReservationResultInfo()
             }
+        case .didTapMyResult:
+            print("결과상세연결 내데이터")
+        case .didTapShareMyResult:
+            print("예약결과 입력하기 연결")
+        case let .didTapMemberResult(index):
+            print("결과상세연결 멤버 데이터")
+        case .didTapRefreshMemberResult:
+            print("멤버 상태 새로고침")
+            Task {
+                await requestMemberReservationResultList()
+            }
+        case .didTapReservationLink:
+            print("링크 사파리이동")
+        case let .didTapPhotoImage(index):
+            state.selectedPhotoIndex = index
+            state.isPresentedPhotoDetail = true
         }
     }
     

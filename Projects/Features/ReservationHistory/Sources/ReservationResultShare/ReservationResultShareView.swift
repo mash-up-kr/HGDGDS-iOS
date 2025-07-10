@@ -33,6 +33,14 @@ public struct ReservationResultShareView: View {
                 leftButtonType: .whiteBack
             )
             .environment(\.colorScheme, .dark)
+            .fullScreenCover(isPresented: $viewModel.state.isPresentedPhotoDetail) {
+                if let selectedPhotoIndex = viewModel.selectedPhotoIndex {
+                    ImageSwipeView(
+                        showIndex: selectedPhotoIndex,
+                        images: viewModel.reservationPhotoImages
+                    )
+                }
+            }
             .onAppear {
                 viewModel.reduce(.onAppear)
             }
@@ -120,7 +128,7 @@ public struct ReservationResultShareView: View {
                     .foregroundStyle(.gray95)
                 Spacer()
                 Button {
-                    
+                    viewModel.reduce(viewModel.userResult != nil ? .didTapMyResult : .didTapShareMyResult)
                 } label: {
                     if viewModel.userResult != nil {
                         Text("공유한 결과 보기")
@@ -162,7 +170,7 @@ public struct ReservationResultShareView: View {
                     .foregroundStyle(.orange500Main)
                 Spacer()
                 Button {
-                    
+                    viewModel.reduce(.didTapRefreshMemberResult)
                 } label: {
                     HGIcons.retry.image
                         .resizable()
@@ -175,7 +183,7 @@ public struct ReservationResultShareView: View {
             ) {
                 ForEach(viewModel.memberResults.indices, id: \.self) { index in
                     let model = viewModel.memberResults[index]
-                    makeTeamMemberResultView(result: model)
+                    makeTeamMemberResultView(index: index, result: model)
                 }
             }
         }
@@ -187,9 +195,9 @@ public struct ReservationResultShareView: View {
         .setRadius(28)
     }
     
-    private func makeTeamMemberResultView(result: ReservationResult) -> some View {
+    private func makeTeamMemberResultView(index: Int, result: ReservationResult) -> some View {
         Button {
-            
+            viewModel.reduce(.didTapMemberResult(index: index))
         } label: {
             VStack {
                 Spacer()
@@ -288,7 +296,7 @@ public struct ReservationResultShareView: View {
     private var linkSectionView: some View {
         makeSectionCardView(icon: .link, title: "링크") {
             Button {
-                
+                viewModel.reduce(.didTapReservationLink)
             } label: {
                 HStack(spacing: 4) {
                     HGIcons.linkURL.image
@@ -316,6 +324,9 @@ public struct ReservationResultShareView: View {
                         .frame(photoGridSize)
                         .setRadius(16)
                         .strokeBorder(HGColors.gray20.color, radius: 16, linewidth: 1)
+                        .onTapGesture {
+                            viewModel.reduce(.didTapPhotoImage(index: index))
+                        }
                 }
             }
         }
