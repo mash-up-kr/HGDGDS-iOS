@@ -55,7 +55,7 @@ struct ReservationView: View {
         .background(
             ActivityView(
                 isPresented: $viewModel.state.isPresentedShareSheet,
-                items: ["kokkok://invite?reservationId=\(viewModel.reservationId)"]
+                items: ["https://hgdgds.duckdns.org/invite?reservationId=\(viewModel.reservationId)"]
             )
         )
     }
@@ -234,7 +234,7 @@ struct ReservationView: View {
     var profileSectionView: some View {
         makeSectionCardView(icon: .person, title: "내 프로필") {
             HStack(spacing: 12) {
-                profileImageView(type: ProfileType(rawValue: viewModel.me.profileImageCode) ?? .purple)
+                profileImageView(type: viewModel.me.profileType)
                 Text(viewModel.me.nickname)
                     .setTypo(.body_16_bold)
                     .foregroundStyle(.gray95)
@@ -356,7 +356,7 @@ struct ReservationView: View {
                 }
                 .frame(height: 158)
                 VStack(spacing: 6) {
-                    profileImageView(type: ProfileType(rawValue: member.profileImageCode) ?? .purple)
+                    profileImageView(type: viewModel.me.profileType)
                     Text(member.nickname)
                         .setTypo(.body_16_bold)
                         .foregroundStyle(.gray95)

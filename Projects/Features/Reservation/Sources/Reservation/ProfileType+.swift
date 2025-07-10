@@ -8,6 +8,7 @@
 import SwiftUI
 
 import UserDomain
+import ReservationDomain
 import HGDesignSystem
 
 extension ProfileType {
@@ -24,5 +25,11 @@ extension ProfileType {
         case .pink:
             HGImages.pinkCharacter.image
         }
+    }
+}
+
+extension ReservationMember {
+    var profileType: ProfileType {
+        ProfileType(rawValue: self.profileImageCode) ?? .green
     }
 }

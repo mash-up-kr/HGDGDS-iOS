@@ -40,11 +40,3 @@ public struct ReservationMember {
          self.isHost = isHost
      }
 }
-
-//public enum ProfileImageCode: String {
-//    case purple = "PURPLE"
-//    case orange = "Orange"
-//    case green = "GREEN"
-//    case blue = "BLUE"
-//    case pink = "PINK"
-//}
