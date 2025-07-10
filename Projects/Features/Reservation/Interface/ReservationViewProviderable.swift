@@ -6,11 +6,16 @@
 //
 
 import SwiftUI
+
+import ReservationDomain
 import HGCommon
 
 @MainActor
 public protocol ReservationViewProviderable {
-    func reservationMainView(reservationId: Int) -> AnyView
+    func reservationMainView(
+        reservationId: Int,
+        category: ReservationCategoryType
+    ) -> AnyView
     
     func reservationShareView(
         reservationId: Int,

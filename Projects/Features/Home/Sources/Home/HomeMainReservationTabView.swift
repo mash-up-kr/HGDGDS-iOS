@@ -33,7 +33,7 @@ struct HomeMainReservationTabView: View {
                     isShowSubReservationCardList: viewModel.isExistScheduledSubReservations
                 ) {
                     tabManager.setTabBarHidden(true)
-                    coordinator.push(.upcomingReservationDetail(reservationId: info.reservationId))
+                    coordinator.push(.upcomingReservationDetail(reservationId: info.reservationId, category: info.categoryType))
                 }
                 .padding(.bottom, HomeUIConstans.bottomPadding)
                 .tag(index)
@@ -86,7 +86,7 @@ private struct MainReservationView: View {
                 dDay: dDay,
                 hours: countDownTimer.hours,
                 minutes: countDownTimer.minutes,
-                seconds: countDownTimer.seconds,
+                seconds: countDownTimer.seconds
             )
             
             Spacer().frame(minHeight: 33)

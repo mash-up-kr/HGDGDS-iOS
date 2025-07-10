@@ -23,7 +23,7 @@ public final class ReservationCoordinator: Coordinatorable {
     public func view(_ screen: Screen) -> some View {
         switch screen {
         case .main:
-            ReservationView(reservationId: 0)
+            ReservationView(reservationId: 0, category: .activity)
         case let .shareResevation(reservationId, type):
             ShareReservationView(
                 viewModel: .init(

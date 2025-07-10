@@ -7,6 +7,8 @@
 
 import Foundation
 
+import ReservationDomain
+
 public enum HomeRouter {
     public enum Sheet: String, Identifiable {
         case photoDetail
@@ -16,7 +18,7 @@ public enum HomeRouter {
     public enum Screen: Hashable {
         case main
         case alarmHistory
-        case upcomingReservationDetail(reservationId: Int)
+        case upcomingReservationDetail(reservationId: Int, category: ReservationCategoryType)
         case pastReservationDetail
         case inputReservationResult
         case modifyReservationInfo

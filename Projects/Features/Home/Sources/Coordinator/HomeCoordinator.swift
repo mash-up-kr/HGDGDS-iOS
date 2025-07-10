@@ -31,8 +31,8 @@ public final class HomeCoordinator: Coordinatorable {
         switch screen {
         case .main: HomeView()
         case .alarmHistory: Color.blue
-        case let .upcomingReservationDetail(id):
-            reservationViewProvider.reservationMainView(reservationId: id)
+        case let .upcomingReservationDetail(id, category):
+            reservationViewProvider.reservationMainView(reservationId: id, category: category)
         case .pastReservationDetail: EmptyView()
         case .inputReservationResult: EmptyView()
         case .modifyReservationInfo: EmptyView()
