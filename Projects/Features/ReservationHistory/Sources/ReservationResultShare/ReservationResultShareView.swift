@@ -155,44 +155,47 @@ public struct ReservationResultShareView: View {
         }
     }
     
+    @ViewBuilder
     private var togetherTeamSectionView: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack(spacing: 2) {
-                HGIcons.group.image
-                    .resizable()
-                    .frame(18)
-                    .foregroundStyle(.gray80)
-                Text("함께하는 팀원")
-                    .setTypo(.subTitle_18_bold)
-                    .foregroundStyle(.gray95)
-                Text("\(viewModel.memberResults.count)명")
-                    .setTypo(.subTitle_18_bold)
-                    .foregroundStyle(.orange500Main)
-                Spacer()
-                Button {
-                    viewModel.reduce(.didTapRefreshMemberResult)
-                } label: {
-                    HGIcons.retry.image
+        if viewModel.memberResults.isNotEmpty {
+            VStack(alignment: .leading, spacing: 16) {
+                HStack(spacing: 2) {
+                    HGIcons.group.image
                         .resizable()
                         .frame(18)
+                        .foregroundStyle(.gray80)
+                    Text("함께하는 팀원")
+                        .setTypo(.subTitle_18_bold)
+                        .foregroundStyle(.gray95)
+                    Text("\(viewModel.memberResults.count)명")
+                        .setTypo(.subTitle_18_bold)
+                        .foregroundStyle(.orange500Main)
+                    Spacer()
+                    Button {
+                        viewModel.reduce(.didTapRefreshMemberResult)
+                    } label: {
+                        HGIcons.retry.image
+                            .resizable()
+                            .frame(18)
+                    }
+                }
+                LazyVGrid(
+                    columns: [.init(), .init()],
+                    spacing: 6
+                ) {
+                    ForEach(viewModel.memberResults.indices, id: \.self) { index in
+                        let model = viewModel.memberResults[index]
+                        makeTeamMemberResultView(index: index, result: model)
+                    }
                 }
             }
-            LazyVGrid(
-                columns: [.init(), .init()],
-                spacing: 6
-            ) {
-                ForEach(viewModel.memberResults.indices, id: \.self) { index in
-                    let model = viewModel.memberResults[index]
-                    makeTeamMemberResultView(index: index, result: model)
-                }
-            }
+            .fillMaxWidth()
+            .padding(.horizontal, innerPadding)
+            .padding(.top, 14)
+            .padding(.bottom, 16)
+            .background(.gray0White)
+            .setRadius(28)
         }
-        .fillMaxWidth()
-        .padding(.horizontal, innerPadding)
-        .padding(.top, 14)
-        .padding(.bottom, 16)
-        .background(.gray0White)
-        .setRadius(28)
     }
     
     private func makeTeamMemberResultView(index: Int, result: ReservationResult) -> some View {
@@ -293,40 +296,46 @@ public struct ReservationResultShareView: View {
         }
     }
     
+    @ViewBuilder
     private var linkSectionView: some View {
-        makeSectionCardView(icon: .link, title: "링크") {
-            Button {
-                viewModel.reduce(.didTapReservationLink)
-            } label: {
-                HStack(spacing: 4) {
-                    HGIcons.linkURL.image
-                        .resizable()
-                        .foregroundStyle(.gray70)
-                        .frame(24)
-                    Text(viewModel.reservationURL)
-                        .lineLimit(1)
-                        .setTypo(.body_16_bold)
-                        .foregroundStyle(.gray80)
+        if viewModel.reservationURL.isNotEmpty {
+            makeSectionCardView(icon: .link, title: "링크") {
+                Button {
+                    viewModel.reduce(.didTapReservationLink)
+                } label: {
+                    HStack(spacing: 4) {
+                        HGIcons.linkURL.image
+                            .resizable()
+                            .foregroundStyle(.gray70)
+                            .frame(24)
+                        Text(viewModel.reservationURL)
+                            .lineLimit(1)
+                            .setTypo(.body_16_bold)
+                            .foregroundStyle(.gray80)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .strokeBorder(HGColors.gray20.color, radius: 14)
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                .strokeBorder(HGColors.gray20.color, radius: 14)
             }
         }
     }
     
+    @ViewBuilder
     private var sharedPhotosSectionView: some View {
-        makeSectionCardView(icon: .cameraShare, title: "공유된 사진") {
-            HStack(spacing: 5) {
-                ForEach(viewModel.reservationPhotoImages.indices, id: \.self) { index in
-                    Image(uiImage: viewModel.reservationPhotoImages[index])
-                        .resizable()
-                        .frame(photoGridSize)
-                        .setRadius(16)
-                        .strokeBorder(HGColors.gray20.color, radius: 16, linewidth: 1)
-                        .onTapGesture {
-                            viewModel.reduce(.didTapPhotoImage(index: index))
-                        }
+        if viewModel.reservationPhotoImages.isNotEmpty {
+            makeSectionCardView(icon: .cameraShare, title: "공유된 사진") {
+                HStack(spacing: 5) {
+                    ForEach(viewModel.reservationPhotoImages.indices, id: \.self) { index in
+                        Image(uiImage: viewModel.reservationPhotoImages[index])
+                            .resizable()
+                            .frame(photoGridSize)
+                            .setRadius(16)
+                            .strokeBorder(HGColors.gray20.color, radius: 16, linewidth: 1)
+                            .onTapGesture {
+                                viewModel.reduce(.didTapPhotoImage(index: index))
+                            }
+                    }
                 }
             }
         }
