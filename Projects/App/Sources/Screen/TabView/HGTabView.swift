@@ -58,6 +58,9 @@ struct HGTabView: View {
             let deepLink = try? DeepLinkPhaser.phase(url)
             self.deepLinkItem = deepLink
         }
+        .onReceive(NotificationCenter.default.publisher(for: .showCreateReservation)) { _ in
+            self.showCreateView = true
+        }
         .onReceive(NotificationCenter.default.publisher(for: .createReservationComplete)) { _ in
             self.showCreateView = false
         }

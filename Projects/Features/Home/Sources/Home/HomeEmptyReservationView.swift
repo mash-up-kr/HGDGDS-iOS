@@ -40,7 +40,7 @@ private struct NoReservationCard: View {
             Spacer().frame(height: 24)
             
             HGButton(title: "예약 생성하기") {
-               //TODO: CreateReservation 화면 띄우기
+                NotificationCenter.default.post(name: .showCreateReservation, object: nil)
             }
         }
         .padding([.top, .horizontal], 36)
