@@ -30,10 +30,10 @@ final class ReservationResultShareViewModel: Reducerable {
     }
     
     struct State {
-        var categoryTitle: String = ""
+        var category: ReservationCategoryType = .etc
         var reservationTitle: String = ""
-        var reservationDateString: String = "0000년 00월 00일"
-        var reservationTimeString: String = "오전 0시"
+        var reservationDateString: String = ""
+        var reservationTimeString: String = ""
         
         // MARK: - 내 프로필
         var userResult: ReservationResult?
@@ -50,17 +50,15 @@ final class ReservationResultShareViewModel: Reducerable {
         var selectedPhotoIndex: Int?
     }
     
-    var state: State
+    var state: State = .init()
     
     private let userManager: UserManager = UserManager.shared
     @ObservationIgnored
     @Dependency private var reservationHistoryUseCase: any ReservationHistoryUseCase
+    @ObservationIgnored
+    @Dependency private var reservationUseCase: any ReservationUseCase
     
-    init() {
-        self.state = .init(
-            categoryTitle: ReservationCategoryType.activity.title
-        )
-    }
+    init() { }
     
     func reduce(_ action: Action) {
         switch action {
@@ -86,8 +84,14 @@ final class ReservationResultShareViewModel: Reducerable {
     }
     
     private func requestReservationResultInfo() async {
-        await requestReservationDetail()
-        await requestMemberReservationResultList()
+        await withDiscardingTaskGroup { group in
+            group.addTask { [weak self] in
+                await self?.requestReservationDetail()
+            }
+            group.addTask { [weak self] in
+                await self?.requestMemberReservationResultList()
+            }
+        }
     }
     
     @MainActor
@@ -102,15 +106,21 @@ final class ReservationResultShareViewModel: Reducerable {
         }
     }
     
+    @MainActor
     private func requestReservationDetail() async {
-        state.reservationURL = "https://example.com/reservation-link"
-        state.reservationPhotoURLs = [
-            "https://mond-al.github.io/assets/images/forTest/ratio/all_ratio/image_8_854x480.png",
-            "https://mond-al.github.io/assets/images/forTest/ratio/all_ratio/image_8_854x480.png",
-            "https://mond-al.github.io/assets/images/forTest/ratio/all_ratio/image_8_854x480.png"
-        ]
-        state.description = "예약설명설명"
-        state.reservationPhotoImages = await loadImages(urls: state.reservationPhotoURLs)
+        do {
+            let model = try await reservationUseCase.getReservationDetail(reservationId: 49)
+            state.category = model.category
+            state.reservationTitle = model.title
+            state.reservationURL = model.linkUrl
+            state.reservationPhotoURLs = model.images
+            state.description = model.description
+            state.reservationPhotoImages = await loadImages(urls: state.reservationPhotoURLs)
+            state.reservationDateString = model.reservationDatetime?.formatted(with: .yyyyMMddEEKorean) ?? ""
+            state.reservationTimeString = model.reservationDatetime?.formatted(with: .ahhmmKorean) ?? ""
+        } catch {
+            print(error)
+        }
     }
     
     private func loadImages(urls: [String]) async -> [UIImage] {

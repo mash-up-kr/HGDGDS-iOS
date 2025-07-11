@@ -65,7 +65,7 @@ public struct ReservationResultShareView: View {
             .padding(.horizontal, outsidePadding)
         }
         .contentMargins(.bottom, 88)
-        .background(HGGradient.purpleSub)
+        .background(viewModel.category.background)
     }
     
     @ViewBuilder
@@ -86,7 +86,7 @@ public struct ReservationResultShareView: View {
         VStack(spacing: 20) {
             HGTagView(
                 style: .medium,
-                title: viewModel.categoryTitle,
+                title: viewModel.category.title,
                 textColor: .gray10,
                 backgroundColor: .opacityWhite10
             )
@@ -113,7 +113,7 @@ public struct ReservationResultShareView: View {
             }
         }
         .background(alignment: .top) {
-            HGImages.categoryPerformance.image
+            viewModel.category.image
                 .resizable()
                 .frame(354)
                 .offset(y: -13)
