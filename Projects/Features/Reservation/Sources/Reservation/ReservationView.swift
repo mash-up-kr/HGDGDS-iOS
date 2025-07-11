@@ -41,7 +41,7 @@ struct ReservationView: View {
                     backgroundColor: .ultraThinMaterial,
                     leftButtonType: .whiteBack
                 )
-                .colorScheme(.dark)
+                .environment(\.colorScheme, .dark)
         }
         .onAppear {
             viewModel.reduce(.onAppear)
@@ -101,6 +101,7 @@ struct ReservationView: View {
     private func profileImageView(type: ProfileType) -> some View {
         type.image
             .resizable()
+            .scaledToFit()
             .frame(62)
             .strokeBorder(
                 HGColors.gray0White.color,
@@ -190,7 +191,7 @@ struct ReservationView: View {
                 )
             }
         }
-        .colorScheme(.light)
+        .environment(\.colorScheme, .light)
         .onAppear {
             viewModel.countDownTimer.setupTime(endDate: viewModel.reservation.reservationDatetime ?? Date())
             viewModel.countDownTimer.start()
@@ -227,7 +228,7 @@ struct ReservationView: View {
                     .stroke(viewModel.category.widthGradient, lineWidth: 1)
             }
             .shadow(color: HGColors.purpleDark.color.opacity(0.15), radius: 20, x: 0, y: 2)
-            .colorScheme(.light)
+            .environment(\.colorScheme, .light)
         }
     }
     
