@@ -10,13 +10,6 @@ import Foundation
 public enum DeepLinkType: Identifiable, Equatable {
     case invite(reservationId: Int)
     
-    public var hostName: String {
-        switch self {
-        case .invite:
-            return "invite"
-        }
-    }
-    
     public var id: String {
         switch self {
         case .invite(let id):

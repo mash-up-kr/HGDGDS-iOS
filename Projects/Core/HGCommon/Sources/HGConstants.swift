@@ -8,5 +8,5 @@
 import Foundation
 
 public enum HGConstants {
-    public static let scheme: String = "kokkok"
+    public static let deepLinkHost: String = "hgdgds.duckdns.org"
 }
