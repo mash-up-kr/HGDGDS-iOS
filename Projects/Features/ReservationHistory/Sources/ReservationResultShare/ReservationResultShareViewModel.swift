@@ -53,6 +53,8 @@ final class ReservationResultShareViewModel: Reducerable {
     var state: State
     
     private let userManager: UserManager = UserManager.shared
+    @ObservationIgnored
+    @Dependency private var reservationHistoryUseCase: any ReservationHistoryUseCase
     
     init() {
         self.state = .init(
@@ -88,64 +90,16 @@ final class ReservationResultShareViewModel: Reducerable {
         await requestMemberReservationResultList()
     }
     
+    @MainActor
     private func requestMemberReservationResultList() async {
-        state.userResult = .init(
-            reservationResultID: 0,
-            reservationID: 12345,
-            userID: 0,
-            name: "나야나",
-            profileType: .blue,
-            resultType: .ambiguousSuccess,
-            imagesURLs: [],
-            successDateTime: Date.now,
-            description: "설명예시"
-        )
-        state.memberResults = [
-            .init(
-                reservationResultID: 0,
-                reservationID: 12345,
-                userID: 1,
-                name: "가나다",
-                profileType: .blue,
-                resultType: .ambiguousSuccess,
-                imagesURLs: [],
-                successDateTime: Date.now,
-                description: "설명예시"
-            ),
-            .init(
-                reservationResultID: 0,
-                reservationID: 12345,
-                userID: 2,
-                name: "라마바",
-                profileType: .green,
-                resultType: .fail,
-                imagesURLs: [],
-                successDateTime: Date.now,
-                description: "설명예시2"
-            ),
-            .init(
-                reservationResultID: 0,
-                reservationID: 12345,
-                userID: 3,
-                name: "사아자",
-                profileType: .purple,
-                resultType: .success,
-                imagesURLs: [],
-                successDateTime: Date.now,
-                description: "설명예시3"
-            ),
-            .init(
-                reservationResultID: 0,
-                reservationID: 12345,
-                userID: 3,
-                name: "사아자",
-                profileType: .pink,
-                resultType: nil,
-                imagesURLs: [],
-                successDateTime: Date.now,
-                description: "설명예시3"
-            )
-        ]
+        do {
+            let results = try await reservationHistoryUseCase.requestMemberReservationResults(reservationID: 49)
+            state.userResult = results.currentUser
+//            state.memberResults = results.members
+            state.memberResults = [results.currentUser, results.currentUser]
+        } catch {
+            print(error)
+        }
     }
     
     private func requestReservationDetail() async {
@@ -179,65 +133,3 @@ final class ReservationResultShareViewModel: Reducerable {
     }
 
 }
-
-/*
- "reservationId": 42,
-     "title": "오아시스를 직접 본다니",
-     "category": "PERFORMANCE",
-     "reservationDatetime": "2025-08-21T19:00:00+09:00",
-     "description": "1순위로 E열 선정하기. 만약에 안되면 H도 괜찮아요",
-     "linkUrl": "https://example.com/reservation-link",
-     "images": [
-       "https://s3.amazonaws.com/bucket/image1.jpg",
-       "https://s3.amazonaws.com/bucket/image2.jpg"
-     ],
-     "host": {
-       "hostId": 1,
-       "nickname": "김파디",
-       "profileImageName": "https://s3.amazonaws.com/bucket/profile-images/IMG_001.png"
-     },
-     "currentUser": {
-       "userId": 123,
-       "status": "DEFAULT",
-       "isHost": false,
-       "canEdit": false,
-       "canJoin": true
-     },
-     "participantCount": 4,
-     "maxParticipants": 30,
-     "createdAt": "2025-06-13T10:00:00Z",
-     "updatedAt": "2025-06-13T15:30:00Z"
- */
-
-/*
- "currentUser": {
-       "reservationResultId": 1,
-       "reservationId": 12345,
-       "userId": 1,
-       "status": "HALF_SUCCESS",
-       "images": [
-         "http://abc.com",
-         "http://abc.com"
-       ],
-       "successDatetime": "2025-01-04T09:00:00+09:00",
-       "description": "string",
-       "createdAt": "2025-01-04T09:00:00+09:00",
-       "updatedAt": "2025-08-21T20:00:00+09:00"
-     },
-     "results": [
-       {
-         "reservationResultId": 1,
-         "reservationId": 12345,
-         "userId": 1,
-         "status": "HALF_SUCCESS",
-         "images": [
-           "http://abc.com",
-           "http://abc.com"
-         ],
-         "successDatetime": "2025-01-04T09:00:00+09:00",
-         "description": "string",
-         "createdAt": "2025-01-04T09:00:00+09:00",
-         "updatedAt": "2025-08-21T20:00:00+09:00"
-       }
-     ]
- */

@@ -8,6 +8,7 @@
 import Foundation
 import ReservationHistoryDomain
 import HGNetwork
+import HGCommon
 
 public final class ReservationHistoryRepositoryImpl: ReservationHistoryRepository {
     private let network: any Networkable
@@ -35,5 +36,14 @@ public final class ReservationHistoryRepositoryImpl: ReservationHistoryRepositor
             return false
         }
         return dtoModel.code == 200
+    }
+    
+    public func requestMemberReservationResults(reservationID id: Int) async throws -> ReservationResults {
+        let api = ReservationResultDetailAPI(reservationId: id)
+        guard let dtoModel = try await network.send(api)?.data else {
+            throw HGError.domainError("dto Model parsing error")
+        }
+        let model = dtoModel.toDomain
+        return model
     }
 }

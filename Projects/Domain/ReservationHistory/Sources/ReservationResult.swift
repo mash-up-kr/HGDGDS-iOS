@@ -8,6 +8,16 @@
 import Foundation
 import UserDomain
 
+public struct ReservationResults {
+    public let currentUser: ReservationResult
+    public let members: [ReservationResult]
+    
+    public init(currentUser: ReservationResult, members: [ReservationResult]) {
+        self.currentUser = currentUser
+        self.members = members
+    }
+}
+
 public struct ReservationResult {
     public let reservationResultID: Int
     public let reservationID: Int

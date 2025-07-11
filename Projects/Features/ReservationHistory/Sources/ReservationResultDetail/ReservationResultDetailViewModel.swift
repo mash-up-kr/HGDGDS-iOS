@@ -67,7 +67,7 @@ final class ReservationResultDetailViewModel: Reducerable {
     
     private func loadImages(urls: [String]) async -> [UIImage] {
         await withTaskGroup(of: UIImage?.self) { group in
-            for urlString in state.photoURLs {
+            for urlString in urls {
                 if let url = URL(string: urlString) {
                     group.addTask {
                         try? await ImagePipeline.shared.image(for: url)
