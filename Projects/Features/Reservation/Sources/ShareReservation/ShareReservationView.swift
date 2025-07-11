@@ -119,7 +119,7 @@ struct ShareReservationView: View {
             .padding(.vertical, 4)
             .background(.ultraThinMaterial)
             .setRadius(30)
-            .colorScheme(.light)
+            .environment(\.colorScheme, .light)
             
             Spacer()
             

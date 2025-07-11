@@ -21,6 +21,16 @@ extension ReservationCategoryType {
         }
     }
     
+    public var thumbnail: Image {
+        switch self {
+        case .restaurant: HGImages.categoryRestaurantThumbnail.image
+        case .sports: HGImages.categorySportsThumbnail.image
+        case .performance: HGImages.categoryPerformanceThumbnail.image
+        case .activity: HGImages.categoryActivityThumbnail.image
+        case .etc: HGImages.categoryETCThumbnail.image
+        }
+    }
+    
     public var gradient: LinearGradient {
         switch self {
         case .restaurant: HGGradient.pinkSub

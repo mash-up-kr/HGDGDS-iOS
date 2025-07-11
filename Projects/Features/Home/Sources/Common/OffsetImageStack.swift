@@ -7,42 +7,30 @@
 
 import SwiftUI
 
+import UserDomain
 import HGDesignSystem
 import NukeUI
 
 struct OffsetImageStack: View {
-    let imageURLStrings: [String]
+    let images: [UIImage]
     let imageLength: CGFloat
     let spacing: CGFloat
     let maxVisibleCount: Int
     
-    private var displayImageURLs: [URL] {
-        imageURLStrings
-            .compactMap { URL(string: $0) }
-            .prefix(maxVisibleCount)
-            .map { $0 }
-    }
-    
     private var totalWidth: CGFloat {
-        let imageCount = displayImageURLs.count
+        let imageCount = images.count
         guard imageCount > 0 else { return 0 }
         return imageLength + spacing * CGFloat(imageCount - 1)
     }
     
     var body: some View {
         ZStack(alignment: .leading) {
-            ForEach(Array(displayImageURLs.enumerated().reversed()), id: \.offset) { index, url in
-                LazyImage(url: url) { state in
-                    if let image = state.image {
-                        image
-                            .resizable()
-                    } else {
-                        HGColors.opacityBlack10.color
-                    }
-                }
-                .frame(imageLength)
-                .cornerRadius(imageLength / 2 - 3)
-                .offset(x: CGFloat(index) * spacing)
+            ForEach(Array(images.enumerated().reversed()), id: \.offset) { index, image in
+                Image(uiImage: image)
+                    .resizable()
+                    .frame(imageLength)
+                    .cornerRadius(imageLength / 2 - 3)
+                    .offset(x: CGFloat(index) * spacing)
             }
         }
         .frame(width: totalWidth, height: imageLength, alignment: .leading)
@@ -51,12 +39,10 @@ struct OffsetImageStack: View {
 
 #Preview {
     OffsetImageStack(
-        imageURLStrings: [
-            "https://i.pravatar.cc/150?img=4",
-            "https://i.pravatar.cc/300",
-            "https://i.pravatar.cc/150?img=3",
-            "https://picsum.photos/200/300?grayscale",
-            "https://picsum.photos/200/300?grayscale"
+        images: [
+            HGImages.blueCharacter.uiImage,
+            HGImages.pinkCharacter.uiImage,
+            HGImages.greenCharacter.uiImage,
         ],
         imageLength: 26,
         spacing: 20,

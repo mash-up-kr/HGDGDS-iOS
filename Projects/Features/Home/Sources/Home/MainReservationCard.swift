@@ -39,7 +39,7 @@ struct MainReservationCard: View {
     private var header: some View {
         HStack(spacing: 0) {
             OffsetImageStack(
-                imageURLStrings: reservationInfo.images,
+                images: reservationInfo.profileImageTypeList.map { $0.image },
                 imageLength: 28,
                 spacing: 20,
                 maxVisibleCount: 3
@@ -55,9 +55,9 @@ struct MainReservationCard: View {
             
             HGTagView(
                 style: .medium,
-                title: reservationInfo.category.title,
-                textColor: reservationInfo.category.mainColor,
-                backgroundColor: reservationInfo.category.lightColor
+                title: reservationInfo.categoryType.title,
+                textColor: reservationInfo.categoryType.mainColor,
+                backgroundColor: reservationInfo.categoryType.lightColor
             )
         }
         .padding(.leading, 4)
@@ -103,7 +103,7 @@ struct MainReservationCard: View {
             .init(
                 reservationId: 0,
                 title: "남수와 함께하는 클라이밍",
-                category: .activity,
+                category: "Activity",
                 reservationDatetime: Date(),
                 participantCount: 4,
                 maxParticipants: 6,
@@ -115,7 +115,8 @@ struct MainReservationCard: View {
                     "https://i.pravatar.cc/150?img=3",
                 ],
                 userStatus: "가자",
-                isHost: true
+                isHost: true,
+                profileImageCodeList: []
             ), action: {
                 
             }

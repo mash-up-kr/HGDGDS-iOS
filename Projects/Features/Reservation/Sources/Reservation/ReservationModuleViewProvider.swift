@@ -8,13 +8,19 @@
 import SwiftUI
 
 import HGCommon
+import ReservationDomain
 import ReservationFeatureInterface
 
 public struct ReservationModuleViewProvider: ReservationViewProviderable {
     public init() { }
     
-    public var reservationMainView: AnyView {
-        AnyView(ReservationView())
+    public func reservationMainView(
+        reservationId: Int,
+        category: ReservationCategoryType
+    ) -> AnyView {
+        AnyView(
+            ReservationView(reservationId: reservationId, category: category)
+        )
     }
     
     public func reservationShareView(

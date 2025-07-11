@@ -16,7 +16,11 @@ struct HGTabView: View {
     
     @State var deepLinkItem: DeepLinkType? = nil
     
-    private let coordinatorFactory: CoordinatorFactory = CoordinatorFactory()
+    private let coordinatorFactory: CoordinatorFactory
+    
+    init(coordinatorFactory: CoordinatorFactory) {
+        self.coordinatorFactory = coordinatorFactory
+    }
     
     private let tabbarHeight: CGFloat = UIConstant.tabBarHeight
     
@@ -53,6 +57,9 @@ struct HGTabView: View {
         .onOpenURL { url in
             let deepLink = try? DeepLinkPhaser.phase(url)
             self.deepLinkItem = deepLink
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .showCreateReservation)) { _ in
+            self.showCreateView = true
         }
         .onReceive(NotificationCenter.default.publisher(for: .createReservationComplete)) { _ in
             self.showCreateView = false
@@ -124,5 +131,5 @@ struct HGTabView: View {
 }
 
 #Preview {
-    HGTabView()
+    HGTabView(coordinatorFactory: .init())
 }

@@ -9,10 +9,17 @@ import SwiftUI
 
 import HGCommon
 import HomeDomain
+import ReservationDomain
 import HGDesignSystem
 
 struct HomeView: View {
-    @Bindable private var viewModel: HomeViewModel = .init()
+    @Environment(HGTabViewManager.self) var tabManager
+    @Environment(HomeCoordinator.self) var coordinator
+    @Bindable var viewModel: HomeViewModel
+    
+    init(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
+    }
     
     private var backgroundGradientHeight: CGFloat {
         /// Screen height - TabBar height - Bottom padding - 91(카드뷰 height 절반)
@@ -24,8 +31,6 @@ struct HomeView: View {
         ZStack(alignment: .top) {
             background
                 .ignoresSafeArea()
-            
-            categoryImage
 
             ScrollView {
                 VStack(spacing: 0) {
@@ -39,10 +44,20 @@ struct HomeView: View {
                 }
                 .padding(.bottom, UIConstant.tabBarHeight)
                 .fillMaxSize(.top)
+                .background(alignment: .top) {
+                    categoryImage
+                }
             }
         }
         .animation(.easeOut(duration: 0.35), value: viewModel.selectedStatusTab)
         .animation(.easeInOut(duration: 0.25), value: viewModel.selectedReservationIndex)
+        .onAppear {
+            tabManager.setTabBarHidden(false)
+            viewModel.reduce(.onAppear)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .createReservationComplete)) { _ in
+            viewModel.reduce(.onAppear)
+        }
     }
     
     @ViewBuilder
@@ -54,7 +69,15 @@ struct HomeView: View {
                 if viewModel.isExistScheduledSubReservations {
                     HomeSubReservationCardListView(
                         statusTab: .scheduled,
-                        reservations: viewModel.scheduledReservationInfos
+                        reservations: viewModel.scheduledReservationInfos,
+                        totalCount: viewModel.scheduledPaginationMetadata.total,
+                        mainReservationCount: viewModel.mainReservationInfos.count,
+                        tapItemAction: { reservationId, category in
+                            coordinator.push(.upcomingReservationDetail(reservationId: reservationId, category: category))
+                        },
+                        lastItemAction: {
+                            viewModel.reduce(.loadMoreReservation(status: .after))
+                        }
                     )
                     .padding(.horizontal, 16)
                 }
@@ -70,7 +93,15 @@ struct HomeView: View {
         if viewModel.isExistCompleteReservation {
             HomeSubReservationCardListView(
                 statusTab: .completed,
-                reservations: viewModel.completedReservationInfos
+                reservations: viewModel.completedReservationInfos,
+                totalCount: viewModel.completedPaginationMetadata.total,
+                tapItemAction: { reservationId, category in
+                    //TODO: - 지난 예약 화면으로 푸시
+                    coordinator.push(.pastReservationDetail)
+                },
+                lastItemAction: {
+                    viewModel.reduce(.loadMoreReservation(status: .before))
+                }
             )
             .padding(.top, 20)
             .padding(.horizontal, 16)
@@ -96,7 +127,7 @@ struct HomeView: View {
     @ViewBuilder
     private var backgroundGradient: some View {
         if viewModel.isExistScheduledMainReservation {
-            viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.category.gradient
+            viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.categoryType.gradient
                 .frame(height: backgroundGradientHeight)
         } else {
             HGGradient.orangeSub
@@ -108,10 +139,10 @@ struct HomeView: View {
         TransitionTabSwitcherView(selectedTab: viewModel.selectedStatusTab) {
             Group {
                 if viewModel.isExistScheduledMainReservation {
-                    viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.category.image
+                    viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.categoryType.image
                         .resizable()
                         .frame(354)
-                        .offset(y: HomeUIConstans.screenHeight * 0.15)
+                        .offset(y: viewModel.isExistScheduledSubReservations ? 32 : 96)
                         .transition(.move(edge: .leading).combined(with: .opacity))
                 }
             }
@@ -150,7 +181,7 @@ private struct ReservationStatusToggle: View {
         } label: {
             Text(type.tabTitle)
                 .setTypo(.body_14_bold)
-                .foregroundStyle(.gray90)
+                .foregroundStyle(textColor(type: type))
                 .fillMaxSize(.center)
                 .background {
                     if selectedTab == type {
@@ -159,6 +190,15 @@ private struct ReservationStatusToggle: View {
                             .padding([.vertical, type == .scheduled ? .leading : .trailing], 4)
                     }
                 }
+        }
+    }
+    
+    func textColor(type: ReservationStatusTab) -> HGColors {
+        switch type {
+        case .scheduled:
+            selectedTab == .scheduled ? .gray90 : .gray40
+        case .completed:
+            selectedTab == .completed ? .gray90 : .gray0White
         }
     }
 }
@@ -182,5 +222,5 @@ private struct TransitionTabSwitcherView<FirstView: View, SecondView: View>: Vie
 }
 
 #Preview(traits: .applyFont) {
-    HomeView()
+    HomeView(viewModel: .init())
 }

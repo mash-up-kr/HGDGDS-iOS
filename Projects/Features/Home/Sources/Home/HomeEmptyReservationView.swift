@@ -20,9 +20,8 @@ struct HomeEmptyReservationView: View {
 private struct NoReservationCard: View {
     var body: some View {
         VStack(spacing: 0) {
-            //TODO: 이미지 자리
-            Rectangle()
-                .foregroundStyle(.gray20)
+            HGImages.noScheduledReservation.image
+                .resizable()
                 .frame(250)
             
             Spacer().frame(height: 36)
@@ -41,7 +40,7 @@ private struct NoReservationCard: View {
             Spacer().frame(height: 24)
             
             HGButton(title: "예약 생성하기") {
-               
+                NotificationCenter.default.post(name: .showCreateReservation, object: nil)
             }
         }
         .padding([.top, .horizontal], 36)

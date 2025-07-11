@@ -8,12 +8,33 @@
 import SwiftUI
 
 import HomeDomain
+import ReservationDomain
 import HGDesignSystem
 import NukeUI
 
 struct HomeSubReservationCardListView: View {
     let statusTab: ReservationStatusTab
     let reservations: [ReservationInfo]
+    let totalCount: Int
+    let mainReservationCount: Int
+    let tapItemAction: (_ reservationId: Int, _ category: ReservationCategoryType) -> Void
+    let lastItemAction: () -> Void
+    
+    init(
+        statusTab: ReservationStatusTab,
+        reservations: [ReservationInfo],
+        totalCount: Int,
+        mainReservationCount: Int = 0,
+        tapItemAction: @escaping (Int, ReservationCategoryType) -> Void,
+        lastItemAction: @escaping () -> Void
+    ) {
+        self.statusTab = statusTab
+        self.reservations = reservations
+        self.totalCount = totalCount
+        self.mainReservationCount = mainReservationCount
+        self.tapItemAction = tapItemAction
+        self.lastItemAction = lastItemAction
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -22,7 +43,7 @@ struct HomeSubReservationCardListView: View {
                     .setTypo(.subTitle_18_bold)
                     .foregroundStyle(.gray80)
                 
-                Text("\(reservations.count)")
+                Text("\(totalCount-mainReservationCount)")
                     .setTypo(.subTitle_18_bold)
                     .foregroundStyle(.orange500Main)
             }
@@ -30,6 +51,14 @@ struct HomeSubReservationCardListView: View {
             LazyVStack(spacing: 12) {
                 ForEach(reservations, id: \.reservationId) { info in
                     SubReservationCard(reservationInfo: info)
+                        .onAppear {
+                            if info.reservationId == reservations.last?.reservationId {
+                                lastItemAction()
+                            }
+                        }
+                        .onTapGesture {
+                            self.tapItemAction(info.reservationId, info.categoryType)
+                        }
                 }
             }
         }
@@ -55,7 +84,7 @@ struct SubReservationCard: View {
     private var header: some View {
         HStack(spacing: 0) {
             OffsetImageStack(
-                imageURLStrings: reservationInfo.images,
+                images: reservationInfo.profileImageTypeList.map { $0.image },
                 imageLength: 28,
                 spacing: 20,
                 maxVisibleCount: 3
@@ -72,9 +101,9 @@ struct SubReservationCard: View {
             
             HGTagView(
                 style: .small,
-                title: reservationInfo.category.title,
-                textColor: reservationInfo.category.mainColor,
-                backgroundColor: reservationInfo.category.lightColor
+                title: reservationInfo.categoryType.title,
+                textColor: reservationInfo.categoryType.mainColor,
+                backgroundColor: reservationInfo.categoryType.lightColor
             )
         }
     }
@@ -87,17 +116,9 @@ struct SubReservationCard: View {
     
     private var content: some View {
         HStack(spacing: 12) {
-            LazyImage(url: URL(string: reservationInfo.images.first ?? "")) { state in
-                if let image = state.image {
-                    image
-                        .resizable()
-                        .scaledToFit()
-                } else {
-                    HGColors.opacityBlack10.color
-                }
-            }
-            .frame(width: 64, height: 64)
-            .setRadius(16)
+            reservationInfo.categoryType.thumbnail
+                .frame(width: 64, height: 64)
+                .setRadius(16)
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(reservationInfo.title)
@@ -137,6 +158,14 @@ struct SubReservationCard: View {
         statusTab: .scheduled,
         reservations: [
             
-        ]
+        ],
+        totalCount: 30,
+        mainReservationCount: 2,
+        tapItemAction: { _, _ in
+            
+        },
+        lastItemAction: {
+            
+        }
     )
 }
