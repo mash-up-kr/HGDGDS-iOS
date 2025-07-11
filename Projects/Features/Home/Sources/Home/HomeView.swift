@@ -68,10 +68,14 @@ struct HomeView: View {
                         statusTab: .scheduled,
                         reservations: viewModel.scheduledReservationInfos,
                         totalCount: viewModel.scheduledPaginationMetadata.total,
-                        mainReservationCount: viewModel.mainReservationInfos.count
-                    ) {
-                        viewModel.reduce(.loadMoreReservation(status: .after))
-                    }
+                        mainReservationCount: viewModel.mainReservationInfos.count,
+                        tapItemAction: { reservationId, category in
+                            coordinator.push(.upcomingReservationDetail(reservationId: reservationId, category: category))
+                        },
+                        lastItemAction: {
+                            viewModel.reduce(.loadMoreReservation(status: .after))
+                        }
+                    )
                     .padding(.horizontal, 16)
                 }
             }
@@ -87,10 +91,14 @@ struct HomeView: View {
             HomeSubReservationCardListView(
                 statusTab: .completed,
                 reservations: viewModel.completedReservationInfos,
-                totalCount: viewModel.completedPaginationMetadata.total
-            ) {
-                viewModel.reduce(.loadMoreReservation(status: .before))
-            }
+                totalCount: viewModel.completedPaginationMetadata.total,
+                tapItemAction: { reservationId, category in
+                    coordinator.push(.pastReservationDetail)
+                },
+                lastItemAction: {
+                    viewModel.reduce(.loadMoreReservation(status: .before))
+                }
+            )
             .padding(.top, 20)
             .padding(.horizontal, 16)
         } else {

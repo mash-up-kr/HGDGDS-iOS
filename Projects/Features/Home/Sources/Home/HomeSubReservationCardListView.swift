@@ -8,6 +8,7 @@
 import SwiftUI
 
 import HomeDomain
+import ReservationDomain
 import HGDesignSystem
 import NukeUI
 
@@ -16,6 +17,7 @@ struct HomeSubReservationCardListView: View {
     let reservations: [ReservationInfo]
     let totalCount: Int
     let mainReservationCount: Int
+    let tapItemAction: (_ reservationId: Int, _ category: ReservationCategoryType) -> Void
     let lastItemAction: () -> Void
     
     init(
@@ -23,12 +25,14 @@ struct HomeSubReservationCardListView: View {
         reservations: [ReservationInfo],
         totalCount: Int,
         mainReservationCount: Int = 0,
+        tapItemAction: @escaping (Int, ReservationCategoryType) -> Void,
         lastItemAction: @escaping () -> Void
     ) {
         self.statusTab = statusTab
         self.reservations = reservations
         self.totalCount = totalCount
         self.mainReservationCount = mainReservationCount
+        self.tapItemAction = tapItemAction
         self.lastItemAction = lastItemAction
     }
     
@@ -51,6 +55,9 @@ struct HomeSubReservationCardListView: View {
                             if info.reservationId == reservations.last?.reservationId {
                                 lastItemAction()
                             }
+                        }
+                        .onTapGesture {
+                            self.tapItemAction(info.reservationId, info.categoryType)
                         }
                 }
             }
@@ -154,6 +161,9 @@ struct SubReservationCard: View {
         ],
         totalCount: 30,
         mainReservationCount: 2,
+        tapItemAction: { _, _ in
+            
+        },
         lastItemAction: {
             
         }

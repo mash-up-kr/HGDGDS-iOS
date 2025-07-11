@@ -57,6 +57,9 @@ public final class HomeViewModel: Reducerable {
         case .onAppear:
             Task { @MainActor in
                 isInitialFetching = true
+                state.mainReservationInfos = []
+                state.scheduledReservationInfos = []
+                state.completedReservationInfos = []
                 await getReservationList(page: scheduledReservationPage, status: .after)
                 await getReservationList(page: completedReservationPage, status: .before)
                 isInitialFetching = false
