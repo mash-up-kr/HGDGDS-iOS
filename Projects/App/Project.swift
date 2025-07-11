@@ -33,6 +33,7 @@ let project = Project(
                 .dataProject(with: .user),
                 .dataProject(with: .createReservation),
                 .dataProject(with: .reservation),
+                .dataProject(with: .reservationHistory),
                 .coreProject(with: .hgImageUploader),
                 .coreProject(with: .hgLogger),
                 .coreProject(with: .hgCommon),

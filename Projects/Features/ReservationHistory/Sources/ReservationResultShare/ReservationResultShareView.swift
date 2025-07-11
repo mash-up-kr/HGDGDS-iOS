@@ -7,6 +7,7 @@
 
 import SwiftUI
 import HGDesignSystem
+import ReservationHistoryDomain
 
 struct ReservationResultShareView: View {
     @Environment(\.colorScheme) var colorScheme
