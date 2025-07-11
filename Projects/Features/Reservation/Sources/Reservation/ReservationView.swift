@@ -14,6 +14,7 @@ import UserDomain
 import HGDesignSystem
 
 struct ReservationView: View {
+    @Environment(HGTabViewManager.self) var tabManager
     @Bindable var viewModel: ReservationViewModel
     @State private var isHiddenNavigationBar = true
     
@@ -44,6 +45,7 @@ struct ReservationView: View {
                 .environment(\.colorScheme, .dark)
         }
         .onAppear {
+            tabManager.setTabBarHidden(true)
             viewModel.reduce(.onAppear)
         }
         .fullScreenCover(isPresented: $viewModel.state.isShowImageViewer) {

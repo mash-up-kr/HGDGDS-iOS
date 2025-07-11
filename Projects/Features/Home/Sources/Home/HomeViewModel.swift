@@ -55,11 +55,13 @@ public final class HomeViewModel: Reducerable {
     public func reduce(_ action: Action) {
         switch action {
         case .onAppear:
+            scheduledReservationPage = 1
+            completedReservationPage = 1
+            scheduledPaginationMetadata = .init()
+            completedPaginationMetadata = .init()
+            isInitialFetching = false
             Task { @MainActor in
                 isInitialFetching = true
-                state.mainReservationInfos = []
-                state.scheduledReservationInfos = []
-                state.completedReservationInfos = []
                 await getReservationList(page: scheduledReservationPage, status: .after)
                 await getReservationList(page: completedReservationPage, status: .before)
                 isInitialFetching = false
@@ -113,7 +115,11 @@ public final class HomeViewModel: Reducerable {
     private func applyReservationList(status: ReservationListRequest.Status, list: ReservationList) {
         switch status {
         case .before:
-            state.completedReservationInfos += list.reservations
+            if completedReservationPage == 1 {
+                state.completedReservationInfos = list.reservations
+            } else {
+                state.completedReservationInfos += list.reservations
+            }
             completedPaginationMetadata = list.metadata
             
         case .after:
@@ -130,11 +136,20 @@ public final class HomeViewModel: Reducerable {
         let futureReservations = reservations.filter { $0.reservationDatetime >= now }
 
         // 1. 24시간 이내 예약은 main, 그 외는 scheduled
-        state.mainReservationInfos = futureReservations.filter {
-            $0.reservationDatetime <= oneDayLater
-        }
-        state.scheduledReservationInfos = futureReservations.filter {
-            $0.reservationDatetime > oneDayLater
+        if scheduledReservationPage == 1 {
+            state.mainReservationInfos = futureReservations.filter {
+                $0.reservationDatetime <= oneDayLater
+            }
+            state.scheduledReservationInfos = futureReservations.filter {
+                $0.reservationDatetime > oneDayLater
+            }
+        } else {
+            state.mainReservationInfos += futureReservations.filter {
+                $0.reservationDatetime <= oneDayLater
+            }
+            state.scheduledReservationInfos += futureReservations.filter {
+                $0.reservationDatetime > oneDayLater
+            }
         }
 
         // 2. main이 비어 있다면 가장 가까운 예약을 하나 main에 넣고 scheduled에서 제거

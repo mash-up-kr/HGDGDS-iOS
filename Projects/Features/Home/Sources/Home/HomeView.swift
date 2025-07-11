@@ -13,8 +13,8 @@ import ReservationDomain
 import HGDesignSystem
 
 struct HomeView: View {
-    @Environment(HomeCoordinator.self) var coordinator
     @Environment(HGTabViewManager.self) var tabManager
+    @Environment(HomeCoordinator.self) var coordinator
     @Bindable var viewModel: HomeViewModel
     
     init(viewModel: HomeViewModel) {
@@ -55,6 +55,9 @@ struct HomeView: View {
             tabManager.setTabBarHidden(false)
             viewModel.reduce(.onAppear)
         }
+        .onReceive(NotificationCenter.default.publisher(for: .createReservationComplete)) { _ in
+            viewModel.reduce(.onAppear)
+        }
     }
     
     @ViewBuilder
@@ -93,6 +96,7 @@ struct HomeView: View {
                 reservations: viewModel.completedReservationInfos,
                 totalCount: viewModel.completedPaginationMetadata.total,
                 tapItemAction: { reservationId, category in
+                    //TODO: - 지난 예약 화면으로 푸시
                     coordinator.push(.pastReservationDetail)
                 },
                 lastItemAction: {
