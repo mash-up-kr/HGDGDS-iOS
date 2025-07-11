@@ -12,6 +12,9 @@ public enum DeepLinkError: Error {
     /// 유효한 Host가 아님
     case invalidHost
     
+    /// 유효한 Host가 아님
+    case invalidPath
+    
     /// 유효한 Scheme이 아님
     case invalidScheme
     

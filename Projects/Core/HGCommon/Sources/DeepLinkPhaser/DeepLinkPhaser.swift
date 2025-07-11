@@ -8,23 +8,33 @@
 import Foundation
 
 public enum DeepLinkPhaser {
+    
+    enum DeepLinkPath: String {
+        case invite = "/invite"
+    }
+    
     public static func phase(_ url: URL) throws -> DeepLinkType {
-        guard url.scheme == HGConstants.scheme else { throw DeepLinkError.invalidScheme }
+
+        guard url.host() == HGConstants.deepLinkHost else {
+            throw DeepLinkError.invalidHost
+        }
         
         let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
         let queryItems = components?.queryItems
         
-        switch url.host() {
-        case "invite":
-            if let queryItem = queryItems?.first(where: { $0.name == "reservationId" }),
-               let reservationId = queryItem.value?.asInt {
-                return .invite(reservationId: reservationId)
-            } else {
+        guard let pathString = components?.path,
+              let path = DeepLinkPath(rawValue: pathString) else {
+            throw DeepLinkError.invalidPath
+        }
+        
+        switch path {
+        case .invite:
+            guard let queryItem = queryItems?.first(where: { $0.name == "reservationId" }),
+                  let reservationId = queryItem.value?.asInt else {
                 throw DeepLinkError.missingParameter
             }
             
-        default:
-            throw DeepLinkError.invalidHost
+            return .invite(reservationId: reservationId)
         }
     }
 }
