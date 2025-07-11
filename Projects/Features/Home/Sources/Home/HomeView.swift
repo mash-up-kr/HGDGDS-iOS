@@ -169,7 +169,7 @@ private struct ReservationStatusToggle: View {
         } label: {
             Text(type.tabTitle)
                 .setTypo(.body_14_bold)
-                .foregroundStyle(.gray90)
+                .foregroundStyle(textColor(type: type))
                 .fillMaxSize(.center)
                 .background {
                     if selectedTab == type {
@@ -178,6 +178,15 @@ private struct ReservationStatusToggle: View {
                             .padding([.vertical, type == .scheduled ? .leading : .trailing], 4)
                     }
                 }
+        }
+    }
+    
+    func textColor(type: ReservationStatusTab) -> HGColors {
+        switch type {
+        case .scheduled:
+            selectedTab == .scheduled ? .gray90 : .gray40
+        case .completed:
+            selectedTab == .completed ? .gray90 : .gray0White
         }
     }
 }
