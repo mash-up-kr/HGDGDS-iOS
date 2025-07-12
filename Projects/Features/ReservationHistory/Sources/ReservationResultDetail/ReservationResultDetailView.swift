@@ -76,26 +76,29 @@ struct ReservationResultDetailView: View {
         .frame(height: 102)
     }
     
+    @ViewBuilder
     private var reservationSuccessDateSectionView: some View {
-        makeSectionContainerView(title: "예약 성공 일자") {
-            HStack(spacing: 16) {
-                HStack(spacing: 2) {
-                    HGIcons.calendar.image
-                        .resizable()
-                        .frame(20)
-                        .foregroundStyle(.gray50)
-                    Text(viewModel.reservationDateString)
-                        .setTypo(.body_16_medium)
-                        .foregroundStyle(.gray95)
-                }
-                HStack(spacing: 2) {
-                    HGIcons.timer.image
-                        .resizable()
-                        .frame(20)
-                        .foregroundStyle(.gray50)
-                    Text(viewModel.reservationTimeString)
-                        .setTypo(.body_16_medium)
-                        .foregroundStyle(.gray95)
+        if viewModel.reservationDateString.isNotEmpty {
+            makeSectionContainerView(title: "예약 성공 일자") {
+                HStack(spacing: 16) {
+                    HStack(spacing: 2) {
+                        HGIcons.calendar.image
+                            .resizable()
+                            .frame(20)
+                            .foregroundStyle(.gray50)
+                        Text(viewModel.reservationDateString)
+                            .setTypo(.body_16_medium)
+                            .foregroundStyle(.gray95)
+                    }
+                    HStack(spacing: 2) {
+                        HGIcons.timer.image
+                            .resizable()
+                            .frame(20)
+                            .foregroundStyle(.gray50)
+                        Text(viewModel.reservationTimeString)
+                            .setTypo(.body_16_medium)
+                            .foregroundStyle(.gray95)
+                    }
                 }
             }
         }

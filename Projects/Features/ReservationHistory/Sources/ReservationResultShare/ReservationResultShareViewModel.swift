@@ -153,8 +153,8 @@ final class ReservationResultShareViewModel: Reducerable {
         ResultDetailRouteModel(
             profileRawValue: result.profileType.rawValue,
             reservationTitle: state.reservationTitle,
-            reservationDateString: state.reservationDateString,
-            reservationTimeString: state.reservationTimeString,
+            reservationDateString: result.successDateTime?.formatted(with: .yyyyMMddEEKorean) ?? "",
+            reservationTimeString: result.successDateTime?.formatted(with: .ahhmmKorean) ?? "",
             userName: result.name,
             photoURLs: result.imagesURLs,
             description: result.description
