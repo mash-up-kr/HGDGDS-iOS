@@ -9,11 +9,14 @@ import SwiftUI
 import HGDesignSystem
 import ReservationHistoryDomain
 import UserDomain
+import HGCommon
+import ReservationHistoryFeatureInterface
 
-public struct ReservationResultShareView: View {
+struct ReservationResultShareView: View {
     @State private var viewModel: ReservationResultShareViewModel = .init()
     @State private var isHiddenNavigationBar = true
     @Environment(\.openURL) private var openURL
+    @Environment(HGTabViewManager.self) var tabManager
  
     private let innerPadding: CGFloat = 16
     private let outsidePadding: CGFloat = 16
@@ -23,9 +26,7 @@ public struct ReservationResultShareView: View {
         return ((UIWindow.current?.screen.bounds.width ?? 100) - (padding + spacing) * 2) / 3
     }
     
-    public init() { }
-    
-    public var body: some View {
+    var body: some View {
         contentView
             .applyNavigationBar(
                 title: "",
@@ -44,6 +45,7 @@ public struct ReservationResultShareView: View {
             }
             .onAppear {
                 viewModel.reduce(.onAppear)
+                tabManager.setTabBarHidden(true)
             }
     }
     
@@ -200,9 +202,7 @@ public struct ReservationResultShareView: View {
     }
     
     private func makeTeamMemberResultView(index: Int, result: ReservationResult) -> some View {
-        Button {
-            viewModel.reduce(.didTapMemberResult(index: index))
-        } label: {
+        NavigationLink(value: ReservationHistoryRoute.resultDetail) {
             VStack {
                 Spacer()
                 ZStack(alignment: .top) {

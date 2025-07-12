@@ -7,10 +7,18 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
+let interface = Target.makeDynamicFrameworkTarget(
+    name: "ReservationHistoryFeatureInterface",
+    sources: ["Interface/**"],
+    dependencies: [.coreProject(with: .hgCommon)],
+    hasResources: false
+)
+
 let project = Project(
     name: "ReservationHistoryFeature",
     settings: .defaultSettings,
     targets: [
+        interface,
         .makeDynamicFrameworkTarget(
             name: "ReservationHistoryFeature",
             dependencies: [
@@ -20,7 +28,8 @@ let project = Project(
                 .coreProject(with: .hgCommon),
                 .coreProject(with: .hgLogger),
                 .uiProject(with: .hgDesignSystem),
-                .coreProject(with: .hgImageUploader)
+                .coreProject(with: .hgImageUploader),
+                .interfaceProject(with: .reservationHistory)
             ],
             hasResources: false
         )

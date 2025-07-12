@@ -9,6 +9,8 @@ import SwiftUI
 
 import HGCommon
 import ReservationFeatureInterface
+import ReservationHistoryFeatureInterface
+
 
 @Observable
 public final class HomeCoordinator: Coordinatorable {
@@ -23,11 +25,15 @@ public final class HomeCoordinator: Coordinatorable {
     private let reservationViewProvider: any ReservationViewProviderable
     private let homeViewModel: HomeViewModel
     
+    private let reservationHistoryViewProvider: any ReservationHistoryViewProviderable
+    
     public init(
         reservationViewProvider: any ReservationViewProviderable,
+        reservationHistoryViewProvider: any ReservationHistoryViewProviderable,
         homeViewModel: HomeViewModel
     ) {
         self.reservationViewProvider = reservationViewProvider
+        self.reservationHistoryViewProvider = reservationHistoryViewProvider
         self.homeViewModel = homeViewModel
     }
     
@@ -38,9 +44,10 @@ public final class HomeCoordinator: Coordinatorable {
         case .alarmHistory: Color.blue
         case let .upcomingReservationDetail(id, category):
             reservationViewProvider.reservationMainView(reservationId: id, category: category)
-        case .pastReservationDetail: EmptyView()
-        case .inputReservationResult: EmptyView()
         case .modifyReservationInfo: EmptyView()
+            
+        case let .reservationHistory(route):
+            reservationHistoryView(route)
         }
     }
     
@@ -54,6 +61,15 @@ public final class HomeCoordinator: Coordinatorable {
     @ViewBuilder
     public func fullCoverView(_ cover: FullScreen) -> some View {
         EmptyView()
+    }
+    
+    @ViewBuilder
+    func reservationHistoryView(_ screen: ReservationHistoryRoute) -> some View {
+        switch screen {
+        case .resultShare: reservationHistoryViewProvider.reservationResultShareView
+        case .resultInput: reservationHistoryViewProvider.reservationResultInputView(coordinator: self)
+        case .resultDetail: reservationHistoryViewProvider.reservationResultDetailView
+        }
     }
 }
 

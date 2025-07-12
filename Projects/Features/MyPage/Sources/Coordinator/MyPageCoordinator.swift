@@ -11,18 +11,17 @@ import SwiftUI
 import HGCommon
 
 @Observable
-public final class MyPageCoordinator: Coordinatorable {
-    public init() { }
-    public typealias Screen = MyPageRouter.Screen
-    public typealias Sheet = MyPageRouter.Sheet
-    public typealias FullScreen = MyPageRouter.FullScreen
+final class MyPageCoordinator: Coordinatorable {
+    typealias Screen = MyPageRouter.Screen
+    typealias Sheet = MyPageRouter.Sheet
+    typealias FullScreen = MyPageRouter.FullScreen
     
-    public var path: NavigationPath = NavigationPath()
-    public var sheet: Sheet?
-    public var fullScreenCover: FullScreen?
+    var path: NavigationPath = NavigationPath()
+    var sheet: Sheet?
+    var fullScreenCover: FullScreen?
     
     @ViewBuilder
-    public func view(_ screen: Screen) -> some View {
+    func view(_ screen: Screen) -> some View {
         switch screen {
         case .main: MyPageView()
         case .setting: SettingView()
@@ -31,12 +30,12 @@ public final class MyPageCoordinator: Coordinatorable {
     }
     
     @ViewBuilder
-    public func presentView(_ sheet: Sheet) -> some View {
+    func presentView(_ sheet: Sheet) -> some View {
         EmptyView()
     }
     
     @ViewBuilder
-    public func fullCoverView(_ cover: FullScreen) -> some View {
+    func fullCoverView(_ cover: FullScreen) -> some View {
         EmptyView()
     }
     

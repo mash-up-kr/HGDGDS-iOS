@@ -13,14 +13,16 @@ import MyPageFeature
 import ReservationFeature
 import CreateReservationFeature
 import ReservationFeatureInterface
+import ReservationHistoryFeature
 
 @MainActor
-struct CoordinatorFactory {
+final class CoordinatorFactory {
     private let homeCoordinator = HomeCoordinator(
         reservationViewProvider: ReservationModuleViewProvider(),
+        reservationHistoryViewProvider: ReservationHistoryViewProvider(),
         homeViewModel: .init()
     )
-
+    
     var homeCoordinatorRootView: some View {
         HomeCoordinatorView()
             .environment(homeCoordinator)

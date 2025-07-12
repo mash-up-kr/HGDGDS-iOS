@@ -152,7 +152,3 @@ struct ReservationResultDetailView: View {
         .fillMaxWidth(.center)
     }
 }
-
-#Preview(traits: .applyFont) {
-    ReservationResultDetailView()
-}

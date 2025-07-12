@@ -9,7 +9,7 @@ import SwiftUI
 
 public struct MyPageCoordinatorView: View {
     @State private var coordinator: MyPageCoordinator = .init()
-
+    
     public init() { }
     
     public var body: some View {

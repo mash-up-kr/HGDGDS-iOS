@@ -24,4 +24,3 @@ public enum MyPageRouter {
         public var id: String { self.rawValue }
     }
 }
-

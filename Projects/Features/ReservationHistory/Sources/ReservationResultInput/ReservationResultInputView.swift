@@ -10,16 +10,16 @@ import HGDesignSystem
 import ReservationHistoryDomain
 import HGCommon
 
-public struct ReservationResultInputView: View {
+struct ReservationResultInputView: View {
     @State private var viewModel: ReservationResultInputViewModel = .init()
     @FocusState private var isFocused: Bool
     @State private var coordinator: any Coordinatorable
     
-    public init(coordinator: any Coordinatorable) {
+    init(coordinator: any Coordinatorable) {
         self.coordinator = coordinator
     }
     
-    public var body: some View {
+    var body: some View {
         ScrollView {
             VStack(spacing: 0) {
                 if viewModel.isShowSectionTitleView {

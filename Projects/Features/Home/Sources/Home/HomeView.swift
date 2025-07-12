@@ -96,8 +96,7 @@ struct HomeView: View {
                 reservations: viewModel.completedReservationInfos,
                 totalCount: viewModel.completedPaginationMetadata.total,
                 tapItemAction: { reservationId, category in
-                    //TODO: - 지난 예약 화면으로 푸시
-                    coordinator.push(.pastReservationDetail)
+                    coordinator.push(.reservationHistory(.resultShare))
                 },
                 lastItemAction: {
                     viewModel.reduce(.loadMoreReservation(status: .before))
