@@ -29,14 +29,26 @@ struct HomeView: View {
                 .ignoresSafeArea()
 
             ScrollView {
-                VStack(spacing: 0) {
+                LazyVStack(spacing: 0) {
                     header
                     if viewModel.selectedStatusTab == .scheduled {
                         scheduledReservationView
-                            .transition(.move(edge: .leading).combined(with: .opacity))
+                            .transition(
+                                .asymmetric(
+                                    insertion: .move(edge: .leading),
+                                    removal: .move(edge: .trailing)
+                                )
+                                .combined(with: .opacity)
+                            )
                     } else if viewModel.selectedStatusTab == .completed {
                         completedReservationView
-                            .transition(.move(edge: .trailing).combined(with: .opacity))
+                            .transition(
+                                .asymmetric(
+                                    insertion: .move(edge: .trailing),
+                                    removal: .move(edge: .leading)
+                                )
+                                .combined(with: .opacity)
+                            )
                     }
                 }
                 .padding(.bottom, UIConstant.tabBarHeight)
@@ -44,8 +56,7 @@ struct HomeView: View {
                
             }
         }
-        .animation(.easeOut(duration: 0.35), value: viewModel.selectedStatusTab)
-        .animation(.easeInOut(duration: 0.25), value: viewModel.selectedReservationIndex)
+        .animation(.easeInOut(duration: 0.2), value: viewModel.selectedStatusTab)
         .onAppear {
             tabManager.setTabBarHidden(false)
             viewModel.reduce(.onAppear)
@@ -169,13 +180,13 @@ private struct ReservationStatusToggle: View {
                         Capsule()
                             .foregroundStyle(HGColors.gray0White.color)
                             .padding([.vertical, type == .scheduled ? .leading : .trailing], 4)
-                            .animation(.spring, value: selectedTab)
                             .matchedGeometryEffect(
                                 id: "tabItem",
                                 in: namespace.self
                             )
                     }
                 }
+                .animation(.spring(bounce: 0.35), value: selectedTab)
         }
     }
     
