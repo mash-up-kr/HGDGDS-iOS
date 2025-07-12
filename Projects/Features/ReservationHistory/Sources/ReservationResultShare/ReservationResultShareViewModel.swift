@@ -26,6 +26,9 @@ final class ReservationResultShareViewModel: Reducerable {
     }
     
     struct State {
+        var myProfileType: ProfileType?
+        var myName: String = ""
+        
         var reservationTitle: String = ""
         var reservationDateString: String = ""
         var reservationTimeString: String = ""
@@ -53,7 +56,7 @@ final class ReservationResultShareViewModel: Reducerable {
     @ObservationIgnored
     @Dependency private var reservationUseCase: any ReservationUseCase
     
-    private let reservationID: Int
+    let reservationID: Int
     let category: ReservationCategoryType
     
     init(reservationID: Int, category: ReservationCategoryType) {
@@ -65,6 +68,7 @@ final class ReservationResultShareViewModel: Reducerable {
         switch action {
         case .onAppear:
             Task {
+                await setupUserInfo()
                 await requestReservationResultInfo()
             }
         case .didTapRefreshMemberResult:
@@ -74,6 +78,17 @@ final class ReservationResultShareViewModel: Reducerable {
         case let .didTapPhotoImage(index):
             state.selectedPhotoIndex = index
             state.isPresentedPhotoDetail = true
+        }
+    }
+    
+    @MainActor
+    private func setupUserInfo() async {
+        do {
+            let user = try await userManager.fetchUser()
+            state.myProfileType = user.profileType
+            state.myName = user.nickname
+        } catch {
+            print(error)
         }
     }
     

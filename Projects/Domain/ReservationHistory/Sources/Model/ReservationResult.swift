@@ -9,10 +9,10 @@ import Foundation
 import UserDomain
 
 public struct ReservationResults {
-    public let currentUser: ReservationResult
+    public let currentUser: ReservationResult?
     public let members: [ReservationResult]
     
-    public init(currentUser: ReservationResult, members: [ReservationResult]) {
+    public init(currentUser: ReservationResult?, members: [ReservationResult]) {
         self.currentUser = currentUser
         self.members = members
     }
@@ -26,7 +26,7 @@ public struct ReservationResult {
     public let profileType: ProfileType
     public let resultType: ReservationResultType?
     public let imagesURLs: [String]
-    public let successDateTime: Date
+    public let successDateTime: Date?
     public let description: String
     
     public init(
@@ -37,7 +37,7 @@ public struct ReservationResult {
         profileType: ProfileType,
         resultType: ReservationResultType?,
         imagesURLs: [String],
-        successDateTime: Date,
+        successDateTime: Date?,
         description: String
     ) {
         self.reservationResultID = reservationResultID

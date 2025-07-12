@@ -131,8 +131,8 @@ struct ReservationResultShareView: View {
     private func profileSectionView(isShared: Bool) -> some View {
         makeSectionCardView(icon: .person, title: "내 프로필") {
             HStack(spacing: 12) {
-                profileImageView(profileType: viewModel.userResult?.profileType)
-                Text(viewModel.userResult?.name ?? "")
+                profileImageView(profileType: viewModel.myProfileType)
+                Text(viewModel.myName)
                     .setTypo(.body_16_bold)
                     .foregroundStyle(.gray95)
                 Spacer()

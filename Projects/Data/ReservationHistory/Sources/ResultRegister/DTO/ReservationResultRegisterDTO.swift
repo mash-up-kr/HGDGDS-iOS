@@ -13,7 +13,7 @@ struct ReservationResultRegisterDTO: Decodable {
     let userId: Int
     let status: String
     let images: [String]?
-    let successDatetime: Date
+    let successDatetime: Date?
     let description: String?
     let createdAt: String
     let updatedAt: String

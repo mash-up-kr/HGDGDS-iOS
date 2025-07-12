@@ -27,7 +27,7 @@ extension ReservationResultDetailDTO.ReservationResultDTO {
 extension ReservationResultDetailDTO {
     var toDomain: ReservationResults {
         .init(
-            currentUser: currentUser.toDomain,
+            currentUser: currentUser?.toDomain,
             members: results?.compactMap { $0.toDomain } ?? []
         )
     }

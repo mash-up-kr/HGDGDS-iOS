@@ -8,7 +8,7 @@
 import Foundation
 
 struct ReservationResultDetailDTO: Decodable {
-    let currentUser: ReservationResultDTO
+    let currentUser: ReservationResultDTO?
     let results: [ReservationResultDTO]?
     
     struct ReservationResultDTO: Decodable {
@@ -19,7 +19,7 @@ struct ReservationResultDetailDTO: Decodable {
         let profileImageCode: String
         let status: String
         let images: [String]?
-        let successDatetime: Date
+        let successDatetime: Date?
         let description: String
     }
 }
