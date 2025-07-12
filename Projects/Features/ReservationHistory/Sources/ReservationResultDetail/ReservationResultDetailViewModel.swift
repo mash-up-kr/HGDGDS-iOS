@@ -11,6 +11,7 @@ import ReservationDomain
 import UserDomain
 import Nuke
 import UIKit
+import HGDesignSystem
 
 @Observable
 final class ReservationResultDetailViewModel: Reducerable {
@@ -54,7 +55,9 @@ final class ReservationResultDetailViewModel: Reducerable {
     }
     
     private func loadImages(urls: [String]) async -> [UIImage] {
-        await withTaskGroup(of: UIImage?.self) { group in
+        let placeholder = HGImages.noCompleteReservation.uiImage
+        state.photoImages = [UIImage](repeating: placeholder, count: urls.count)
+        return await withTaskGroup(of: UIImage?.self) { group in
             for urlString in urls {
                 if let url = URL(string: urlString) {
                     group.addTask {
