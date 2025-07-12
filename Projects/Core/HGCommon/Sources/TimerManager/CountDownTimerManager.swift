@@ -11,13 +11,13 @@ import Foundation
 public final class CountDownTimerManager {
     private let timer: TimerManager = TimerManager()
     /// 2025-07-11T19:00:00+09:00
-    private var endDate: Date?
-    private var remainTime: TimeInterval { ceil(endDate?.timeIntervalSinceNow ?? 0) }
+    @ObservationIgnored private var endDate: Date?
+    @ObservationIgnored private var remainTime: TimeInterval { ceil(endDate?.timeIntervalSinceNow ?? 0) }
     
     public private(set) var hours: String = "00"
     public private(set) var minutes: String = "00"
     public private(set) var seconds: String = "00"
-    public var fullTimeString: String { "\(hours) : \(minutes) : \(seconds)" }
+    @ObservationIgnored public var fullTimeString: String { "\(hours) : \(minutes) : \(seconds)" }
     
     public init() {
         bind()
