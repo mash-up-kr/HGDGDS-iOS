@@ -54,12 +54,6 @@ struct ReservationView: View {
                 images: viewModel.sharedImages
             )
         }
-        .background(
-            ActivityView(
-                isPresented: $viewModel.state.isPresentedShareSheet,
-                items: ["https://hgdgds.duckdns.org/invite?reservationId=\(viewModel.reservationId)"]
-            )
-        )
     }
     
     private var contentView: some View {
@@ -327,14 +321,20 @@ struct ReservationView: View {
                 .background(.gray15)
                 .setRadius(20)
             }
-            
-            HGButton(
-                title: "+ 초대장 보내기",
-                size: .large,
-                variant: .subtle,
-                isMaxWidth: true
+            ShareLink(
+                item: URL(string: "https://hgdgds.duckdns.org/invite?reservationId=\(viewModel.reservationId)")!,
+                preview: SharePreview("초대장 링크공유", image: viewModel.category.image)
             ) {
-                viewModel.reduce(.inviteButtonTapped)
+                Text("+ 초대장 보내기")
+                    .setTypo(.body_16_bold)
+                    .foregroundStyle(.orange500Main)
+                    .frame(height: 48)
+                    .fillMaxWidth(.center)
+                    .strokeBorder(
+                        HGColors.orange300.color,
+                        radius: 30,
+                        linewidth: 1
+                    )
             }
         }
         .fillMaxWidth()
