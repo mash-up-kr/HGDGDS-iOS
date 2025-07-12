@@ -11,7 +11,11 @@ import NukeUI
 import HGCommon
 
 struct ReservationResultDetailView: View {
-    @State private var viewModel: ReservationResultDetailViewModel = .init()
+    @State private var viewModel: ReservationResultDetailViewModel
+    
+    init(state: ReservationResultDetailViewModel.State) {
+        self._viewModel = State(initialValue: .init(state: state))
+    }
     
     var body: some View {
         VStack(spacing: 0) {

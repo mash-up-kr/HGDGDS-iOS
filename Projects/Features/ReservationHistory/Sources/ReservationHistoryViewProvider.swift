@@ -8,6 +8,8 @@
 import SwiftUI
 import ReservationHistoryFeatureInterface
 import HGCommon
+import UserDomain
+import ReservationDomain
 
 public struct ReservationHistoryViewProvider: ReservationHistoryViewProviderable {
     public init() { }
@@ -16,11 +18,25 @@ public struct ReservationHistoryViewProvider: ReservationHistoryViewProviderable
         AnyView(ReservationResultInputView(coordinator: coordinator))
     }
     
-    public var reservationResultShareView: AnyView {
-        AnyView(ReservationResultShareView())
+    public func reservationResultShareView(reservationID: Int, categoryRawValue: String) -> AnyView {
+        AnyView(
+            ReservationResultShareView(
+                reservationID: reservationID,
+                category: ReservationCategoryType(rawValue: categoryRawValue) ?? .etc
+            )
+        )
     }
     
-    public var reservationResultDetailView: AnyView {
-        AnyView(ReservationResultDetailView())
+    public func reservationResultDetailView(routeModel: ResultDetailRouteModel) -> AnyView {
+        let state = ReservationResultDetailViewModel.State(
+            profile: ProfileType(rawValue: routeModel.profileRawValue) ?? .green,
+            reservationTitle: routeModel.reservationTitle,
+            reservationDateString: routeModel.reservationDateString,
+            reservationTimeString: routeModel.reservationTimeString,
+            userName: routeModel.userName,
+            photoURLs: routeModel.photoURLs,
+            description: routeModel.description
+        )
+        return AnyView(ReservationResultDetailView(state: state))
     }
 }

@@ -11,6 +11,7 @@ import UIKit
 import HGCommon
 import ReservationDomain
 import ReservationHistoryDomain
+import ReservationHistoryFeatureInterface
 import UserDomain
 import Nuke
 
@@ -19,18 +20,12 @@ final class ReservationResultShareViewModel: Reducerable {
     enum Action {
         case onAppear
         
-        // todo
-        case didTapMyResult
-        case didTapShareMyResult
-        
-        case didTapMemberResult(index: Int)
         case didTapRefreshMemberResult
         case didTapPhotoImage(index: Int)
         
     }
     
     struct State {
-        var category: ReservationCategoryType = .etc
         var reservationTitle: String = ""
         var reservationDateString: String = ""
         var reservationTimeString: String = ""
@@ -58,7 +53,13 @@ final class ReservationResultShareViewModel: Reducerable {
     @ObservationIgnored
     @Dependency private var reservationUseCase: any ReservationUseCase
     
-    init() { }
+    private let reservationID: Int
+    let category: ReservationCategoryType
+    
+    init(reservationID: Int, category: ReservationCategoryType) {
+        self.reservationID = reservationID
+        self.category = category
+    }
     
     func reduce(_ action: Action) {
         switch action {
@@ -66,14 +67,7 @@ final class ReservationResultShareViewModel: Reducerable {
             Task {
                 await requestReservationResultInfo()
             }
-        case .didTapMyResult:
-            print("결과상세연결 내데이터")
-        case .didTapShareMyResult:
-            print("예약결과 입력하기 연결")
-        case let .didTapMemberResult(index):
-            print("결과상세연결 멤버 데이터, \(index)")
         case .didTapRefreshMemberResult:
-            print("멤버 상태 새로고침")
             Task {
                 await requestMemberReservationResultList()
             }
@@ -97,10 +91,9 @@ final class ReservationResultShareViewModel: Reducerable {
     @MainActor
     private func requestMemberReservationResultList() async {
         do {
-            let results = try await reservationHistoryUseCase.requestMemberReservationResults(reservationID: 49)
+            let results = try await reservationHistoryUseCase.requestMemberReservationResults(reservationID: reservationID)
             state.userResult = results.currentUser
-//            state.memberResults = results.members
-            state.memberResults = [results.currentUser, results.currentUser]
+            state.memberResults = results.members
         } catch {
             print(error)
         }
@@ -109,8 +102,7 @@ final class ReservationResultShareViewModel: Reducerable {
     @MainActor
     private func requestReservationDetail() async {
         do {
-            let model = try await reservationUseCase.getReservationDetail(reservationId: 49)
-            state.category = model.category
+            let model = try await reservationUseCase.getReservationDetail(reservationId: reservationID)
             state.reservationTitle = model.title
             state.reservationURL = model.linkUrl
             state.reservationPhotoURLs = model.images
@@ -142,4 +134,15 @@ final class ReservationResultShareViewModel: Reducerable {
         }
     }
 
+    func makeRouteModel(result: ReservationResult) -> ResultDetailRouteModel {
+        ResultDetailRouteModel(
+            profileRawValue: result.profileType.rawValue,
+            reservationTitle: state.reservationTitle,
+            reservationDateString: state.reservationDateString,
+            reservationTimeString: state.reservationTimeString,
+            userName: result.name,
+            photoURLs: result.imagesURLs,
+            description: result.description
+        )
+    }
 }

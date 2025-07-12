@@ -7,11 +7,11 @@
 
 import Foundation
 
-public enum ReservationHistoryRoute {
+public enum ReservationHistoryRoute: Hashable {
     /// 예약결과 입력화면
     case resultInput
     /// 예약결과 공유화면
-    case resultShare
+    case resultShare(reservationID: Int, categoryRawValue: String)
     /// 예약결과 멤버별 상세화면
-    case resultDetail
+    case resultDetail(ResultDetailRouteModel)
 }

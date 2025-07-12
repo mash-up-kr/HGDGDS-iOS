@@ -11,9 +11,10 @@ import ReservationHistoryDomain
 import UserDomain
 import HGCommon
 import ReservationHistoryFeatureInterface
+import ReservationDomain
 
 struct ReservationResultShareView: View {
-    @State private var viewModel: ReservationResultShareViewModel = .init()
+    @State private var viewModel: ReservationResultShareViewModel
     @State private var isHiddenNavigationBar = true
     @Environment(\.openURL) private var openURL
     @Environment(HGTabViewManager.self) var tabManager
@@ -24,6 +25,10 @@ struct ReservationResultShareView: View {
         let padding: CGFloat = outsidePadding + innerPadding
         let spacing: CGFloat = 8
         return ((UIWindow.current?.screen.bounds.width ?? 100) - (padding + spacing) * 2) / 3
+    }
+    
+    init(reservationID: Int, category: ReservationCategoryType) {
+        self._viewModel = State(initialValue: .init(reservationID: reservationID, category: category))
     }
     
     var body: some View {
@@ -122,6 +127,7 @@ struct ReservationResultShareView: View {
         }
     }
     
+    @ViewBuilder
     private func profileSectionView(isShared: Bool) -> some View {
         makeSectionCardView(icon: .person, title: "내 프로필") {
             HStack(spacing: 12) {
@@ -130,10 +136,10 @@ struct ReservationResultShareView: View {
                     .setTypo(.body_16_bold)
                     .foregroundStyle(.gray95)
                 Spacer()
-                Button {
-                    viewModel.reduce(viewModel.userResult != nil ? .didTapMyResult : .didTapShareMyResult)
-                } label: {
-                    if viewModel.userResult != nil {
+                
+                if let userResult = viewModel.userResult {
+                    let routeModel = viewModel.makeRouteModel(result: userResult)
+                    NavigationLink(value: ReservationHistoryRoute.resultDetail(routeModel)) {
                         Text("공유한 결과 보기")
                             .setTypo(.body_14_bold)
                             .foregroundStyle(.gray95)
@@ -144,7 +150,9 @@ struct ReservationResultShareView: View {
                                 radius: 16,
                                 linewidth: 1
                             )
-                    } else {
+                    }
+                } else {
+                    NavigationLink(value: ReservationHistoryRoute.resultInput) {
                         Text("결과 공유하기")
                             .setTypo(.body_14_bold)
                             .foregroundStyle(.gray0White)
@@ -188,7 +196,7 @@ struct ReservationResultShareView: View {
                 ) {
                     ForEach(viewModel.memberResults.indices, id: \.self) { index in
                         let model = viewModel.memberResults[index]
-                        makeTeamMemberResultView(index: index, result: model)
+                        makeTeamMemberResultView(result: model)
                     }
                 }
             }
@@ -201,8 +209,10 @@ struct ReservationResultShareView: View {
         }
     }
     
-    private func makeTeamMemberResultView(index: Int, result: ReservationResult) -> some View {
-        NavigationLink(value: ReservationHistoryRoute.resultDetail) {
+    @ViewBuilder
+    private func makeTeamMemberResultView(result: ReservationResult) -> some View {
+        let routeModel = viewModel.makeRouteModel(result: result)
+        NavigationLink(value: ReservationHistoryRoute.resultDetail(routeModel)) {
             VStack {
                 Spacer()
                 ZStack(alignment: .top) {
@@ -316,6 +326,7 @@ struct ReservationResultShareView: View {
                             .setTypo(.body_16_bold)
                             .foregroundStyle(.gray80)
                     }
+                    .fillMaxWidth()
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)
                     .strokeBorder(HGColors.gray20.color, radius: 14)
@@ -345,11 +356,14 @@ struct ReservationResultShareView: View {
         }
     }
     
+    @ViewBuilder
     private var descriptionSectionView: some View {
-        makeSectionCardView(icon: .writePencilCircle, title: "설명") {
-            Text(viewModel.description)
-                .setTypo(.body_16_regular)
-                .foregroundStyle(.gray80)
+        if viewModel.description.isNotEmpty {
+            makeSectionCardView(icon: .writePencilCircle, title: "설명") {
+                Text(viewModel.description)
+                    .setTypo(.body_16_regular)
+                    .foregroundStyle(.gray80)
+            }
         }
     }
     
@@ -377,8 +391,4 @@ struct ReservationResultShareView: View {
         .background(.gray0White)
         .setRadius(28)
     }
-}
-
-#Preview(traits: .applyFont) {
-    ReservationResultShareView()
 }

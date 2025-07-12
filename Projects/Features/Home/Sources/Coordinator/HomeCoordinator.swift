@@ -66,9 +66,12 @@ public final class HomeCoordinator: Coordinatorable {
     @ViewBuilder
     func reservationHistoryView(_ screen: ReservationHistoryRoute) -> some View {
         switch screen {
-        case .resultShare: reservationHistoryViewProvider.reservationResultShareView
-        case .resultInput: reservationHistoryViewProvider.reservationResultInputView(coordinator: self)
-        case .resultDetail: reservationHistoryViewProvider.reservationResultDetailView
+        case let .resultShare(id, category):
+            reservationHistoryViewProvider.reservationResultShareView(reservationID: id, categoryRawValue: category)
+        case .resultInput:
+            reservationHistoryViewProvider.reservationResultInputView(coordinator: self)
+        case let .resultDetail(routeModel):
+            reservationHistoryViewProvider.reservationResultDetailView(routeModel: routeModel)
         }
     }
 }

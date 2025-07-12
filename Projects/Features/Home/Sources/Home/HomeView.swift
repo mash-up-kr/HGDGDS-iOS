@@ -96,7 +96,11 @@ struct HomeView: View {
                 reservations: viewModel.completedReservationInfos,
                 totalCount: viewModel.completedPaginationMetadata.total,
                 tapItemAction: { reservationId, category in
-                    coordinator.push(.reservationHistory(.resultShare))
+                    coordinator.push(
+                        .reservationHistory(
+                            .resultShare(reservationID: reservationId, categoryRawValue: category.rawValue)
+                        )
+                    )
                 },
                 lastItemAction: {
                     viewModel.reduce(.loadMoreReservation(status: .before))

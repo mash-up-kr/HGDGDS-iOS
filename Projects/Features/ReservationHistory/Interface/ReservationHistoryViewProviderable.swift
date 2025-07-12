@@ -12,6 +12,6 @@ import HGCommon
 @MainActor
 public protocol ReservationHistoryViewProviderable {
     func reservationResultInputView(coordinator: any Coordinatorable) -> AnyView
-    var reservationResultShareView: AnyView { get }
-    var reservationResultDetailView: AnyView { get }
+    func reservationResultShareView(reservationID: Int, categoryRawValue: String) -> AnyView
+    func reservationResultDetailView(routeModel: ResultDetailRouteModel) -> AnyView
 }
