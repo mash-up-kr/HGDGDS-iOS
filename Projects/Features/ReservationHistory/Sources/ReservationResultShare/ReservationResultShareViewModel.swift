@@ -135,7 +135,7 @@ final class ReservationResultShareViewModel: Reducerable {
         let placeholder = HGImages.noCompleteReservation.uiImage
         state.reservationPhotoImages = [UIImage](repeating: placeholder, count: urls.count)
         return await withTaskGroup(of: UIImage?.self) { group in
-            for urlString in state.reservationPhotoURLs {
+            for urlString in urls {
                 if let url = URL(string: urlString) {
                     group.addTask {
                         try? await ImagePipeline.shared.image(for: url)
