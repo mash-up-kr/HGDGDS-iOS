@@ -11,12 +11,13 @@ import ReservationHistoryDomain
 import HGCommon
 
 struct ReservationResultInputView: View {
-    @State private var viewModel: ReservationResultInputViewModel = .init()
+    @State private var viewModel: ReservationResultInputViewModel
     @FocusState private var isFocused: Bool
     @State private var coordinator: any Coordinatorable
     
-    init(coordinator: any Coordinatorable) {
+    init(coordinator: any Coordinatorable, reservationID: Int) {
         self.coordinator = coordinator
+        self._viewModel = State(initialValue: .init(reservationID: reservationID))
     }
     
     var body: some View {

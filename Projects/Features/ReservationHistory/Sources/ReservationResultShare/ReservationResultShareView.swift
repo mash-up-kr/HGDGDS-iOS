@@ -152,7 +152,11 @@ struct ReservationResultShareView: View {
                             )
                     }
                 } else {
-                    NavigationLink(value: ReservationHistoryRoute.resultInput) {
+                    NavigationLink(
+                        value: ReservationHistoryRoute.resultInput(
+                            reservationID: viewModel.reservationID
+                        )
+                    ) {
                         Text("결과 공유하기")
                             .setTypo(.body_14_bold)
                             .foregroundStyle(.gray0White)

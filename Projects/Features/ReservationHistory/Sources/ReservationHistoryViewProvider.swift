@@ -14,8 +14,8 @@ import ReservationDomain
 public struct ReservationHistoryViewProvider: ReservationHistoryViewProviderable {
     public init() { }
     
-    public func reservationResultInputView(coordinator: any Coordinatorable) -> AnyView {
-        AnyView(ReservationResultInputView(coordinator: coordinator))
+    public func reservationResultInputView(coordinator: any Coordinatorable, reservationID: Int) -> AnyView {
+        AnyView(ReservationResultInputView(coordinator: coordinator, reservationID: reservationID))
     }
     
     public func reservationResultShareView(reservationID: Int, categoryRawValue: String) -> AnyView {

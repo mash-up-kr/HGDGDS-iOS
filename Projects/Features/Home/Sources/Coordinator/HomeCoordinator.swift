@@ -68,8 +68,8 @@ public final class HomeCoordinator: Coordinatorable {
         switch screen {
         case let .resultShare(id, category):
             reservationHistoryViewProvider.reservationResultShareView(reservationID: id, categoryRawValue: category)
-        case .resultInput:
-            reservationHistoryViewProvider.reservationResultInputView(coordinator: self)
+        case let .resultInput(id):
+            reservationHistoryViewProvider.reservationResultInputView(coordinator: self, reservationID: id)
         case let .resultDetail(routeModel):
             reservationHistoryViewProvider.reservationResultDetailView(routeModel: routeModel)
         }
