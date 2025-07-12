@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@MainActor
 @Observable
 final public class HGTabViewManager {
     public private(set) var hiddenTabBar: Bool = false
