@@ -21,10 +21,11 @@ struct ReservationResultShareView: View {
  
     private let innerPadding: CGFloat = 16
     private let outsidePadding: CGFloat = 16
+    private let photoSpacing: CGFloat = 8
     private var photoGridSize: CGFloat {
         let padding: CGFloat = outsidePadding + innerPadding
-        let spacing: CGFloat = 8
-        return ((UIWindow.current?.screen.bounds.width ?? 100) - (padding + spacing) * 2) / 3
+        let spacing: CGFloat = photoSpacing
+        return ((UIWindow.current?.screen.bounds.width ?? 300) - (padding + spacing) * 2) / 3
     }
     
     init(reservationID: Int, category: ReservationCategoryType) {
@@ -343,13 +344,12 @@ struct ReservationResultShareView: View {
     private var sharedPhotosSectionView: some View {
         if viewModel.reservationPhotoImages.isNotEmpty {
             makeSectionCardView(icon: .cameraShare, title: "공유된 사진") {
-                HStack(spacing: 5) {
+                HStack(spacing: photoSpacing) {
                     ForEach(viewModel.reservationPhotoImages.indices, id: \.self) { index in
                         Image(uiImage: viewModel.reservationPhotoImages[index])
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                             .frame(photoGridSize)
-                            .setRadius(16)
                             .strokeBorder(HGColors.gray20.color, radius: 16, linewidth: 1)
                             .onTapGesture {
                                 viewModel.reduce(.didTapPhotoImage(index: index))
