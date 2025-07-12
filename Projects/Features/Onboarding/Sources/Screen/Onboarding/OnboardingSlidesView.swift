@@ -54,6 +54,7 @@ struct OnboardingSlidesView: View {
                 }
                 .tag(tab)
             }
+            .toolbarVisibility(.hidden, for: .tabBar)
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
         .padding(.top, 34)

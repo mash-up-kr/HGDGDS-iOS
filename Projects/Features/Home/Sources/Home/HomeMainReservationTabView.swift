@@ -36,6 +36,7 @@ struct HomeMainReservationTabView: View {
                 .padding(.bottom, HomeUIConstans.bottomPadding)
                 .tag(index)
             }
+            .toolbarVisibility(.hidden, for: .tabBar)
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         .frame(height: mainReservationTabViewHeight)
