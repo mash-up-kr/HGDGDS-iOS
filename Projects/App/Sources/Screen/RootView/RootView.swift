@@ -2,6 +2,7 @@ import SwiftUI
 
 struct RootView: View {
     private var viewModel: RootViewModel = .init()
+    @State private var coordinatorFactory: CoordinatorFactory = CoordinatorFactory()
     
     var body: some View {
         contentView
@@ -15,14 +16,13 @@ struct RootView: View {
     private var contentView: some View {
         switch viewModel.routeState {
         case .onboarding:
-            viewModel
-                .coordinatorFactory
+            coordinatorFactory
                 .onboardingCoordinatorRootView
                 .onAppear {
                     viewModel.reduce(.validateAccessToken)
                 }
         case .mainTab:
-            HGTabView(coordinatorFactory: viewModel.coordinatorFactory)
+            HGTabView(coordinatorFactory: coordinatorFactory)
                 .onAppear {
                     viewModel.reduce(.validateAccessToken)
                 }

@@ -11,12 +11,12 @@ import HGCommon
 
 struct HGTabView: View {
     @State private var selectedItem: TabItem = .home
-    @State var tabViewManager = HGTabViewManager()
-    @State var showCreateView: Bool = false
+    @State private var tabViewManager = HGTabViewManager()
+    @State private var showCreateView: Bool = false
     
-    @State var deepLinkItem: DeepLinkType? = nil
+    @State private var deepLinkItem: DeepLinkType? = nil
     
-    private let coordinatorFactory: CoordinatorFactory
+    private unowned let coordinatorFactory: CoordinatorFactory
     
     init(coordinatorFactory: CoordinatorFactory) {
         self.coordinatorFactory = coordinatorFactory

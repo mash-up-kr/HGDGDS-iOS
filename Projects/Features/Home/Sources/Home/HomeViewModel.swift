@@ -15,8 +15,8 @@ import HGDesignSystem
 import HGLogger
 
 @Observable
-public final class HomeViewModel: Reducerable {
-    public var state: State = .init()
+final class HomeViewModel: Reducerable {
+    var state: State = .init()
     
     @ObservationIgnored
     @Dependency var homeUseCase: HomeUseCase
@@ -32,14 +32,12 @@ public final class HomeViewModel: Reducerable {
     @ObservationIgnored
     var isInitialFetching = false
     
-    public init() { }
-
-    public enum Action {
+    enum Action {
         case onAppear
         case loadMoreReservation(status: ReservationListRequest.Status)
     }
 
-    public struct State {
+    struct State {
         var selectedStatusTab: ReservationStatusTab = .scheduled
         var selectedReservationIndex: Int = 0
         
@@ -52,7 +50,7 @@ public final class HomeViewModel: Reducerable {
         var completedReservationInfos: [ReservationInfo] = []
     }
     
-    public func reduce(_ action: Action) {
+    func reduce(_ action: Action) {
         switch action {
         case .onAppear:
             scheduledReservationPage = 1

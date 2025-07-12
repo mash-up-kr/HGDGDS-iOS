@@ -11,11 +11,6 @@ import UserDomain
 
 @Observable
 final class RootViewModel: Reducerable {
-    
-    @MainActor
-    @ObservationIgnored
-    let coordinatorFactory: CoordinatorFactory = CoordinatorFactory()
-    
     @ObservationIgnored
     @Dependency private var keychain: KeychainManagerable
     

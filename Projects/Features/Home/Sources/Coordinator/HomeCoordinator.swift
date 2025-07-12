@@ -23,24 +23,21 @@ public final class HomeCoordinator: Coordinatorable {
     public var fullScreenCover: FullScreen?
     
     private let reservationViewProvider: any ReservationViewProviderable
-    private let homeViewModel: HomeViewModel
     
     private let reservationHistoryViewProvider: any ReservationHistoryViewProviderable
     
     public init(
         reservationViewProvider: any ReservationViewProviderable,
-        reservationHistoryViewProvider: any ReservationHistoryViewProviderable,
-        homeViewModel: HomeViewModel
+        reservationHistoryViewProvider: any ReservationHistoryViewProviderable
     ) {
         self.reservationViewProvider = reservationViewProvider
         self.reservationHistoryViewProvider = reservationHistoryViewProvider
-        self.homeViewModel = homeViewModel
     }
     
     @ViewBuilder
     public func view(_ screen: Screen) -> some View {
         switch screen {
-        case .main: HomeView(viewModel: homeViewModel)
+        case .main: HomeView()
         case .alarmHistory: Color.blue
         case let .upcomingReservationDetail(id, category):
             reservationViewProvider.reservationMainView(reservationId: id, category: category)

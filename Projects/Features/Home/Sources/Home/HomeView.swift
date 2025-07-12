@@ -15,11 +15,7 @@ import HGDesignSystem
 struct HomeView: View {
     @Environment(HGTabViewManager.self) var tabManager
     @Environment(HomeCoordinator.self) var coordinator
-    @Bindable var viewModel: HomeViewModel
-    
-    init(viewModel: HomeViewModel) {
-        self.viewModel = viewModel
-    }
+    @State private var viewModel: HomeViewModel = .init()
     
     private var backgroundGradientHeight: CGFloat {
         /// Screen height - TabBar height - Bottom padding - 91(카드뷰 height 절반)
@@ -225,5 +221,5 @@ private struct TransitionTabSwitcherView<FirstView: View, SecondView: View>: Vie
 }
 
 #Preview(traits: .applyFont) {
-    HomeView(viewModel: .init())
+    HomeView()
 }

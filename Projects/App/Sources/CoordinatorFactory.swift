@@ -19,8 +19,7 @@ import ReservationHistoryFeature
 final class CoordinatorFactory {
     private let homeCoordinator = HomeCoordinator(
         reservationViewProvider: ReservationModuleViewProvider(),
-        reservationHistoryViewProvider: ReservationHistoryViewProvider(),
-        homeViewModel: .init()
+        reservationHistoryViewProvider: ReservationHistoryViewProvider()
     )
     
     var homeCoordinatorRootView: some View {
@@ -28,8 +27,11 @@ final class CoordinatorFactory {
             .environment(homeCoordinator)
     }
     
+    private let myPageCoordinator: MyPageCoordinator = .init()
+    
     var myPageCoordinatorRootView: some View {
         MyPageCoordinatorView()
+            .environment(myPageCoordinator)
     }
     
     var onboardingCoordinatorRootView: some View {
