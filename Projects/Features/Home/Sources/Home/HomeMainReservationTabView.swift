@@ -68,7 +68,9 @@ private struct MainReservationView: View {
     var body: some View {
         VStack(spacing: 0) {
             headerText
-            
+                .background(alignment: .top) {
+                    categoryImage
+                }
             if isShowSubReservationCardList {
                 Spacer().frame(height: 42)
             } else {
@@ -93,6 +95,14 @@ private struct MainReservationView: View {
             .setTypo(.body_16_medium)
             .foregroundStyle(.gray0White)
             .shadow(color: reservationInfo.categoryType.darkColor.color, radius: 20)
+    }
+    
+    @ViewBuilder
+    private var categoryImage: some View {
+        reservationInfo.categoryType.image
+            .resizable()
+            .frame(354)
+            .transition(.move(edge: .leading).combined(with: .opacity))
     }
 }
 

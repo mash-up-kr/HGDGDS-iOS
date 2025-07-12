@@ -31,18 +31,17 @@ struct HomeView: View {
             ScrollView {
                 VStack(spacing: 0) {
                     header
-                    
-                    TransitionTabSwitcherView(selectedTab: viewModel.selectedStatusTab) {
+                    if viewModel.selectedStatusTab == .scheduled {
                         scheduledReservationView
-                    } completedView: {
+                            .transition(.move(edge: .leading).combined(with: .opacity))
+                    } else if viewModel.selectedStatusTab == .completed {
                         completedReservationView
+                            .transition(.move(edge: .trailing).combined(with: .opacity))
                     }
                 }
                 .padding(.bottom, UIConstant.tabBarHeight)
                 .fillMaxSize(.top)
-                .background(alignment: .top) {
-                    categoryImage
-                }
+               
             }
         }
         .animation(.easeOut(duration: 0.35), value: viewModel.selectedStatusTab)
@@ -134,23 +133,6 @@ struct HomeView: View {
         }
     }
     
-    private var categoryImage: some View {
-        TransitionTabSwitcherView(selectedTab: viewModel.selectedStatusTab) {
-            Group {
-                if viewModel.isExistScheduledMainReservation {
-                    viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.categoryType.image
-                        .resizable()
-                        .frame(354)
-                        .offset(y: viewModel.isExistScheduledSubReservations ? 32 : 96)
-                        .transition(.move(edge: .leading).combined(with: .opacity))
-                }
-            }
-        } completedView: {
-            Color.clear
-                .transition(.move(edge: .trailing).combined(with: .opacity))
-        }
-    }
-    
     private var header: some View {
         ReservationStatusToggle(selectedTab: $viewModel.state.selectedStatusTab)
             .frame(width: 154, height: 40)
@@ -203,24 +185,6 @@ private struct ReservationStatusToggle: View {
             selectedTab == .scheduled ? .gray90 : .gray40
         case .completed:
             selectedTab == .completed ? .gray90 : .gray0White
-        }
-    }
-}
-
-private struct TransitionTabSwitcherView<FirstView: View, SecondView: View>: View {
-    let selectedTab: ReservationStatusTab
-    let scheduledView: () -> FirstView
-    let completedView: () -> SecondView
-
-    var body: some View {
-        ZStack {
-            if selectedTab == .scheduled {
-                scheduledView()
-                    .transition(.move(edge: .leading).combined(with: .opacity))
-            } else if selectedTab == .completed {
-                completedView()
-                    .transition(.move(edge: .trailing).combined(with: .opacity))
-            }
         }
     }
 }
