@@ -159,6 +159,7 @@ struct HomeView: View {
 }
 
 private struct ReservationStatusToggle: View {
+    @Namespace var namespace
     @Binding var selectedTab: ReservationStatusTab
 
     var body: some View {
@@ -167,7 +168,6 @@ private struct ReservationStatusToggle: View {
             
             tabItem(type: .completed)
         }
-        .animation(.easeInOut, value: selectedTab)
         .background(.opacityBlack10)
         .clipShape(Capsule())
         .frame(width: 154, height: 40)
@@ -185,8 +185,13 @@ private struct ReservationStatusToggle: View {
                 .background {
                     if selectedTab == type {
                         Capsule()
-                            .foregroundStyle(HGColors.gray0White)
+                            .foregroundStyle(HGColors.gray0White.color)
                             .padding([.vertical, type == .scheduled ? .leading : .trailing], 4)
+                            .animation(.spring, value: selectedTab)
+                            .matchedGeometryEffect(
+                                id: "tabItem",
+                                in: namespace.self
+                            )
                     }
                 }
         }
