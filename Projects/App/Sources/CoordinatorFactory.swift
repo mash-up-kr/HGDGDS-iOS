@@ -13,21 +13,25 @@ import MyPageFeature
 import ReservationFeature
 import CreateReservationFeature
 import ReservationFeatureInterface
+import ReservationHistoryFeature
 
 @MainActor
-struct CoordinatorFactory {
+final class CoordinatorFactory {
     private let homeCoordinator = HomeCoordinator(
         reservationViewProvider: ReservationModuleViewProvider(),
-        homeViewModel: .init()
+        reservationHistoryViewProvider: ReservationHistoryViewProvider()
     )
-
+    
     var homeCoordinatorRootView: some View {
         HomeCoordinatorView()
             .environment(homeCoordinator)
     }
     
+    private let myPageCoordinator: MyPageCoordinator = .init()
+    
     var myPageCoordinatorRootView: some View {
         MyPageCoordinatorView()
+            .environment(myPageCoordinator)
     }
     
     var onboardingCoordinatorRootView: some View {

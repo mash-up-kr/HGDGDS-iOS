@@ -47,7 +47,11 @@ final class ReservationResultInputViewModel: Reducerable {
     
     var state: State = .init()
     
-    init() { }
+    private let reservationID: Int
+    
+    init(reservationID: Int) {
+        self.reservationID = reservationID
+    }
     
     @ObservationIgnored
     @Dependency private var imageUploader: HGImageUploader
@@ -102,7 +106,6 @@ final class ReservationResultInputViewModel: Reducerable {
         }
         state.isLoading = true
         
-        let reservationID: Int = 1 // TODO: 실제 id로 매칭
         let successReservationDate = state.successReservationDate
         let successDateTime = successReservationDate?.combineWith(time: state.successReservationTime)
         let description: String = state.explainString

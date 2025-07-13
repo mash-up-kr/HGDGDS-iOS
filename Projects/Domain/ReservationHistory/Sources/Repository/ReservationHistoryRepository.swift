@@ -15,4 +15,8 @@ public protocol ReservationHistoryRepository {
         successDateTime: Date?,
         description: String
     ) async throws -> Bool
+    
+    func requestMemberReservationResults(
+        reservationID id: Int
+    ) async throws -> ReservationResults 
 }

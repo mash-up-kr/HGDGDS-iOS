@@ -8,6 +8,7 @@
 import Foundation
 
 import ReservationDomain
+import ReservationHistoryFeatureInterface
 
 public enum HomeRouter {
     public enum Sheet: String, Identifiable {
@@ -19,9 +20,9 @@ public enum HomeRouter {
         case main
         case alarmHistory
         case upcomingReservationDetail(reservationId: Int, category: ReservationCategoryType)
-        case pastReservationDetail
-        case inputReservationResult
         case modifyReservationInfo
+        
+        case reservationHistory(ReservationHistoryRoute)
     }
 
     public enum FullScreen: String, Identifiable {

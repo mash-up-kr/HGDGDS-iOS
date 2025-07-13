@@ -1,5 +1,5 @@
 //
-//  ReservationResultType.swift
+//  ReservationResultType+.swift
 //  ReservationHistoryFeature
 //
 //  Created by Enes on 6/29/25.

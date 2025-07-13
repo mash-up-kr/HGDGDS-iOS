@@ -21,6 +21,7 @@ let project = Project(
                 .coreProject(with: .hgLogger),
                 .uiProject(with: .hgDesignSystem),
                 .interfaceProject(with: .reservation),
+                .interfaceProject(with: .reservationHistory)
             ],
             hasResources: false
         )

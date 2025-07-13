@@ -9,6 +9,8 @@ import SwiftUI
 
 import HGCommon
 import ReservationFeatureInterface
+import ReservationHistoryFeatureInterface
+
 
 @Observable
 public final class HomeCoordinator: Coordinatorable {
@@ -21,26 +23,28 @@ public final class HomeCoordinator: Coordinatorable {
     public var fullScreenCover: FullScreen?
     
     private let reservationViewProvider: any ReservationViewProviderable
-    private let homeViewModel: HomeViewModel
+    
+    private let reservationHistoryViewProvider: any ReservationHistoryViewProviderable
     
     public init(
         reservationViewProvider: any ReservationViewProviderable,
-        homeViewModel: HomeViewModel
+        reservationHistoryViewProvider: any ReservationHistoryViewProviderable
     ) {
         self.reservationViewProvider = reservationViewProvider
-        self.homeViewModel = homeViewModel
+        self.reservationHistoryViewProvider = reservationHistoryViewProvider
     }
     
     @ViewBuilder
     public func view(_ screen: Screen) -> some View {
         switch screen {
-        case .main: HomeView(viewModel: homeViewModel)
+        case .main: HomeView()
         case .alarmHistory: Color.blue
         case let .upcomingReservationDetail(id, category):
             reservationViewProvider.reservationMainView(reservationId: id, category: category)
-        case .pastReservationDetail: EmptyView()
-        case .inputReservationResult: EmptyView()
         case .modifyReservationInfo: EmptyView()
+            
+        case let .reservationHistory(route):
+            reservationHistoryView(route)
         }
     }
     
@@ -54,6 +58,18 @@ public final class HomeCoordinator: Coordinatorable {
     @ViewBuilder
     public func fullCoverView(_ cover: FullScreen) -> some View {
         EmptyView()
+    }
+    
+    @ViewBuilder
+    func reservationHistoryView(_ screen: ReservationHistoryRoute) -> some View {
+        switch screen {
+        case let .resultShare(id, category):
+            reservationHistoryViewProvider.reservationResultShareView(reservationID: id, categoryRawValue: category)
+        case let .resultInput(id):
+            reservationHistoryViewProvider.reservationResultInputView(coordinator: self, reservationID: id)
+        case let .resultDetail(routeModel):
+            reservationHistoryViewProvider.reservationResultDetailView(routeModel: routeModel)
+        }
     }
 }
 

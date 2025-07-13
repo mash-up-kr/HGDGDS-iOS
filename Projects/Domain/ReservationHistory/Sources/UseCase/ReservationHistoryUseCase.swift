@@ -15,6 +15,8 @@ public protocol ReservationHistoryUseCase {
         successDateTime: Date?,
         description: String
     ) async throws -> Bool
+    
+    func requestMemberReservationResults(reservationID id: Int) async throws -> ReservationResults
 }
 
 public final class ReservationHistoryUseCaseImpl: ReservationHistoryUseCase {
@@ -48,5 +50,9 @@ public final class ReservationHistoryUseCaseImpl: ReservationHistoryUseCase {
                 description: description
             )
         }
+    }
+    
+    public func requestMemberReservationResults(reservationID id: Int) async throws -> ReservationResults {
+        try await repository.requestMemberReservationResults(reservationID: id)
     }
 }

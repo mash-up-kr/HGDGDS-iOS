@@ -12,7 +12,6 @@ import HGCommon
 
 @Observable
 public final class MyPageCoordinator: Coordinatorable {
-    public init() { }
     public typealias Screen = MyPageRouter.Screen
     public typealias Sheet = MyPageRouter.Sheet
     public typealias FullScreen = MyPageRouter.FullScreen
@@ -20,6 +19,8 @@ public final class MyPageCoordinator: Coordinatorable {
     public var path: NavigationPath = NavigationPath()
     public var sheet: Sheet?
     public var fullScreenCover: FullScreen?
+    
+    public init() { }
     
     @ViewBuilder
     public func view(_ screen: Screen) -> some View {

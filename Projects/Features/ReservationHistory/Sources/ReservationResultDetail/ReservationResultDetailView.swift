@@ -11,7 +11,20 @@ import NukeUI
 import HGCommon
 
 struct ReservationResultDetailView: View {
-    @State private var viewModel: ReservationResultDetailViewModel = .init()
+    @State private var viewModel: ReservationResultDetailViewModel
+    
+    private let innerPadding: CGFloat = 16
+    private let outsidePadding: CGFloat = 16
+    private let photoSpacing: CGFloat = 9
+    private var photoGridSize: CGFloat {
+        let padding: CGFloat = outsidePadding + innerPadding
+        let spacing: CGFloat = photoSpacing
+        return ((UIWindow.current?.screen.bounds.width ?? 300) - (padding + spacing) * 2) / 3
+    }
+    
+    init(state: ReservationResultDetailViewModel.State) {
+        self._viewModel = State(initialValue: .init(state: state))
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -24,7 +37,7 @@ struct ReservationResultDetailView: View {
                     sharedPhotoSectionView
                     descriptionSectionView
                 }
-                .padding(.horizontal, 16)
+                .padding(.horizontal, outsidePadding)
             }
             .background(.gray10)
             .contentMargins(.top, 20)
@@ -45,7 +58,8 @@ struct ReservationResultDetailView: View {
     
     private var profileHeaderView: some View {
         HStack(spacing: 15) {
-            Color.red
+            viewModel.profile.image
+                .resizable()
                 .frame(62)
                 .setRadius(24)
             VStack(alignment: .leading, spacing: 4) {
@@ -62,26 +76,29 @@ struct ReservationResultDetailView: View {
         .frame(height: 102)
     }
     
+    @ViewBuilder
     private var reservationSuccessDateSectionView: some View {
-        makeSectionContainerView(title: "예약 성공 일자") {
-            HStack(spacing: 16) {
-                HStack(spacing: 2) {
-                    HGIcons.calendar.image
-                        .resizable()
-                        .frame(20)
-                        .foregroundStyle(.gray50)
-                    Text(viewModel.reservationDateString)
-                        .setTypo(.body_16_medium)
-                        .foregroundStyle(.gray95)
-                }
-                HStack(spacing: 2) {
-                    HGIcons.timer.image
-                        .resizable()
-                        .frame(20)
-                        .foregroundStyle(.gray50)
-                    Text(viewModel.reservationTimeString)
-                        .setTypo(.body_16_medium)
-                        .foregroundStyle(.gray95)
+        if viewModel.reservationDateString.isNotEmpty {
+            makeSectionContainerView(title: "예약 성공 일자") {
+                HStack(spacing: 16) {
+                    HStack(spacing: 2) {
+                        HGIcons.calendar.image
+                            .resizable()
+                            .frame(20)
+                            .foregroundStyle(.gray50)
+                        Text(viewModel.reservationDateString)
+                            .setTypo(.body_16_medium)
+                            .foregroundStyle(.gray95)
+                    }
+                    HStack(spacing: 2) {
+                        HGIcons.timer.image
+                            .resizable()
+                            .frame(20)
+                            .foregroundStyle(.gray50)
+                        Text(viewModel.reservationTimeString)
+                            .setTypo(.body_16_medium)
+                            .foregroundStyle(.gray95)
+                    }
                 }
             }
         }
@@ -94,12 +111,12 @@ struct ReservationResultDetailView: View {
                 makeEmptyView(title: "공유된 사진이 없어요")
             } else {
                 ScrollView(.horizontal) {
-                    LazyHStack(spacing: 9) {
+                    LazyHStack(spacing: photoSpacing) {
                         ForEach(viewModel.photoImages.indices, id: \.self) { index in
                             Image(uiImage: viewModel.photoImages[index])
                                 .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(106)
+                                .aspectRatio(contentMode: .fill)
+                                .frame(photoGridSize)
                                 .strokeBorder(HGColors.opacityBlack10.color, radius: 15, linewidth: 0.75)
                                 .onTapGesture {
                                     viewModel.reduce(.didTapPhoto(index: index))
@@ -136,7 +153,7 @@ struct ReservationResultDetailView: View {
             childView()
         }
         .fillMaxWidth()
-        .padding([.horizontal, .top], 16)
+        .padding([.horizontal, .top], innerPadding)
         .padding(.bottom, 22)
         .background(.gray0White)
         .setRadius(28)
@@ -151,8 +168,4 @@ struct ReservationResultDetailView: View {
         }
         .fillMaxWidth(.center)
     }
-}
-
-#Preview(traits: .applyFont) {
-    ReservationResultDetailView()
 }

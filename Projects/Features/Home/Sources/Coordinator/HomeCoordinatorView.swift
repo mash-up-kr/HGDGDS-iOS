@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ReservationHistoryFeatureInterface
 
 public struct HomeCoordinatorView: View {
     @Environment(HomeCoordinator.self) var coordinator
@@ -17,6 +18,9 @@ public struct HomeCoordinatorView: View {
             coordinator.view(.main)
                 .navigationDestination(for: HomeRouter.Screen.self) {
                     coordinator.view($0)
+                }
+                .navigationDestination(for: ReservationHistoryRoute.self) {
+                    coordinator.reservationHistoryView($0)
                 }
                 .sheet(item: $coordinator.sheet) {
                     coordinator.presentView($0)
