@@ -188,10 +188,6 @@ struct ReservationView: View {
             }
         }
         .environment(\.colorScheme, .light)
-        .onAppear {
-            viewModel.countDownTimer.setupTime(endDate: viewModel.reservation.reservationDatetime ?? Date())
-            viewModel.countDownTimer.start()
-        }
         .onDisappear {
             viewModel.countDownTimer.stop()
         }
@@ -244,7 +240,7 @@ struct ReservationView: View {
                         .foregroundStyle(.white)
                         .padding(.horizontal, 15)
                         .padding(.vertical, 5)
-                        .background(viewModel.isReady ? .orange500Main : .gray30)
+                        .background(viewModel.isReady ? .gray30 : .orange500Main)
                         .clipShape(Capsule())
                 }
                 .disabled(!viewModel.isWithinOneHours)
