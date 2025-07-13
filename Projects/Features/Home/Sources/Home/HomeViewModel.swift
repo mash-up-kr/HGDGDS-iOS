@@ -36,15 +36,17 @@ final class HomeViewModel: Reducerable {
         case onAppear
         case loadMoreReservation(status: ReservationListRequest.Status)
     }
-
+    
+    var isExistScheduledMainReservation: Bool { !state.mainReservationInfos.isEmpty }
+    var isExistScheduledSubReservations: Bool {
+        !state.scheduledReservationInfos.isEmpty
+    }
+    var isExistCompleteReservation: Bool { !state.completedReservationInfos.isEmpty }
+    
     struct State {
         var selectedStatusTab: ReservationStatusTab = .scheduled
         var selectedReservationIndex: Int = 0
         
-        var isExistScheduledMainReservation: Bool { !mainReservationInfos.isEmpty }
-        var isExistScheduledSubReservations: Bool { !scheduledReservationInfos.isEmpty }
-        var isExistCompleteReservation: Bool { !completedReservationInfos.isEmpty }
-
         var mainReservationInfos: [ReservationInfo] = []
         var scheduledReservationInfos: [ReservationInfo] = []
         var completedReservationInfos: [ReservationInfo] = []

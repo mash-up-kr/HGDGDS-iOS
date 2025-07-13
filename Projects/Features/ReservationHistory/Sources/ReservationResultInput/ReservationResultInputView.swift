@@ -71,9 +71,17 @@ struct ReservationResultInputView: View {
                 "",
                 selection: .init(
                     get: { viewModel.successReservationTime ?? .now },
-                    set: { viewModel.reduce(.didChangeTime($0)) }
+                    set: {
+                        viewModel.reduce(.didChangeTime($0))
+                        let selectedDate = viewModel.successReservationDate ?? .now
+                        let fullDateTime = selectedDate.addingTimeInterval($0.timeIntervalSinceNow)
+                        if fullDateTime > Date.now {
+                            viewModel.reduce(.didChangeTime($0))
+                        } else {
+                            viewModel.reduce(.didChangeTime(.now))
+                        }
+                    }
                 ),
-                in: Date.now...,
                 displayedComponents: [.hourAndMinute]
             )
             .datePickerStyle(.wheel)

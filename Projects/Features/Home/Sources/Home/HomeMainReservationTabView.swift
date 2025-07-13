@@ -36,6 +36,7 @@ struct HomeMainReservationTabView: View {
                 .padding(.bottom, HomeUIConstans.bottomPadding)
                 .tag(index)
             }
+            .toolbarVisibility(.hidden, for: .tabBar)
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         .frame(height: mainReservationTabViewHeight)
@@ -64,28 +65,20 @@ private struct MainReservationView: View {
     let reservationInfo: ReservationInfo
     let isShowSubReservationCardList: Bool
     let action: () -> Void
-    
-    @State var countDownTimer: CountDownTimerManager = .init()
-    
-    var dDay: Int { reservationInfo.reservationDatetime.dDayValue() }
 
     var body: some View {
         VStack(spacing: 0) {
             headerText
-            
+                .background(alignment: .top) {
+                    categoryImage
+                }
             if isShowSubReservationCardList {
                 Spacer().frame(height: 42)
             } else {
                 Spacer().frame(maxHeight: 70)
             }
             
-            ReservationTimerView(
-                category: reservationInfo.categoryType,
-                dDay: dDay,
-                hours: countDownTimer.hours,
-                minutes: countDownTimer.minutes,
-                seconds: countDownTimer.seconds
-            )
+            ReservationTimerView(reservationInfo: reservationInfo)
             
             Spacer().frame(minHeight: 33)
             
@@ -95,13 +88,7 @@ private struct MainReservationView: View {
         }
         .padding(.top, isShowSubReservationCardList ? 20 : 44)
         .padding(.horizontal, 16)
-        .onAppear {
-            countDownTimer.setupTime(endDate: reservationInfo.reservationDatetime)
-            countDownTimer.start()
-        }
-        .onDisappear {
-            countDownTimer.stop()
-        }
+        
     }
     
     private var headerText: some View {
@@ -110,14 +97,27 @@ private struct MainReservationView: View {
             .foregroundStyle(.gray0White)
             .shadow(color: reservationInfo.categoryType.darkColor.color, radius: 20)
     }
+    
+    @ViewBuilder
+    private var categoryImage: some View {
+        reservationInfo.categoryType.image
+            .resizable()
+            .frame(354)
+            .transition(.move(edge: .leading).combined(with: .opacity))
+    }
 }
 
 private struct ReservationTimerView: View {
+    @State private var countDownTimer: CountDownTimerManager = .init()
     let category: ReservationCategoryType
-    var dDay: Int
-    var hours: String
-    var minutes: String
-    var seconds: String
+    let endDate: Date
+    let dDay: Int
+    
+    init(reservationInfo: ReservationInfo) {
+        self.category = reservationInfo.categoryType
+        self.endDate = reservationInfo.reservationDatetime
+        self.dDay = reservationInfo.reservationDatetime.dDayValue()
+    }
     
     var body: some View {
         VStack(spacing: 8) {
@@ -125,7 +125,7 @@ private struct ReservationTimerView: View {
             
             HStack(spacing: 4) {
                 TimerView(
-                    time: hours,
+                    time: countDownTimer.hours,
                     description: "시간",
                     backgroundColor: category.opacityColor.color
                 )
@@ -133,7 +133,7 @@ private struct ReservationTimerView: View {
                 colon
                 
                 TimerView(
-                    time: minutes,
+                    time: countDownTimer.minutes,
                     description: "분",
                     backgroundColor: category.opacityColor.color
                 )
@@ -141,11 +141,18 @@ private struct ReservationTimerView: View {
                 colon
                 
                 TimerView(
-                    time: seconds,
+                    time: countDownTimer.seconds,
                     description: "초",
                     backgroundColor: category.opacityColor.color
                 )
             }
+        }
+        .onAppear {
+            countDownTimer.setupTime(endDate: endDate)
+            countDownTimer.start()
+        }
+        .onDisappear {
+            countDownTimer.stop()
         }
     }
     

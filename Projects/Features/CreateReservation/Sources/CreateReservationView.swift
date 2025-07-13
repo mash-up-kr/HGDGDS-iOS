@@ -77,9 +77,16 @@ struct CreateReservationView: View {
                     "",
                     selection: .init(
                         get: { viewModel.selectedTime ?? .now },
-                        set: { viewModel.reduce(.didSelectTime($0)) }
+                        set: {
+                            let selectedDate = viewModel.selectedDate ?? .now
+                            let fullDateTime = selectedDate.addingTimeInterval($0.timeIntervalSinceNow)
+                            if fullDateTime > Date.now {
+                                viewModel.reduce(.didSelectTime($0))
+                            } else {
+                                viewModel.reduce(.didSelectTime(.now))
+                            }
+                        }
                     ),
-                    in: Date.now...,
                     displayedComponents: [.hourAndMinute]
                 )
                 .datePickerStyle(.wheel)

@@ -29,24 +29,34 @@ struct HomeView: View {
                 .ignoresSafeArea()
 
             ScrollView {
-                VStack(spacing: 0) {
+                LazyVStack(spacing: 0) {
                     header
-                    
-                    TransitionTabSwitcherView(selectedTab: viewModel.selectedStatusTab) {
+                    if viewModel.selectedStatusTab == .scheduled {
                         scheduledReservationView
-                    } completedView: {
+                            .transition(
+                                .asymmetric(
+                                    insertion: .move(edge: .leading),
+                                    removal: .move(edge: .trailing)
+                                )
+                                .combined(with: .opacity)
+                            )
+                    } else if viewModel.selectedStatusTab == .completed {
                         completedReservationView
+                            .transition(
+                                .asymmetric(
+                                    insertion: .move(edge: .trailing),
+                                    removal: .move(edge: .leading)
+                                )
+                                .combined(with: .opacity)
+                            )
                     }
                 }
                 .padding(.bottom, UIConstant.tabBarHeight)
                 .fillMaxSize(.top)
-                .background(alignment: .top) {
-                    categoryImage
-                }
+               
             }
         }
-        .animation(.easeOut(duration: 0.35), value: viewModel.selectedStatusTab)
-        .animation(.easeInOut(duration: 0.25), value: viewModel.selectedReservationIndex)
+        .animation(.easeInOut(duration: 0.2), value: viewModel.selectedStatusTab)
         .onAppear {
             tabManager.setTabBarHidden(false)
             viewModel.reduce(.onAppear)
@@ -134,23 +144,6 @@ struct HomeView: View {
         }
     }
     
-    private var categoryImage: some View {
-        TransitionTabSwitcherView(selectedTab: viewModel.selectedStatusTab) {
-            Group {
-                if viewModel.isExistScheduledMainReservation {
-                    viewModel.mainReservationInfos[safe: viewModel.selectedReservationIndex]?.categoryType.image
-                        .resizable()
-                        .frame(354)
-                        .offset(y: viewModel.isExistScheduledSubReservations ? 32 : 96)
-                        .transition(.move(edge: .leading).combined(with: .opacity))
-                }
-            }
-        } completedView: {
-            Color.clear
-                .transition(.move(edge: .trailing).combined(with: .opacity))
-        }
-    }
-    
     private var header: some View {
         ReservationStatusToggle(selectedTab: $viewModel.state.selectedStatusTab)
             .frame(width: 154, height: 40)
@@ -159,6 +152,7 @@ struct HomeView: View {
 }
 
 private struct ReservationStatusToggle: View {
+    @Namespace var namespace
     @Binding var selectedTab: ReservationStatusTab
 
     var body: some View {
@@ -167,7 +161,6 @@ private struct ReservationStatusToggle: View {
             
             tabItem(type: .completed)
         }
-        .animation(.easeInOut, value: selectedTab)
         .background(.opacityBlack10)
         .clipShape(Capsule())
         .frame(width: 154, height: 40)
@@ -185,10 +178,15 @@ private struct ReservationStatusToggle: View {
                 .background {
                     if selectedTab == type {
                         Capsule()
-                            .foregroundStyle(HGColors.gray0White)
+                            .foregroundStyle(HGColors.gray0White.color)
                             .padding([.vertical, type == .scheduled ? .leading : .trailing], 4)
+                            .matchedGeometryEffect(
+                                id: "tabItem",
+                                in: namespace.self
+                            )
                     }
                 }
+                .animation(.spring(bounce: 0.35), value: selectedTab)
         }
     }
     
@@ -198,24 +196,6 @@ private struct ReservationStatusToggle: View {
             selectedTab == .scheduled ? .gray90 : .gray40
         case .completed:
             selectedTab == .completed ? .gray90 : .gray0White
-        }
-    }
-}
-
-private struct TransitionTabSwitcherView<FirstView: View, SecondView: View>: View {
-    let selectedTab: ReservationStatusTab
-    let scheduledView: () -> FirstView
-    let completedView: () -> SecondView
-
-    var body: some View {
-        ZStack {
-            if selectedTab == .scheduled {
-                scheduledView()
-                    .transition(.move(edge: .leading).combined(with: .opacity))
-            } else if selectedTab == .completed {
-                completedView()
-                    .transition(.move(edge: .trailing).combined(with: .opacity))
-            }
         }
     }
 }
