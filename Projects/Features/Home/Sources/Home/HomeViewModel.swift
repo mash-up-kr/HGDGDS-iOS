@@ -59,7 +59,6 @@ final class HomeViewModel: Reducerable {
             completedReservationPage = 1
             scheduledPaginationMetadata = .init()
             completedPaginationMetadata = .init()
-            isInitialFetching = false
             Task { @MainActor in
                 isInitialFetching = true
                 await getReservationList(page: scheduledReservationPage, status: .after)

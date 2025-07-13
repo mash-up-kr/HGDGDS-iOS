@@ -130,7 +130,7 @@ struct ReservationView: View {
                     .resizable()
                     .frame(16)
                     .foregroundStyle(.opacityWhite30)
-                Text(viewModel.reservation.reservationDatetime?.formatted(with: .ahhmm) ?? "")
+                Text(viewModel.reservation.reservationDatetime?.formatted(with: .ahhmmKorean) ?? "")
                     .setTypo(.body_14_bold)
                     .foregroundStyle(.opacityWhite60)
             }
@@ -240,7 +240,7 @@ struct ReservationView: View {
                         .foregroundStyle(.white)
                         .padding(.horizontal, 15)
                         .padding(.vertical, 5)
-                        .background(viewModel.isReady ? .gray30 : .orange500Main)
+                        .background(viewModel.isWithinOneHours ? (viewModel.isReady ? .gray30 : .orange500Main) : .gray30)
                         .clipShape(Capsule())
                 }
                 .disabled(!viewModel.isWithinOneHours)
