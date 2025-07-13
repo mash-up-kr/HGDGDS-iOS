@@ -8,5 +8,12 @@
    Copyright (c) 2025 ___ORGANIZATIONNAME___. All rights reserved.
 -->
 <plist version="1.0">
-<dict/>
+<dict>
+    <key>aps-environment</key>
+    <string>development</string>
+    <key>com.apple.developer.associated-domains</key>
+    <array>
+        <string>applinks:hgdgds.duckdns.org</string>
+    </array>
+</dict>
 </plist>

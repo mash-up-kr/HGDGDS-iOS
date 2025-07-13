@@ -1,8 +1,7 @@
 //
 //  Project.stencil
-//  Config
 //
-//  Created by iOS신상우 on 4/26/25.
+//  Created by {{ author }} on {{ date }}.
 //
 
 import ProjectDescription
@@ -14,12 +13,11 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "{{ name }}Feature",
-            deploymentTargetsVersion: "\(Constants.targetVersion)",
             dependencies: [
-                DependencyContainer.{{ name }}Domain,
-                DependencyContainer.HGCommon,
-                DependencyContainer.HGLogger,
-                DependencyContainer.HGDesignSystem,
+                .domainProject(with: .{{ name|lowerFirstWord }}),
+                .coreProject(with: .hgCommon),
+                .coreProject(with: .hgLogger),
+                .uiProject(with: .hgDesignSystem)
             ],
             hasResources: false
         )

@@ -1,10 +1,9 @@
 //
-//  UserDataProject.swift
+//  UserData.swift
 //  User
 //
-//  Created by  on .
+//  Created by 김남수 on 25/06/14.
 //
-
 
 import ProjectDescription
 import ProjectDescriptionHelpers
@@ -15,13 +14,9 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "UserData",
-            deploymentTargetsVersion: Constants.targetVersion,
             dependencies: [
-                DependencyContainer.UserDomain,
-                DependencyContainer.HGNetwork,
-                DependencyContainer.HGCommon,
-                DependencyContainer.HGLogger,
-                DependencyContainer.HGDataBase
+                .domainProject(with: .user),
+                .coreProject(with: .hgNetwork)
             ],
             hasResources: false
         )

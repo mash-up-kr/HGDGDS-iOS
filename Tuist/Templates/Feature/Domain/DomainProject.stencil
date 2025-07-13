@@ -1,8 +1,8 @@
 //
-//  DomainProject.stencil
-//  Config
+//  {{ name }}Domain.swift
+//  {{ name }}
 //
-//  Created by iOS신상우 on 4/26/25.
+//  Created by {{ author }} on {{ date }}.
 //
 
 import ProjectDescription
@@ -14,10 +14,7 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "{{ name }}Domain",
-            deploymentTargetsVersion: "\(Constants.targetVersion)",
-            dependencies: [
-
-            ],
+            dependencies: [ ],
             hasResources: false
         )
     ]

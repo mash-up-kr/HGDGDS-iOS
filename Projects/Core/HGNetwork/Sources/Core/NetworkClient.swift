@@ -1,0 +1,158 @@
+//
+//  NetworkClient.swift
+//  HGNetwork
+//
+//  Created by 박병호 on 5/19/25.
+//
+
+import Foundation
+
+import Alamofire
+
+final class NetworkClient: Networkable {
+    private let session: Session
+    private let interceptor: any RequestInterceptor = HGIntercepter()
+    private let jsonDecoder: JSONDecoder = {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        return decoder
+    }()
+    
+    init(session: Session) {
+        self.session = session
+    }
+    
+    // MARK: - Send
+    func send<T: EndPointable & Sendable>(
+        _ request: T
+    ) async throws(NetworkError) -> T.Response? {
+        let requestInterceptor: RequestInterceptor? = if request.isNeedAuthorization {
+            interceptor
+        } else {
+            nil
+        }
+        let response = try await _send(request, interceptor: requestInterceptor)
+        return try handleResponse(response)
+    }
+
+    // MARK: - Upload
+    func uploadPresignURL<T:PresignedUploadable & Sendable>(
+        _ request: T
+    ) async throws(NetworkError) -> T.Response? {
+        do {
+            let response = try await _uploadPresignURL(request)
+            return try handleResponse(response)
+        } catch {
+            if case .none = error {
+                return nil
+            } else {
+                throw error
+            }
+        }
+    }
+}
+
+private extension NetworkClient {
+    func handleResponse<T>(_ response: DataResponse<T, AFError>) throws(NetworkError) -> T? {
+        switch response.result {
+        case let .success(model):
+            return model
+        case let .failure(error):
+            guard let statusCode = response.response?.statusCode else {
+                throw mapToNetworkError(error, errorModel: nil)
+            }
+            var errorModel: HGErrorResponse?
+            
+            if !(200...299).contains(statusCode),
+               let errorData = response.data {
+                errorModel = try? jsonDecoder.decode(HGErrorResponse.self, from: errorData)
+            }
+            
+            throw mapToNetworkError(error, errorModel: errorModel)
+        }
+    }
+    
+    func _send<T: EndPointable>(_ request: T, interceptor: RequestInterceptor?) async throws(NetworkError) -> DataResponse<T.Response, AFError> {
+        guard let url = request.url else {
+            throw .invalidURL
+        }
+        
+        return await session
+            .request(
+                url,
+                method: request.method.toAFMethod,
+                parameters: request.parameters,
+                encoding: request.encoding.toAFEndcoding,
+                headers: request.requestHeaders.toAFHeaders,
+                interceptor: interceptor
+            )
+            .validate()
+            .serializingDecodable(T.Response.self, decoder: jsonDecoder)
+            .response
+    }
+    
+    func _uploadPresignURL<T: PresignedUploadable>(_ request: T) async throws(NetworkError) -> DataResponse<T.Response, AFError> {
+        guard let url = request.url else {
+            throw .invalidURL
+        }
+       
+        return await session.upload(
+            request.data,
+            to: url,
+            method: request.method.toAFMethod,
+            headers: request.headers?.toAFHeaders,
+            interceptor: nil
+        )
+        .validate()
+        .serializingDecodable(T.Response.self, decoder: jsonDecoder)
+        .response
+    }
+    
+    func mapToNetworkError(_ error: Error, errorModel: HGErrorResponse?) -> NetworkError {
+        if let afError = error as? AFError {
+            switch afError {
+            case .sessionTaskFailed(let underlyingError):
+                if let urlError = underlyingError as? URLError {
+                    switch urlError.code {
+                    case .notConnectedToInternet:
+                        return .noInternet
+                    case .timedOut:
+                        return .timeout
+                    default:
+                        return .underlying(urlError)
+                    }
+                }
+                return .underlying(underlyingError)
+                
+            case .responseValidationFailed(let reason):
+                switch reason {
+                case .unacceptableStatusCode(let code):
+                    if code == 401 {
+                        return .unauthorized
+                    } else if let errorModel {
+                        return .customError(statusCode: errorModel.code)
+                    } else {
+                        return .requestFailed(statusCode: code)
+                    }
+                default:
+                    return .underlying(afError)
+                }
+                
+            case .responseSerializationFailed(let reason):
+                switch reason {
+                case .decodingFailed(let decodeError):
+                    return .decodingFailed(decodeError)
+                case .inputDataNilOrZeroLength:
+                    return .none
+                default:
+                    return .decodingFailed(afError)
+                }
+                
+            default:
+                return .underlying(afError)
+            }
+        }
+        
+        return .underlying(error)
+    }
+}

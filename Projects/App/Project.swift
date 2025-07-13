@@ -15,12 +15,32 @@ let project = Project(
         .makeAppTarget(
             name: "HGDGDS-iOS",
             deploymentTargetsVersion: Constants.targetVersion,
-            infoPlist: [:],
+            infoPlist: defaultPlist,
             entitlements: "Configs/HGDGDS.entitlements",
             scripts: [],
             dependencies: [
-                DependencyContainer.HGLogger,
-                DependencyContainer.HGCommon,
+                .featureProject(with: .onboarding),
+                .featureProject(with: .home),
+                .featureProject(with: .createReservation),
+                .featureProject(with: .reservation),
+                .featureProject(with: .reservationHistory),
+                .featureProject(with: .myPage),
+                .domainProject(with: .home),
+                .domainProject(with: .user),
+                .domainProject(with: .reservation),
+                .domainProject(with: .createReservation),
+                .dataProject(with: .home),
+                .dataProject(with: .user),
+                .dataProject(with: .createReservation),
+                .dataProject(with: .reservation),
+                .dataProject(with: .reservationHistory),
+                .coreProject(with: .hgImageUploader),
+                .coreProject(with: .hgLogger),
+                .coreProject(with: .hgCommon),
+                .coreProject(with: .hgNetwork),
+                .uiProject(with: .hgDesignSystem),
+                .external(.firebaseCore),
+                .external(.firebaseMessaging)
             ],
             settings: .defaultSettings
         ),
@@ -35,5 +55,6 @@ let project = Project(
             dependencies: [.target(name: "HGDGDS-iOS")],
             settings: .defaultSettings
         ),
-    ]
+    ],
+    resourceSynthesizers: []
 )

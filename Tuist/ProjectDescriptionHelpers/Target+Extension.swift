@@ -21,7 +21,7 @@ public extension Target {
     ) -> Target {
         let appTaget: Target = .target(
             name: name,
-            destinations: .iOS,
+            destinations: [.iPhone],
             product: .app,
             bundleId: "\(Constants.organizationName).\(name)",
             deploymentTargets: .iOS(deploymentTargetsVersion),
@@ -64,8 +64,8 @@ public extension Target {
 public extension Target {
     static func makeDynamicFrameworkTarget(
         name: String,
-        deploymentTargetsVersion: String,
         infoPlist: [String : Plist.Value] = [:],
+        sources: SourceFilesList = ["Sources/**"],
         dependencies: [TargetDependency],
         hasResources: Bool = true
     ) -> Target {
@@ -74,9 +74,9 @@ public extension Target {
             destinations: .iOS,
             product: .framework,
             bundleId: "\(Constants.organizationName).\(name)",
-            deploymentTargets: .iOS(deploymentTargetsVersion),
-            infoPlist: .default,
-            sources: ["Sources/**"],
+            deploymentTargets: .iOS(Constants.targetVersion),
+            infoPlist: .extendingDefault(with: infoPlist),
+            sources: sources,
             resources: hasResources ? ["Resources/**"] : nil,
             dependencies: dependencies,
             settings: .defaultSettings

@@ -8,8 +8,9 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "HGCommon",
-            deploymentTargetsVersion: Constants.targetVersion,
-            dependencies: [],
+            dependencies: [
+                .external(.swinject)
+            ],
             hasResources: false
         )
     ]

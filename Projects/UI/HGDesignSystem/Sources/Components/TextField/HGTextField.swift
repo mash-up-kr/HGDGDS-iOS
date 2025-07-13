@@ -1,0 +1,178 @@
+//
+//  HGTextField.swift
+//  HGDesignSystem
+//
+//  Created by iOS신상우 on 6/21/25.
+//
+
+import SwiftUI
+
+public struct HGTextField: View {
+    @Environment(\.isEnabled) private var isEnabled: Bool
+    @FocusState private var isFocused: Bool
+    
+    private var title: String?
+    private var hiddenClearButton: Bool = false
+    private var errorMessage: String?
+    private var required: Bool = false
+    
+    private let size: TextFieldSize
+    private let placeholder: String
+    private let maxCount: Int?
+    
+    private var hiddenHelperArea: Bool {
+        errorMessage == nil && maxCount == nil
+    }
+    
+    @Binding var text: String
+    
+    public init(
+        title: String? = nil,
+        text: Binding<String>,
+        placeholder: String,
+        size: TextFieldSize = .default,
+        maxCount: Int? = nil,
+        hiddenClearButton: Bool = false,
+        errorMessage: String? = nil,
+        required: Bool = false
+    ) {
+        self.title = title
+        self.placeholder = placeholder
+        self.size = size
+        self.maxCount = maxCount
+        self._text = text
+        self.hiddenClearButton = hiddenClearButton
+        self.errorMessage = errorMessage
+        self.required = required
+    }
+    
+    public var body: some View {
+        VStack(spacing: .zero) {
+            titleArea
+            inputArea
+            if !hiddenHelperArea { helperArea }
+        }
+        .if(maxCount != nil) {
+            $0.onChange(of: text) { _, newValue in
+                guard let maxCount, text.count > maxCount else { return }
+                withAnimation(nil) {
+                    self.text = String(newValue.prefix(maxCount))
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var titleArea: some View {
+        if let title {
+            HGSectionHeader(
+                title: title,
+                isRequired: required
+            )
+            .padding(.bottom, 8)
+        }
+    }
+    
+    private var inputArea: some View {
+        let state = makeState()
+        
+        return HStack(spacing: 8) {
+            TextField("", text: $text)
+                .focused($isFocused)
+                .autocorrectionDisabled()
+                .textInputAutocapitalization(.never)
+                .foregroundStyle(.gray95)
+                .setTypo(size.font)
+                .frame(height: 24)
+                .multilineTextAlignment(.leading)
+                .background(alignment: .leading) {
+                    if text.isEmpty {
+                        Text(placeholder)
+                            .setTypo(size.font)
+                            .foregroundStyle(HGColors.gray30)
+                    }
+                }
+            
+            if !hiddenClearButton && isFocused {
+                Button {
+                    withAnimation {
+                        text.removeAll()
+                    }
+                } label: {
+                    HGIcons.closeInbox.image
+                        .resizable()
+                        .frame(24)
+                        .foregroundStyle(HGColors.gray40)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.bottom, 6)
+        .overlay(alignment: .bottom) {
+            Rectangle()
+                .fill(underLineColor(state: state))
+                .frame(height: 1)
+        }
+    }
+    
+    private var helperArea: some View {
+        HStack(spacing: 8) {
+            if let errorMessage {
+                Text(errorMessage)
+                    .setTypo(.caption_12_medium)
+                    .foregroundStyle(.redMain)
+            }
+            Spacer()
+            if let maxCount {
+                Text("\(text.count) / \(maxCount)")
+                    .setTypo(.caption_12_medium)
+                    .foregroundStyle(.gray50)
+                    .if(maxCount >= text.count) {
+                        $0
+                            .contentTransition(.numericText(countsDown: true))
+                            .animation(.default, value: text)
+                    }
+            }
+        }
+        .padding(.top, 4)
+    }
+}
+
+// MARK: - Private Method
+private extension HGTextField {
+    func makeState() -> TextFieldState {
+        if !self.isEnabled {
+            return .disabled
+        }
+        
+        if self.isFocused {
+            return .focused
+        }
+        
+        return .normal
+    }
+    
+    func underLineColor(state: TextFieldState) -> Color {
+        switch state {
+        case .normal, .disabled, .error:
+            return HGColors.gray40.color
+        case .focused:
+            return HGColors.orange500Main.color
+        }
+    }
+}
+
+#Preview {
+    @Previewable @State var text: String = "123123"
+    
+    UIFont.registerAllFont()
+    
+    return HGTextField(
+        title: "제목",
+        text: $text,
+        placeholder: "닉네임을 입력해주세요",
+        size: .default,
+        maxCount: 6
+    )
+    .padding(.horizontal, 16)
+}

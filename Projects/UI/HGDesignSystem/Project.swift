@@ -15,11 +15,12 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "HGDesignSystem",
-            deploymentTargetsVersion: Constants.targetVersion,
             dependencies: [
-                ThirdParty.Nuke
+                .external(.nukeUI)
             ]
         )
     ],
-    resourceSynthesizers: .default
+    resourceSynthesizers: [
+        .custom(name: "Assets", parser: .assets, extensions: ["xcassets"])
+    ]
 )

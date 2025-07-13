@@ -1,0 +1,65 @@
+//
+//  RootViewModel.swift
+//  HGDGDS-iOS
+//
+//  Created by iOS신상우 on 6/30/25.
+//
+
+import Foundation
+import HGCommon
+import UserDomain
+
+@Observable
+final class RootViewModel: Reducerable {
+    @ObservationIgnored
+    @Dependency private var keychain: KeychainManagerable
+    
+    var state: State = .init()
+    
+    struct State {
+        var routeState: RouteType = .splash
+    }
+    
+    enum Action {
+        case validateAccessToken
+        case signUpComplete
+        case onSplashAppear
+    }
+    
+    func reduce(_ action: Action) {
+        switch action {
+        case .validateAccessToken:
+            Task {
+                if await validateAccessToken() {
+                    state.routeState = .mainTab
+                } else {
+                    state.routeState = .onboarding
+                }
+            }
+        case .onSplashAppear:
+            Task {
+                try? await Task.sleep(for: .seconds(1))
+                reduce(.validateAccessToken)
+            }
+        case .signUpComplete:
+            state.routeState = .mainTab
+        }
+    }
+    
+    private func validateAccessToken() async -> Bool {
+        if let _ = try? await keychain.readKeychain(key: .accessToken) {
+            await UserManager.shared.requestUserInfo()
+            return true
+        } else {
+            return false
+        }
+    }
+}
+
+extension RootViewModel {
+    enum RouteType: String {
+        case onboarding
+        case mainTab
+        case splash
+    }
+}

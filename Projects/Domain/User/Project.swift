@@ -1,8 +1,8 @@
 //
-//  DomainProject.stencil
-//  Config
+//  UserDomain.swift
+//  User
 //
-//  Created by iOS신상우 on 4/26/25.
+//  Created by 김남수 on 25/06/14.
 //
 
 import ProjectDescription
@@ -14,8 +14,9 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: "UserDomain",
-            deploymentTargetsVersion: "\(Constants.targetVersion)",
             dependencies: [
+                .coreProject(with: .hgCommon),
+                .coreProject(with: .hgLogger)
             ],
             hasResources: false
         )

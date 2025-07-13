@@ -17,7 +17,6 @@ let project = Project(
     targets: [
         .makeDynamicFrameworkTarget(
             name: name,
-            deploymentTargetsVersion: Constants.targetVersion,
             dependencies: [],
             hasResources: false
         )
