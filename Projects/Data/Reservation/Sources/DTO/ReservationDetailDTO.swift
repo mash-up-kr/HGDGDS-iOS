@@ -81,7 +81,7 @@ extension ReservationDetailDTO {
             reservationId: self.reservationId,
             title: self.title,
             category: .init(rawValue: self.category) ?? .activity,
-            reservationDatetime: self.reservationDatetime.toDate(with: .iso8601ms),
+            reservationDatetime: self.reservationDatetime.toDate(with: .iso8601),
             description: self.description,
             linkUrl: self.linkUrl,
             images: self.images,
