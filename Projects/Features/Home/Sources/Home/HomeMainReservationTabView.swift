@@ -154,6 +154,11 @@ private struct ReservationTimerView: View {
         .onDisappear {
             countDownTimer.stop()
         }
+        .onChange(of: endDate) { _, newValue in
+            countDownTimer.stop()
+            countDownTimer.setupTime(endDate: newValue)
+            countDownTimer.start()
+        }
     }
     
     private var dDayText: some View {
