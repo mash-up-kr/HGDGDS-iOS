@@ -13,6 +13,7 @@ import ReservationDomain
 import ReservationFeatureInterface
 import HGDesignSystem
 import SwiftUI
+import UserDomain
 import Nuke
 
 @Observable
@@ -23,6 +24,7 @@ final class ShareReservationViewModel: Reducerable {
     
     /// 예약장을 받는 사람 보내는 사람의 액션을 구분하기 위함
     let shareViewType: ShareViewType
+    var hostProfile: ProfileType?
     let reservationId: Int
     
     @ObservationIgnored
@@ -100,6 +102,7 @@ final class ShareReservationViewModel: Reducerable {
                     }
                     
                     await MainActor.run {
+                        self.hostProfile = ProfileType(rawValue: reservationDetail.host.profileImageCode)
                         self.state.isLoading = false
                         self.state.reservation = reservationDetail
                     }

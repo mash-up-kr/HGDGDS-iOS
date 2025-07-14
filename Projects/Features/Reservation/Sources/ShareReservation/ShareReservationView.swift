@@ -96,18 +96,18 @@ struct ShareReservationView: View {
     private var cardFrontView: some View {
         VStack(spacing: .zero) {
             HStack(spacing: 4) {
-                LazyImage(url: .init(string: viewModel.reservation.host.profileImageName)) { state in
-                    if let image = state.image {
-                        image
-                            .resizable()
-                            .scaledToFit()
-                            .frame(24)
-                    } else {
-                        HGColors.opacityBlack10.color
-                            .frame(24)
-                    }
+                if let hostProfile = viewModel.hostProfile {
+                    hostProfile.image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(24)
+                        .clipShape(.circle)
+                } else {
+                    HGColors.opacityBlack10.color
+                        .frame(24)
+                        .clipShape(.circle)
                 }
-                .clipShape(.circle)
+                
                 Text(viewModel.reservation.host.nickName)
                     .setTypo(.body_14_bold)
                     .foregroundStyle(.white)

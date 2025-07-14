@@ -27,12 +27,12 @@ struct ReservationDetailDTO: Decodable {
     struct HostDTO: Decodable {
         let hostId: Int
         let nickname: String
-        let profileImageName: String
+        let profileImageCode: String
         
-        init(hostId: Int, nickname: String, profileImageName: String) {
+        init(hostId: Int, nickname: String, profileImageCode: String) {
             self.hostId = hostId
             self.nickname = nickname
-            self.profileImageName = profileImageName
+            self.profileImageCode = profileImageCode
         }
     }
     
@@ -70,7 +70,7 @@ extension ReservationDetailDTO.HostDTO {
         .init(
             hostId: self.hostId,
             nickName: self.nickname,
-            profileImageName: self.profileImageName
+            profileImageCode: self.profileImageCode
         )
     }
 }
@@ -81,7 +81,7 @@ extension ReservationDetailDTO {
             reservationId: self.reservationId,
             title: self.title,
             category: .init(rawValue: self.category) ?? .activity,
-            reservationDatetime: self.reservationDatetime.toDate(with: .iso8601ms),
+            reservationDatetime: self.reservationDatetime.toDate(with: .iso8601),
             description: self.description,
             linkUrl: self.linkUrl,
             images: self.images,
@@ -89,8 +89,8 @@ extension ReservationDetailDTO {
             currentUser: self.currentUser.toDomain,
             participantCount: self.participantCount,
             maxParticipants: self.maxParticipants,
-            createdAt: self.createdAt.toDate(with: .iso8601ms),
-            updatedAt: self.updatedAt.toDate(with: .iso8601ms)
+            createdAt: self.createdAt.toDate(with: .iso8601),
+            updatedAt: self.updatedAt.toDate(with: .iso8601)
         )
     }
 }
