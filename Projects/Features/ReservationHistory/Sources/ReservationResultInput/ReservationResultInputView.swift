@@ -15,9 +15,14 @@ struct ReservationResultInputView: View {
     @FocusState private var isFocused: Bool
     @State private var coordinator: any Coordinatorable
     
-    init(coordinator: any Coordinatorable, reservationID: Int) {
+    init(coordinator: any Coordinatorable, reservationID: Int, title: String) {
         self.coordinator = coordinator
-        self._viewModel = State(initialValue: .init(reservationID: reservationID))
+        self._viewModel = State(
+            initialValue: .init(
+                reservationID: reservationID,
+                title: title
+            )
+        )
     }
     
     var body: some View {
@@ -72,7 +77,6 @@ struct ReservationResultInputView: View {
                 selection: .init(
                     get: { viewModel.successReservationTime ?? .now },
                     set: {
-                        viewModel.reduce(.didChangeTime($0))
                         let selectedDate = viewModel.successReservationDate ?? .now
                         let fullDateTime = selectedDate.addingTimeInterval($0.timeIntervalSinceNow)
                         if fullDateTime > Date.now {
@@ -98,7 +102,7 @@ struct ReservationResultInputView: View {
         
     private var sectionTitle: some View {
         VStack(spacing: 0) {
-            Text("매쉬업 야구장 직관 모임")
+            Text(viewModel.title)
                 .setTypo(.heading_24_bold)
                 .foregroundStyle(.orange500Main)
             Spacer().frame(height: 2)
