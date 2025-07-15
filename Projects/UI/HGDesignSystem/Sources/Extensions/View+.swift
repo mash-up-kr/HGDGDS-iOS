@@ -80,12 +80,12 @@ public extension View {
     }
     
     /// 기본 프로그래스 로딩뷰
-    @ViewBuilder func isLoading(_ state: Bool) -> some View {
+    @ViewBuilder func isLoading(_ state: Bool, opacity: CGFloat = 0.25) -> some View {
         self
             .disabled(state)
             .overlay {
                 if state {
-                    Color.black.opacity(0.25)
+                    Color.black.opacity(opacity)
                         .ignoresSafeArea()
                         .overlay {
                             ProgressView() // TODO: 추후 디자인에 맞게 변경

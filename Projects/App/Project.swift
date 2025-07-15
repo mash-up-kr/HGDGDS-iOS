@@ -40,7 +40,8 @@ let project = Project(
                 .coreProject(with: .hgNetwork),
                 .uiProject(with: .hgDesignSystem),
                 .external(.firebaseCore),
-                .external(.firebaseMessaging)
+                .external(.firebaseMessaging),
+                .external(.branchSDK)
             ],
             settings: .defaultSettings
         ),

@@ -18,11 +18,18 @@ struct ShareReservationView: View {
     
     var body: some View {
         VStack(spacing: .zero) {
-            topArea
-            Spacer().frame(maxHeight: 79)
-            cardView.padding(.horizontal, 32)
-            Spacer()
-            bottomArea
+            if viewModel.reservation == nil {
+                HGColors.gray0White.color
+                    .onAppear {
+                        viewModel.reduce(.fetchReservationInfo)
+                    }
+            } else {
+                topArea
+                Spacer().frame(maxHeight: 79)
+                cardView.padding(.horizontal, 32)
+                Spacer()
+                bottomArea
+            }
         }
         .applyNavigationBar(
             title: "",
@@ -36,25 +43,32 @@ struct ShareReservationView: View {
                 }
             }
         )
-        .background(
-            viewModel.reservation.category.background.image
-                .resizable()
-                .scaledToFill()
-                .ignoresSafeArea()
-        )
-        .background(
-            ActivityView(
-                isPresented: $viewModel.state.isPresentedShareSheet,
-                items: ["kokkok://invite?reservationId=\(viewModel.reservationId)"]
-            )
-        )
-        .onAppear {
-            viewModel.reduce(.fetchReservationInfo)
+        .background{
+            if let reservation = viewModel.reservation {
+                reservation.category.background.image
+                    .resizable()
+                    .scaledToFill()
+                    .ignoresSafeArea()
+            } else {
+                HGColors.gray0White.color
+            }
+        }
+        .background {
+            if let url = DeepLinkPath.invite.generateDeeplinkURL(
+                parameters: ["reservationId":"\(viewModel.reservationId)"]
+            ) {
+                ActivityView(
+                    isPresented: $viewModel.state.isPresentedShareSheet,
+                    items: [url]
+                )
+            } else {
+                EmptyView()
+            }
         }
         .fullScreenCover(isPresented: $viewModel.state.isPresentedImageViewer, content: {
             ImageSwipeView(showIndex: viewModel.selectedImageIndex, images: viewModel.uiImages)
         })
-        .isLoading(viewModel.isLoading)
+        .isLoading(viewModel.isLoading, opacity: 0.01)
     }
     
     private var cardView: some View {
@@ -108,7 +122,7 @@ struct ShareReservationView: View {
                         .clipShape(.circle)
                 }
                 
-                Text(viewModel.reservation.host.nickName)
+                Text(viewModel.reservation?.host.nickName ?? "호스트")
                     .setTypo(.body_14_bold)
                     .foregroundStyle(.white)
                 Text("님이 생성")
@@ -123,15 +137,17 @@ struct ShareReservationView: View {
             
             Spacer()
             
-            HGTagView(
-                style: .medium,
-                title: viewModel.reservation.category.title,
-                textColor: viewModel.reservation.category.tagTextColor,
-                backgroundColor: viewModel.reservation.category.tagBackgroundColor
-            )
-            .padding(.bottom, 5)
+            if let reservation = viewModel.reservation {
+                HGTagView(
+                    style: .medium,
+                    title: reservation.category.title,
+                    textColor: reservation.category.tagTextColor,
+                    backgroundColor: reservation.category.tagBackgroundColor
+                )
+                .padding(.bottom, 5)
+            }
             
-            Text(viewModel.reservation.title)
+            Text(viewModel.reservation?.title ?? "")
                 .setTypo(.display_32_extraBold)
                 .foregroundStyle(.gray95)
                 .padding(.bottom, 1)
@@ -142,7 +158,7 @@ struct ShareReservationView: View {
                     .frame(16)
                     .foregroundStyle(.gray50)
                     .padding(.trailing, 2)
-                Text(viewModel.reservation.reservationDatetime?.formatted(with: .yyyyMMddKorean) ?? "-")
+                Text(viewModel.reservation?.reservationDatetime?.formatted(with: .yyyyMMddKorean) ?? "-")
                     .foregroundStyle(.gray70)
                     .padding(.trailing, 4)
                 
@@ -151,7 +167,7 @@ struct ShareReservationView: View {
                     .frame(16)
                     .foregroundStyle(.gray50)
                     .padding(.trailing, 2)
-                Text(viewModel.reservation.reservationDatetime?.formatted(with: .ahhmmKorean) ?? "-")
+                Text(viewModel.reservation?.reservationDatetime?.formatted(with: .ahhmmKorean) ?? "-")
                     .foregroundStyle(.gray70)
             }
             .setTypo(.body_14_medium)
@@ -160,11 +176,15 @@ struct ShareReservationView: View {
         .padding(.top, 26)
         .padding(.bottom, 29)
         .frame(height: 402)
-        .background(
-            viewModel.reservation.category.card.image
-                .resizable()
-                .scaledToFill()
-        )
+        .background {
+            if let image = viewModel.reservation?.category.card.image {
+                image
+                    .resizable()
+                    .scaledToFill()
+            } else {
+                HGColors.gray15.color
+            }
+        }
         .setRadius(31)
         .strokeOutterBorder(
             HGGradient.strokeGradient.opacity(0.6),
@@ -184,9 +204,9 @@ struct ShareReservationView: View {
             cardDetailHeader(
                 icon: .link,
                 title: "링크",
-                content: viewModel.reservation.linkUrl
+                content: viewModel.reservation?.linkUrl ?? "-"
             ) {
-                guard let url = URL(string: viewModel.reservation.linkUrl),
+                guard let url = URL(string: viewModel.reservation?.linkUrl ?? ""),
                       UIApplication.shared.canOpenURL(url) else {
                     viewModel.reduce(.showInvalidLinkToast)
                     return
@@ -198,18 +218,11 @@ struct ShareReservationView: View {
                 icon: .camera,
                 title: "공유 사진",
                 content: nil,
-                boldContent: "\(viewModel.reservation.images.count)장"
+                boldContent: "\(viewModel.reservation?.images.count ?? 0)장"
             )
             .padding(.bottom, 10)
-            if viewModel.reservation.images.isEmpty {
-                Text("공유된 사진이 없어요")
-                    .setTypo(.caption_12_regular)
-                    .foregroundStyle(.gray50)
-                    .fillMaxWidth(.center)
-                    .frame(height: 87)
-                    .background(.gray10)
-                    .setRadius(10)
-            } else {
+            
+            if let images = viewModel.reservation?.images, images.isNotEmpty {
                 HStack(spacing: .zero) {
                     ForEach(viewModel.uiImages.indices, id: \.self) { i in
                         let uiImage = viewModel.uiImages[i]
@@ -229,6 +242,15 @@ struct ShareReservationView: View {
                         Spacer()
                     }
                 }
+            } else {
+                Text("공유된 사진이 없어요")
+                    .setTypo(.caption_12_regular)
+                    .foregroundStyle(.gray50)
+                    .fillMaxWidth(.center)
+                    .frame(height: 87)
+                    .background(.gray10)
+                    .setRadius(10)
+                
             }
             HGDividerView().padding(.vertical, 12)
             cardDetailHeader(
@@ -237,7 +259,15 @@ struct ShareReservationView: View {
                 content: nil
             )
             .padding(.bottom, 4)
-            if viewModel.reservation.description.isEmpty {
+            if let description = viewModel.reservation?.description, description.isNotEmpty {
+                Text(description)
+                    .setTypo(.body_14_regular)
+                    .fillMaxWidth()
+                    .foregroundStyle(.gray80)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(4)
+                
+            } else {
                 Text("작성된 내용이 없어요")
                     .setTypo(.caption_12_regular)
                     .foregroundStyle(.gray50)
@@ -245,13 +275,6 @@ struct ShareReservationView: View {
                     .padding(.vertical, 12)
                     .background(.gray10)
                     .setRadius(10)
-            } else {
-                Text(viewModel.reservation.description)
-                    .setTypo(.body_14_regular)
-                    .fillMaxWidth()
-                    .foregroundStyle(.gray80)
-                    .multilineTextAlignment(.leading)
-                    .lineLimit(4)
             }
         }
         .padding(.horizontal, 24)

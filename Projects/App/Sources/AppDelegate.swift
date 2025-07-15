@@ -12,6 +12,7 @@ import HGLogger
 import FirebaseCore
 import FirebaseMessaging
 import UserDomain
+import BranchSDK
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
     @Dependency private var keychain: KeychainManagerable
@@ -21,12 +22,21 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
+        configureBranchSDK(launchOptions: launchOptions)
+        configureFireBase()
+        
         Task {
-            configureFireBase()
             await configureNotification(application: application)
         }
 
         return true
+    }
+}
+
+// MARK: - Branch.io 
+extension AppDelegate {
+    func configureBranchSDK(launchOptions: [UIApplication.LaunchOptionsKey : Any]?) {
+        Branch.getInstance().initSession(launchOptions: launchOptions)
     }
 }
 

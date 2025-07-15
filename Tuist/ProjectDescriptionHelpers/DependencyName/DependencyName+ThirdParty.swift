@@ -16,5 +16,6 @@ public extension DependencyName {
         case firebaseCore = "FirebaseCore"
         case firebaseMessaging = "FirebaseMessaging"
         case swinject = "Swinject"
+        case branchSDK = "BranchSDK"
     }
 }
