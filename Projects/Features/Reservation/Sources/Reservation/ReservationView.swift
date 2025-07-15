@@ -430,36 +430,42 @@ struct ReservationView: View {
         }
     }
     
+    @ViewBuilder
     private var sharedPhotosSectionView: some View {
-        makeSectionCardView(icon: .cameraShare, title: "공유된 사진") {
-            HStack(spacing: 5) {
-                let imageItems = Array((viewModel.reservation?.images ?? []).enumerated())
-                ForEach(imageItems, id: \.offset) { index, imageURLString in
-                    Button {
-                        viewModel.reduce(.showImageViewer(index))
-                    } label: {
-                        LazyImage(url: URL(string: imageURLString)) { state in
-                            if let image = state.image {
-                                image
-                                    .resizable()
-                            } else {
-                                HGColors.opacityBlack10.color
+        if let images = viewModel.reservation?.images, images.isNotEmpty {
+            makeSectionCardView(icon: .cameraShare, title: "공유된 사진") {
+                HStack(spacing: 5) {
+                    let imageItems = Array(images.enumerated())
+                    ForEach(imageItems, id: \.offset) { index, imageURLString in
+                        Button {
+                            viewModel.reduce(.showImageViewer(index))
+                        } label: {
+                            LazyImage(url: URL(string: imageURLString)) { state in
+                                if let image = state.image {
+                                    image
+                                        .resizable()
+                                } else {
+                                    HGColors.opacityBlack10.color
+                                }
                             }
+                            .frame(photoGridSize)
+                            .setRadius(16)
+                            .strokeBorder(HGColors.gray20.color, radius: 16, linewidth: 1)
                         }
-                        .frame(photoGridSize)
-                        .setRadius(16)
-                        .strokeBorder(HGColors.gray20.color, radius: 16, linewidth: 1)
                     }
                 }
             }
         }
     }
     
+    @ViewBuilder
     private var descriptionSectionView: some View {
-        makeSectionCardView(icon: .writePencilCircle, title: "설명") {
-            Text(viewModel.reservation?.description ?? "")
-                .setTypo(.body_16_regular)
-                .foregroundStyle(.gray80)
+        if let description = viewModel.reservation?.description, description.isNotEmpty {
+            makeSectionCardView(icon: .writePencilCircle, title: "설명") {
+                Text(description)
+                    .setTypo(.body_16_regular)
+                    .foregroundStyle(.gray80)
+            }
         }
     }
     

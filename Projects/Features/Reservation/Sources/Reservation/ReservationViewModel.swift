@@ -90,8 +90,8 @@ final class ReservationViewModel: Reducerable {
                 await getReservationMembers(reservationId: reservationId)
             }
         case let .showImageViewer(index):
+            guard let images = state.reservation?.images else { return }
             Task { @MainActor in
-                guard let images = state.reservation?.images else { return }
                 state.sharedImages = await fetchImages(urlStrings: images)
                 state.selectedImageIndex = index
                 state.isShowImageViewer = true
