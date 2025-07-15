@@ -88,7 +88,7 @@ struct MainReservationCard: View {
                         .frame(16)
                         .foregroundStyle(.gray40)
                     
-                    Text(reservationInfo.reservationDatetime.formatted(with: .ahhKorean))
+                    Text(reservationInfo.reservationDatetime.formatted(with: .ahhmmKorean))
                         .setTypo(.body_14_medium)
                         .foregroundStyle(.gray50)
                 }

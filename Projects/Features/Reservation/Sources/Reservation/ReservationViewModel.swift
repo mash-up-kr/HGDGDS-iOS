@@ -44,7 +44,7 @@ final class ReservationViewModel: Reducerable {
     }
     
     struct State {
-        var reservation: ReservationDetail = .mockData
+        var reservation: ReservationDetail?
         var members: [ReservationMember] = []
         var me: ReservationMember = ReservationMember()
         
@@ -58,7 +58,7 @@ final class ReservationViewModel: Reducerable {
         var isPresentedShareSheet: Bool = false
         
         var isWithinOneHours: Bool {
-            let interval = reservation.reservationDatetime?.timeIntervalSince(Date()) ?? 0
+            let interval = reservation?.reservationDatetime?.timeIntervalSince(Date()) ?? 0
             return interval > 0 && interval <= 3600 // 60 * 60
         }
     }
@@ -90,8 +90,9 @@ final class ReservationViewModel: Reducerable {
                 await getReservationMembers(reservationId: reservationId)
             }
         case let .showImageViewer(index):
+            guard let images = state.reservation?.images else { return }
             Task { @MainActor in
-                state.sharedImages = await fetchImages(urlStrings: state.reservation.images)
+                state.sharedImages = await fetchImages(urlStrings: images)
                 state.selectedImageIndex = index
                 state.isShowImageViewer = true
             }
@@ -198,11 +199,7 @@ public extension ReservationDetail {
         reservationDatetime: ISO8601DateFormatter().date(from: "2025-07-09T02:09:09+09:00") ?? .distantFuture,
         description: "1순위로 E열 선정하기. 만약에 안되면 H도 괜찮아요",
         linkUrl: "https://example.com/reservation-link",
-        images: [
-            "https://i.pravatar.cc/150?img=4",
-            "https://i.pravatar.cc/150?img=4",
-            "https://i.pravatar.cc/150?img=3",
-        ],
+        images: [],
         host: .init(
             hostId: -1,
             nickName: "예약자",

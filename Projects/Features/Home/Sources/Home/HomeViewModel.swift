@@ -59,7 +59,6 @@ final class HomeViewModel: Reducerable {
             completedReservationPage = 1
             scheduledPaginationMetadata = .init()
             completedPaginationMetadata = .init()
-            isInitialFetching = false
             Task { @MainActor in
                 isInitialFetching = true
                 await getReservationList(page: scheduledReservationPage, status: .after)
@@ -95,7 +94,12 @@ final class HomeViewModel: Reducerable {
         guard shouldLoadMore(for: status) else { return }
 
         do {
-            let request = ReservationListRequest(page: page, limit: 10, status: status)
+            let request = ReservationListRequest(
+                page: page,
+                limit: 10,
+                order: status == .after ? .asc : .desc,
+                status: status
+            )
             let list = try await homeUseCase.getReservationList(request: request)
 
             applyReservationList(status: status, list: list)
