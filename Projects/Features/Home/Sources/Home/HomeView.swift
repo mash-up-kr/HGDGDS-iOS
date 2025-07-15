@@ -129,6 +129,8 @@ struct HomeView: View {
                     
                     HGColors.gray10.color
                 }
+            } else {
+                HGColors.gray10.color
             }
         }
     }

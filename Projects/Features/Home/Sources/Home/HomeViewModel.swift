@@ -94,7 +94,12 @@ final class HomeViewModel: Reducerable {
         guard shouldLoadMore(for: status) else { return }
 
         do {
-            let request = ReservationListRequest(page: page, limit: 10, status: status)
+            let request = ReservationListRequest(
+                page: page,
+                limit: 10,
+                order: status == .after ? .asc : .desc,
+                status: status
+            )
             let list = try await homeUseCase.getReservationList(request: request)
 
             applyReservationList(status: status, list: list)
