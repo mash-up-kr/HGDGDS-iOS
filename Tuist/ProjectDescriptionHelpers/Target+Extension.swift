@@ -21,7 +21,7 @@ public extension Target {
     ) -> Target {
         let appTaget: Target = .target(
             name: name,
-            destinations: .iOS,
+            destinations: [.iPhone],
             product: .app,
             bundleId: "\(Constants.organizationName).\(name)",
             deploymentTargets: .iOS(deploymentTargetsVersion),

@@ -12,8 +12,7 @@ public extension Settings {
         base: [
             "DEVELOPMENT_TEAM": "V2YNV9QV27",
             "CODE_SIGN_STYLE": "Manual",
-            "PROVISIONING_PROFILE_SPECIFIER": "match Development HGDGDS.HGDGDS-iOS",
-            "ENABLE_APP_SANDBOX": true
+            "PROVISIONING_PROFILE_SPECIFIER": "match Development HGDGDS.HGDGDS-iOS"
         ],
         configurations: [
             .debug(

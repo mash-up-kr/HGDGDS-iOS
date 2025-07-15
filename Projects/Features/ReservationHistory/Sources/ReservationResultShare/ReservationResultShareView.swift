@@ -155,7 +155,8 @@ struct ReservationResultShareView: View {
                 } else {
                     NavigationLink(
                         value: ReservationHistoryRoute.resultInput(
-                            reservationID: viewModel.reservationID
+                            reservationID: viewModel.reservationID,
+                            title: viewModel.reservationTitle
                         )
                     ) {
                         Text("결과 공유하기")

@@ -19,5 +19,7 @@ public let defaultPlist: [String: Plist.Value] = [
             "CFBundleURLSchemes": ["kokkok"]
         ]
     ],
-    "UILaunchStoryboardName": "LaunchScreen"
+    "UILaunchStoryboardName": "LaunchScreen",
+    "CFBundleShortVersionString": .init(stringLiteral: Constants.version),
+    "CFBundleVersion": .init(stringLiteral: Constants.buildNumber)
 ]
