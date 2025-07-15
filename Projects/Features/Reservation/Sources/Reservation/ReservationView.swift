@@ -30,7 +30,7 @@ struct ReservationView: View {
         self.viewModel = .init(reservationId: reservationId, category: category)
     }
     
-    var dDay: Int { viewModel.reservation.reservationDatetime?.dDayValue() ?? 0 }
+    var dDay: Int { viewModel.reservation?.reservationDatetime?.dDayValue() ?? 0 }
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -115,7 +115,7 @@ struct ReservationView: View {
                 backgroundColor: HGColors.opacityWhite10
             )
             Spacer().frame(height: 20)
-            Text(viewModel.reservation.title)
+            Text(viewModel.reservation?.title ?? "")
                 .setTypo(.display_32_extraBold)
                 .foregroundStyle(.gray0White)
             HStack(spacing: 2) {
@@ -123,14 +123,14 @@ struct ReservationView: View {
                     .resizable()
                     .frame(16)
                     .foregroundStyle(.opacityWhite30)
-                Text(viewModel.reservation.reservationDatetime?.formatted(with: .yyyyMMddKorean) ?? "")
+                Text(viewModel.reservation?.reservationDatetime?.formatted(with: .yyyyMMddKorean) ?? "")
                     .setTypo(.body_14_bold)
                     .foregroundStyle(.opacityWhite60)
                 HGIcons.timer.image
                     .resizable()
                     .frame(16)
                     .foregroundStyle(.opacityWhite30)
-                Text(viewModel.reservation.reservationDatetime?.formatted(with: .ahhmmKorean) ?? "")
+                Text(viewModel.reservation?.reservationDatetime?.formatted(with: .ahhmmKorean) ?? "")
                     .setTypo(.body_14_bold)
                     .foregroundStyle(.opacityWhite60)
             }
@@ -410,7 +410,7 @@ struct ReservationView: View {
                     .resizable()
                     .foregroundStyle(.gray70)
                     .frame(24)
-                Text(viewModel.reservation.linkUrl)
+                Text(viewModel.reservation?.linkUrl ?? "")
                     .lineLimit(1)
                     .setTypo(.body_16_bold)
                     .foregroundStyle(.gray80)
@@ -420,7 +420,7 @@ struct ReservationView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .strokeBorder(HGColors.gray20.color, radius: 14)
             .onTapGesture {
-                guard let url = URL(string: viewModel.reservation.linkUrl),
+                guard let url = URL(string: viewModel.reservation?.linkUrl ?? ""),
                       UIApplication.shared.canOpenURL(url) else {
                     viewModel.reduce(.showInvalidLinkToast)
                     return
@@ -433,7 +433,8 @@ struct ReservationView: View {
     private var sharedPhotosSectionView: some View {
         makeSectionCardView(icon: .cameraShare, title: "공유된 사진") {
             HStack(spacing: 5) {
-                ForEach(Array(viewModel.reservation.images.enumerated()), id: \.offset) { index, imageURLString in
+                let imageItems = Array((viewModel.reservation?.images ?? []).enumerated())
+                ForEach(imageItems, id: \.offset) { index, imageURLString in
                     Button {
                         viewModel.reduce(.showImageViewer(index))
                     } label: {
@@ -456,7 +457,7 @@ struct ReservationView: View {
     
     private var descriptionSectionView: some View {
         makeSectionCardView(icon: .writePencilCircle, title: "설명") {
-            Text(viewModel.reservation.description)
+            Text(viewModel.reservation?.description ?? "")
                 .setTypo(.body_16_regular)
                 .foregroundStyle(.gray80)
         }
