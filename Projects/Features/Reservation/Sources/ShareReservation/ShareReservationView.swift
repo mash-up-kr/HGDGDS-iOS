@@ -96,18 +96,18 @@ struct ShareReservationView: View {
     private var cardFrontView: some View {
         VStack(spacing: .zero) {
             HStack(spacing: 4) {
-                LazyImage(url: .init(string: viewModel.reservation.host.profileImageName)) { state in
-                    if let image = state.image {
-                        image
-                            .resizable()
-                            .scaledToFit()
-                            .frame(24)
-                    } else {
-                        HGColors.opacityBlack10.color
-                            .frame(24)
-                    }
+                if let hostProfile = viewModel.hostProfile {
+                    hostProfile.image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(24)
+                        .clipShape(.circle)
+                } else {
+                    HGColors.opacityBlack10.color
+                        .frame(24)
+                        .clipShape(.circle)
                 }
-                .clipShape(.circle)
+                
                 Text(viewModel.reservation.host.nickName)
                     .setTypo(.body_14_bold)
                     .foregroundStyle(.white)
@@ -185,7 +185,14 @@ struct ShareReservationView: View {
                 icon: .link,
                 title: "링크",
                 content: viewModel.reservation.linkUrl
-            )
+            ) {
+                guard let url = URL(string: viewModel.reservation.linkUrl),
+                      UIApplication.shared.canOpenURL(url) else {
+                    viewModel.reduce(.showInvalidLinkToast)
+                    return
+                }
+                UIApplication.shared.open(url)
+            }
             HGDividerView().padding(.vertical, 12)
             cardDetailHeader(
                 icon: .camera,
@@ -283,6 +290,7 @@ struct ShareReservationView: View {
         icon: HGIcons,
         title: String,
         content: String?,
+        onTapContent: (()->Void)? = nil,
         boldContent: String? = nil
     ) -> some View {
         HStack(spacing: 2) {
@@ -300,6 +308,9 @@ struct ShareReservationView: View {
                     .foregroundStyle(.gray95)
                     .lineLimit(1)
                     .frame(maxWidth: 150, alignment: .trailing)
+                    .onTapGesture {
+                        onTapContent?()
+                    }
             }
             
             if let boldContent {
