@@ -14,6 +14,7 @@ public enum DeepLinkPath: String {
         let urlString = "https://" + HGConstants.deepLinkHost + self.rawValue + "?"
         if var components = URLComponents(string: urlString) {
             for parameter in parameters {
+                components.queryItems = []
                 components.queryItems?.append(
                     .init(
                         name: parameter.key,
