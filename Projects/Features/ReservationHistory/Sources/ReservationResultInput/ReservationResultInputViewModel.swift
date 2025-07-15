@@ -48,9 +48,11 @@ final class ReservationResultInputViewModel: Reducerable {
     var state: State = .init()
     
     private let reservationID: Int
+    let title: String
     
-    init(reservationID: Int) {
+    init(reservationID: Int, title: String) {
         self.reservationID = reservationID
+        self.title = title
     }
     
     @ObservationIgnored
