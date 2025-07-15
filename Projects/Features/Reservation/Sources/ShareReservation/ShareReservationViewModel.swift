@@ -54,7 +54,7 @@ final class ShareReservationViewModel: Reducerable {
     }
     
     struct State {
-        var reservation: ReservationDetail = .mockData
+        var reservation: ReservationDetail?
         var cardState: CardState = .front
         var isPresentedShareSheet: Bool = false
         var isPresentedImageViewer: Bool = false
