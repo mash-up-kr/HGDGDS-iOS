@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+
 import HGDesignSystem
 import HGCommon
+import BranchSDK
 
 struct HGTabView: View {
     @State private var selectedItem: TabItem = .home
@@ -57,6 +59,8 @@ struct HGTabView: View {
         .onOpenURL { url in
             let deepLink = try? DeepLinkPhaser.phase(url)
             self.deepLinkItem = deepLink
+            Branch.getInstance().handleDeepLink(url)
+            
         }
         .onReceive(NotificationCenter.default.publisher(for: .showCreateReservation)) { _ in
             self.showCreateView = true

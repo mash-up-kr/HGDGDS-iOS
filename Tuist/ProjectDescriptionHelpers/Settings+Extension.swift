@@ -13,7 +13,7 @@ public extension Settings {
             "DEVELOPMENT_TEAM": "V2YNV9QV27",
             "CODE_SIGN_STYLE": "Manual",
             "PROVISIONING_PROFILE_SPECIFIER": "match Development HGDGDS.HGDGDS-iOS",
-            "OTHER_LDFLAGS": ["-all_load -Objc"]
+            "OTHER_LDFLAGS": ["-ObjC"]
         ],
         configurations: [
             .debug(

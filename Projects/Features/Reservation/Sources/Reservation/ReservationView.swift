@@ -317,9 +317,11 @@ struct ReservationView: View {
                 .background(.gray15)
                 .setRadius(20)
             }
+            
             ShareLink(
-                item: URL(string: "https://hgdgds.duckdns.org/invite?reservationId=\(viewModel.reservationId)")!,
-                preview: SharePreview("초대장 링크공유", image: viewModel.category.image)
+                item: DeepLinkPath.invite.generateDeeplinkURL(
+                    parameters: ["reservationId":"\(viewModel.reservationId)"]
+                )!
             ) {
                 Text("+ 초대장 보내기")
                     .setTypo(.body_16_bold)
