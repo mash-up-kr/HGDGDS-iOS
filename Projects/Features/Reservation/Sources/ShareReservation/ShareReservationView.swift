@@ -96,7 +96,7 @@ struct ShareReservationView: View {
     private var cardFrontView: some View {
         VStack(spacing: .zero) {
             HStack(spacing: 4) {
-                LazyImage(url: .init(string: viewModel.reservation.host.profileImageName)) { state in
+                LazyImage(url: .init(string: viewModel.reservation.host.profileImageCode)) { state in
                     if let image = state.image {
                         image
                             .resizable()

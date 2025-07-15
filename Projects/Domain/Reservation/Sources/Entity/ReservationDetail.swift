@@ -55,12 +55,12 @@ public struct ReservationDetail: Equatable {
     public struct Host: Equatable {
         public let hostId: Int
         public let nickName: String
-        public let profileImageName: String
+        public let profileImageCode: String
         
-        public init(hostId: Int, nickName: String, profileImageName: String) {
+        public init(hostId: Int, nickName: String, profileImageCode: String) {
             self.hostId = hostId
             self.nickName = nickName
-            self.profileImageName = profileImageName
+            self.profileImageCode = profileImageCode
         }
     }
     
@@ -94,7 +94,7 @@ public extension ReservationDetail {
         host: .init(
             hostId: -1,
             nickName: "예약자",
-            profileImageName: "IMG_001"
+            profileImageCode: "IMG_001"
         ),
         currentUser: .init(
             userId: -1,

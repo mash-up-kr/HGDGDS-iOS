@@ -203,7 +203,7 @@ public extension ReservationDetail {
         host: .init(
             hostId: -1,
             nickName: "예약자",
-            profileImageName: "IMG_001"
+            profileImageCode: "IMG_001"
         ),
         currentUser: .init(
             userId: -1,
