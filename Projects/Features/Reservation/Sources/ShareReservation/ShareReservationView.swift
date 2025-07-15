@@ -185,7 +185,14 @@ struct ShareReservationView: View {
                 icon: .link,
                 title: "링크",
                 content: viewModel.reservation.linkUrl
-            )
+            ) {
+                guard let url = URL(string: viewModel.reservation.linkUrl),
+                      UIApplication.shared.canOpenURL(url) else {
+                    viewModel.reduce(.showInvalidLinkToast)
+                    return
+                }
+                UIApplication.shared.open(url)
+            }
             HGDividerView().padding(.vertical, 12)
             cardDetailHeader(
                 icon: .camera,
@@ -283,6 +290,7 @@ struct ShareReservationView: View {
         icon: HGIcons,
         title: String,
         content: String?,
+        onTapContent: (()->Void)? = nil,
         boldContent: String? = nil
     ) -> some View {
         HStack(spacing: 2) {
@@ -300,6 +308,9 @@ struct ShareReservationView: View {
                     .foregroundStyle(.gray95)
                     .lineLimit(1)
                     .frame(maxWidth: 150, alignment: .trailing)
+                    .onTapGesture {
+                        onTapContent?()
+                    }
             }
             
             if let boldContent {

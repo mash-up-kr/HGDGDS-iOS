@@ -68,6 +68,7 @@ final class ShareReservationViewModel: Reducerable {
         case toggleCardState
         case didTapBottomButton
         case didTapDismiss(dismiss: ()->Void)
+        case showInvalidLinkToast
     }
     
     func reduce(_ action: Action) {
@@ -112,6 +113,10 @@ final class ShareReservationViewModel: Reducerable {
                         self.state.isLoading = false
                     }
                 }
+            }
+        case .showInvalidLinkToast:
+            Task { @MainActor in
+                ToastUtils.showToast("유효하지 않은 링크입니다!")
             }
             
         case .toggleCardState:
