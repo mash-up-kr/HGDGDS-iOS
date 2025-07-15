@@ -53,6 +53,7 @@ struct SelectProfileImageView: View {
                 viewModel.reduce(.didTapNextButton)
             }
             .padding(.bottom, 15)
+            .disabled(viewModel.selectedProfile == nil)
         }
         .padding(.horizontal, 16)
         .applyNavigationBar(title: "")

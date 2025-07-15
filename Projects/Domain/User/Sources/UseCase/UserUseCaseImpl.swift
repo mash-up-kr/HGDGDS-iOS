@@ -40,9 +40,7 @@ public final class UserUseCaseImpl: UserUseCase {
         try await keychain.addKeychain(key: .accessToken, value: response.accessToken)
         
         /// FCM 등록
-        let fcmToken = try await keychain.readKeychain(key: .fcmToken)
-        try await userRepo.updateFCM(fcmToken: fcmToken)
-        LoggerUtil.log("FCM 등록 성공 FCM Token: \(fcmToken) ")
+        await updateFCM()
     }
     
     public func getProfileList() async throws -> [KokProfile] {
@@ -52,6 +50,13 @@ public final class UserUseCaseImpl: UserUseCase {
     public func validateNickname(nickname: String) -> Bool {
         return !nickname.contains { c in
             c.isEmoji || c.isWhitespace || c.isNewline
+        }
+    }
+    
+    public func updateFCM() async {
+        if let fcmToken = try? await keychain.readKeychain(key: .fcmToken) {
+            try? await userRepo.updateFCM(fcmToken: fcmToken)
+            LoggerUtil.log("FCM 등록 성공 FCM Token: \(fcmToken) ")
         }
     }
 }

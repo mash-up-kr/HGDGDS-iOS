@@ -94,7 +94,7 @@ public extension ReservationDetail {
         host: .init(
             hostId: -1,
             nickName: "예약자",
-            profileImageCode: "IMG_001"
+            profileImageCode: "PURPLE"
         ),
         currentUser: .init(
             userId: -1,

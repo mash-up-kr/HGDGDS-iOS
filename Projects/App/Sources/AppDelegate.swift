@@ -11,17 +11,19 @@ import HGCommon
 import HGLogger
 import FirebaseCore
 import FirebaseMessaging
+import UserDomain
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
     @Dependency private var keychain: KeychainManagerable
+    @Dependency private var userUsecase: UserUseCase
     
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
         Task {
-            await configureNotification(application: application)
             configureFireBase()
+            await configureNotification(application: application)
         }
 
         return true
@@ -58,6 +60,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 // MARK: - FCM
 
 extension AppDelegate: MessagingDelegate {
+    
     func messaging(
         _ messaging: Messaging,
         didReceiveRegistrationToken fcmToken: String?
@@ -65,6 +68,8 @@ extension AppDelegate: MessagingDelegate {
         Task {
             guard let fcmToken = fcmToken else { return }
             try await keychain.addKeychain(key: .fcmToken, value: fcmToken)
+            // TODO: [임시] 어디서 부를지 추후 논의하기
+            await userUsecase.updateFCM()
         }
     }
 }
