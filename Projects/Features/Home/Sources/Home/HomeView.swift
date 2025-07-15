@@ -68,29 +68,33 @@ struct HomeView: View {
     
     @ViewBuilder
     private var scheduledReservationView: some View {
-        if viewModel.isExistScheduledMainReservation {
-            VStack(spacing: 0) {
-                HomeMainReservationTabView(viewModel: viewModel)
-                
-                if viewModel.isExistScheduledSubReservations {
-                    HomeSubReservationCardListView(
-                        statusTab: .scheduled,
-                        reservations: viewModel.scheduledReservationInfos,
-                        totalCount: viewModel.scheduledPaginationMetadata.total,
-                        mainReservationCount: viewModel.mainReservationInfos.count,
-                        tapItemAction: { reservationId, category in
-                            coordinator.push(.upcomingReservationDetail(reservationId: reservationId, category: category))
-                        },
-                        lastItemAction: {
-                            viewModel.reduce(.loadMoreReservation(status: .after))
-                        }
-                    )
-                    .padding(.horizontal, 16)
+        VStack(spacing: 0) {
+            reservationResultView
+            
+            if viewModel.isExistScheduledMainReservation {
+                VStack(spacing: 0) {
+                    HomeMainReservationTabView(viewModel: viewModel)
+                    
+                    if viewModel.isExistScheduledSubReservations {
+                        HomeSubReservationCardListView(
+                            statusTab: .scheduled,
+                            reservations: viewModel.scheduledReservationInfos,
+                            totalCount: viewModel.scheduledPaginationMetadata.total,
+                            mainReservationCount: viewModel.mainReservationInfos.count,
+                            tapItemAction: { reservationId, category in
+                                coordinator.push(.upcomingReservationDetail(reservationId: reservationId, category: category))
+                            },
+                            lastItemAction: {
+                                viewModel.reduce(.loadMoreReservation(status: .after))
+                            }
+                        )
+                        .padding(.horizontal, 16)
+                    }
                 }
+            } else {
+                HomeEmptyReservationView()
+                    .frame(height: HomeUIConstans.contentHeight)
             }
-        } else {
-            HomeEmptyReservationView()
-                .frame(height: HomeUIConstans.contentHeight)
         }
     }
     
@@ -150,6 +154,64 @@ struct HomeView: View {
         ReservationStatusToggle(selectedTab: $viewModel.state.selectedStatusTab)
             .frame(width: 154, height: 40)
             .padding(.vertical, 6)
+    }
+    
+    @ViewBuilder
+    private var reservationResultView: some View {
+        if let reservation = viewModel.state.compeletedReservationWithIn24Hours,
+           let interval = viewModel.compeletedReservationWithIn24HoursInterval {
+            Button {
+                coordinator.push(
+                    .reservationHistory(
+                        .resultShare(
+                            reservationID: reservation.reservationId,
+                            categoryRawValue: reservation.categoryType.rawValue
+                        )
+                    )
+                )
+            } label: {
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 0) {
+                        Text(reservation.title)
+                            .setTypo(.body_14_bold)
+                            .foregroundStyle(.gray95)
+                        
+                        Spacer().frame(width: 6)
+                        
+                        HGIcons.timer.image
+                            .resizable()
+                            .frame(12)
+                            .foregroundStyle(.gray40)
+                        Text("\(interval) 전 예약 마감")
+                            .setTypo(.caption_11_medium)
+                            .foregroundStyle(.gray60)
+                    }
+                    
+                    Text("팀원들에게 결과를 공유하세요!")
+                        .setTypo(.body_16_bold)
+                        .foregroundStyle(.gray95)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .overlay(alignment: .trailing) {
+                    HGIcons.arrowRight.image
+                        .foregroundStyle(.gray60)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 15)
+                .background(
+                    RoundedRectangle(cornerRadius: 22)
+                        .foregroundStyle(.opacityWhite30)
+                )
+                .overlay {
+                    RoundedRectangle(cornerRadius: 22)
+                        .stroke(HGGradient.strokeGradient.opacity(0.6), lineWidth: 1)
+                }
+                .shadow(color: HGColors.purpleDark.color.opacity(0.15), radius: 20, x: 0, y: 2)
+                .environment(\.colorScheme, .light)
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 12)
+        }
     }
 }
 

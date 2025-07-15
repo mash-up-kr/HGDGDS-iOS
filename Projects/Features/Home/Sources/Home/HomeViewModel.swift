@@ -50,6 +50,9 @@ final class HomeViewModel: Reducerable {
         var mainReservationInfos: [ReservationInfo] = []
         var scheduledReservationInfos: [ReservationInfo] = []
         var completedReservationInfos: [ReservationInfo] = []
+        
+        var compeletedReservationWithIn24Hours: ReservationInfo?
+        var compeletedReservationWithIn24HoursInterval: String?
     }
     
     func reduce(_ action: Action) {
@@ -103,6 +106,11 @@ final class HomeViewModel: Reducerable {
             let list = try await homeUseCase.getReservationList(request: request)
 
             applyReservationList(status: status, list: list)
+            
+            if status == .before,
+               let firstRservation = list.reservations.first {
+                udpateBannerForShareReservation(with: firstRservation)
+            }
         } catch {
             LoggerUtil.log("홈화면: 예약 리스트 불러오기 실패 – \(error)")
         }
@@ -160,6 +168,27 @@ final class HomeViewModel: Reducerable {
         if state.mainReservationInfos.isEmpty, let first = futureReservations.first {
             state.mainReservationInfos = [first]
             state.scheduledReservationInfos.removeAll { $0.reservationId == first.reservationId }
+        }
+    }
+    
+    private func udpateBannerForShareReservation(with reservation: ReservationInfo) {
+        let interval = reservation.reservationDatetime.timeIntervalSince(Date())
+        if interval < 0 && interval >= -86400 { // 60 * 60 * 24
+            state.compeletedReservationWithIn24Hours = reservation
+            state.compeletedReservationWithIn24HoursInterval = formatIntervalToHourMinuteString(interval)
+        }
+    }
+    
+    private func formatIntervalToHourMinuteString(_ interval: TimeInterval) -> String {
+        let absInterval = abs(Int(interval))
+        
+        let hours = absInterval / 3600
+        let minutes = (absInterval % 3600) / 60
+        
+        if hours > 0 {
+            return "\(hours)시간 \(minutes)분"
+        } else {
+            return "\(minutes)분"
         }
     }
 }
