@@ -138,9 +138,9 @@ final class ReservationViewModel: Reducerable {
     
     @MainActor
     private func kok(reservationId: Int, userId: Int) async {
+        ToastUtils.showToast("친구를 콕 찔러 알림을 보냈어요", icon: .checkInCircle)
         do {
             try await reservationUseCase.kok(reservationId: reservationId, userId: userId)
-            ToastUtils.showToast("친구를 콕 찔러 알림을 보냈어요", icon: .checkInCircle)
         } catch {
             LoggerUtil.log("콕찌르기 실패: \(error)", level: .error)
         }
