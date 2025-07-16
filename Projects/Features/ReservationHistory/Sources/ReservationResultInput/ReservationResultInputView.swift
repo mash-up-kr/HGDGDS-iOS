@@ -174,6 +174,7 @@ struct ReservationResultInputView: View {
                 required: true
             )
             .disabled(true)
+            .contentShape(.rect)
             .onTapGesture {
                 viewModel.reduce(.didTapReservationDateButton)
             }
@@ -187,6 +188,7 @@ struct ReservationResultInputView: View {
                 hiddenClearButton: true
             )
             .disabled(true)
+            .contentShape(.rect)
             .onTapGesture {
                 viewModel.reduce(.didTapReservationHourButton)
             }
