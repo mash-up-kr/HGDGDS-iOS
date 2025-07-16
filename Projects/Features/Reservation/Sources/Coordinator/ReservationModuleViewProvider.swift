@@ -26,7 +26,7 @@ public struct ReservationModuleViewProvider: ReservationViewProviderable {
     public func reservationShareView(
         reservationId: Int,
         type: ShareViewType,
-        coordinator: (any Coordinatorable)
+        coordinator: (any Coordinatorable)?
     ) -> AnyView {
         AnyView(
             ShareReservationView(

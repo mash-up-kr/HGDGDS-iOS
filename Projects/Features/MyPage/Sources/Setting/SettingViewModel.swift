@@ -9,6 +9,7 @@ import Foundation
 import HGCommon
 import UserDomain
 import HGLogger
+import UIKit
 
 @Observable
 final class SettingViewModel: Reducerable {
@@ -18,6 +19,7 @@ final class SettingViewModel: Reducerable {
         case setup
         case didTapReserveAlarmToggle(Bool)
         case didTapKokAlarmToggle(Bool)
+        case resetKeychain
     }
     
     struct State {
@@ -30,6 +32,9 @@ final class SettingViewModel: Reducerable {
     private let reservationAlarmToggleEvent: Debouncer = Debouncer()
     private let kokAlarmToggleEvent: Debouncer = Debouncer()
     private unowned let userManager: UserManager = .shared
+    
+    @ObservationIgnored
+    @Dependency private var keychainManager: any KeychainManagerable
     
     private var getVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.0.0"
@@ -56,6 +61,17 @@ final class SettingViewModel: Reducerable {
                 guard let self else { return }
                 await self.kokAlarmToggleEvent.debounce(delay: 0.3) {
                     await self.requestUpdateKokAlarm(isOn: isOn)
+                }
+            }
+        case .resetKeychain:
+            Task {
+                try await keychainManager.deleteKeychain(key: .accessToken)
+                try await keychainManager.deleteKeychain(key: .fcmToken)
+                await MainActor.run {
+                    UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        exit(0)
+                    }
                 }
             }
         }

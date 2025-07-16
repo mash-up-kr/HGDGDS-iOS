@@ -69,6 +69,11 @@ struct ShareReservationView: View {
             ImageSwipeView(showIndex: viewModel.selectedImageIndex, images: viewModel.uiImages)
         })
         .isLoading(viewModel.isLoading, opacity: 0.01)
+        .onChange(of: viewModel.isJoinedReservation) { _, isJoinedReservation in
+            if isJoinedReservation {
+                dismiss()
+            }
+        }
     }
     
     private var cardView: some View {
@@ -223,7 +228,7 @@ struct ShareReservationView: View {
             .padding(.bottom, 10)
             
             if let images = viewModel.reservation?.images, images.isNotEmpty {
-                HStack(spacing: .zero) {
+                HStack(spacing: 3) {
                     ForEach(viewModel.uiImages.indices, id: \.self) { i in
                         let uiImage = viewModel.uiImages[i]
                         Button {
@@ -239,8 +244,8 @@ struct ShareReservationView: View {
                                     linewidth: 1
                                 )
                         }
-                        Spacer()
                     }
+                    Spacer()
                 }
             } else {
                 Text("공유된 사진이 없어요")

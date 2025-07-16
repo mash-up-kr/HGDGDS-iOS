@@ -60,6 +60,7 @@ public final class UserRepositoryImpl: UserRepository {
         }
     }
     
+    /// - NOTE: 통신사용안하고 내부이미지 사용으로 변경됬습니다.
     public func getProfileList() async throws -> [KokProfile] {
         let api = GetProfileListAPI(parameters: nil)
         

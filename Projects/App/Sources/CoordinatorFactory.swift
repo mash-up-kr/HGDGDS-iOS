@@ -17,8 +17,10 @@ import ReservationHistoryFeature
 
 @MainActor
 final class CoordinatorFactory {
-    private let homeCoordinator = HomeCoordinator(
-        reservationViewProvider: ReservationModuleViewProvider(),
+    let reservationViewProvider: ReservationModuleViewProvider = .init()
+    
+    private lazy var homeCoordinator = HomeCoordinator(
+        reservationViewProvider: reservationViewProvider,
         reservationHistoryViewProvider: ReservationHistoryViewProvider()
     )
     
@@ -44,12 +46,5 @@ final class CoordinatorFactory {
         )
         return CreateReservationCoordinatorView()
             .environment(coordinator)
-    }
-    
-    func reservationShareView(reservationId: Int, type: ShareViewType) -> some View {
-        ReservationShareCoordinatorView(
-            reservationId: reservationId,
-            type: type
-        )
     }
 }

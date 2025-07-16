@@ -50,12 +50,18 @@ struct HGTabView: View {
         .fullScreenCover(isPresented: $showCreateView) {
             coordinatorFactory.createReservationRootView
         }
-        .fullScreenCover(item: $deepLinkItem, content: { item in
-            switch item {
-            case let .invite(reservationId):
-                coordinatorFactory.reservationShareView(reservationId: reservationId, type: .receiver)
-            }
-        })
+        .fullScreenCover(
+            item: $deepLinkItem,
+            content: { item in
+                switch item {
+                case let .invite(reservationId):
+                    coordinatorFactory.reservationViewProvider.reservationShareView(
+                        reservationId: reservationId,
+                        type: .receiver,
+                        coordinator: nil
+                    )
+                }
+            })
         .onOpenURL { url in
             let deepLink = try? DeepLinkPhaser.phase(url)
             self.deepLinkItem = deepLink
