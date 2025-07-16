@@ -89,8 +89,10 @@ final class CreateReservationViewModel: Reducerable {
             }
         case .didTapDatePicker:
             state.showDatePicker = true
+            state.selectedDate = Date.now
         case .didTapTimePicker:
             state.showTimePicker = true
+            state.selectedTime = Date.now
         case let .didSelectDate(date):
             state.selectedDate = date
         case let .didSelectTime(date):

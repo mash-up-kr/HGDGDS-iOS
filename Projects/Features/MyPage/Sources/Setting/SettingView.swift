@@ -35,9 +35,6 @@ struct SettingView: View {
             Text(viewModel.nickname)
                 .setTypo(.title_20_bold)
                 .foregroundStyle(.gray100Black)
-                .onLongPressGesture(minimumDuration: 3) {
-                    viewModel.reduce(.resetKeychain)
-                }
             Spacer()
             HGButton(title: "프로필 편집", size: .xSmall, variant: .subtle, isMaxWidth: false) {
                 coordinator.push(.editProfile)
@@ -92,6 +89,9 @@ struct SettingView: View {
                 Text(viewModel.versionString)
                     .setTypo(.body_16_medium)
                     .foregroundStyle(.gray50)
+                    .onLongPressGesture(minimumDuration: 3) {
+                        viewModel.reduce(.resetKeychain)
+                    }
             }
         }
     }

@@ -69,8 +69,14 @@ final class ReservationResultInputViewModel: Reducerable {
             checkValidationDoneButton()
         case .didTapReservationDateButton:
             state.isPresentedDatePicker = true
+            let now = Date.now
+            state.successReservationDate = now
+            state.successReservationDateString = now.formatted(with: .yyyyMMddEEKorean)
         case .didTapReservationHourButton:
             state.isPresentedHourPicker = true
+            let now = Date.now
+            state.successReservationTime = now
+            state.successReservationTimeString = now.formatted(with: .ahhmmKorean)
         case let .didChangeDate(date):
             state.successReservationDate = date
             state.successReservationDateString = date.formatted(with: .yyyyMMddEEKorean)

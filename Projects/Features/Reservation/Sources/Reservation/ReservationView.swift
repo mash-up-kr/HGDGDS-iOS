@@ -361,16 +361,12 @@ struct ReservationView: View {
                     Text(member.nickname)
                         .setTypo(.body_16_bold)
                         .foregroundStyle(.gray95)
-                    Button {
+                    HGButton(
+                        title: "콕 찌르기",
+                        size: .small,
+                        isMaxWidth: true
+                    ) {
                         viewModel.reduce(.kokButtonTapped(member.userId))
-                    } label: {
-                        Text("콕 찌르기")
-                            .setTypo(.body_14_bold)
-                            .foregroundStyle(.gray0White)
-                            .frame(height: 31)
-                            .frame(maxWidth: .infinity)
-                            .background(.orange500Main)
-                            .clipShape(Capsule())
                     }
                 }
                 .padding(.top, 15)
