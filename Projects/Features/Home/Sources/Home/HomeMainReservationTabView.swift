@@ -16,9 +16,16 @@ struct HomeMainReservationTabView: View {
     @Environment(HomeCoordinator.self) var coordinator
     @Bindable var viewModel: HomeViewModel
     
+    private var oneMainReservationHeight: CGFloat {
+        let oneMainReservationHeight = HomeUIConstans.screenHeight - UIConstant.tabBarHeight
+        - HomeUIConstans.headerHeight
+        return viewModel.compeletedReservationWithIn24Hours == nil ? oneMainReservationHeight
+        : oneMainReservationHeight - 87
+    }
+    
     private var mainReservationTabViewHeight: CGFloat {
         viewModel.isExistScheduledSubReservations ? HomeUIConstans.defaultTabViewHeight
-        : HomeUIConstans.screenHeight - UIConstant.tabBarHeight - HomeUIConstans.headerHeight
+        : oneMainReservationHeight
     }
     
     var body: some View {
