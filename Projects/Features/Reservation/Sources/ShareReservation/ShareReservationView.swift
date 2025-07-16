@@ -69,6 +69,11 @@ struct ShareReservationView: View {
             ImageSwipeView(showIndex: viewModel.selectedImageIndex, images: viewModel.uiImages)
         })
         .isLoading(viewModel.isLoading, opacity: 0.01)
+        .onChange(of: viewModel.isJoinedReservation) { _, isJoinedReservation in
+            if isJoinedReservation {
+                dismiss()
+            }
+        }
     }
     
     private var cardView: some View {

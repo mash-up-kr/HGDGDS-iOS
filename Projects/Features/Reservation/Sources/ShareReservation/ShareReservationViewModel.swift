@@ -60,6 +60,7 @@ final class ShareReservationViewModel: Reducerable {
         var isPresentedImageViewer: Bool = false
         var isLoading: Bool = false
         var uiImages: [UIImage] = []
+        var isJoinedReservation: Bool = false
     }
     
     enum Action {
@@ -138,6 +139,10 @@ final class ShareReservationViewModel: Reducerable {
         do {
             try await usecase.joinReservation(reservationId: reservationId)
             await ToastUtils.showToast("예약에 참여했어요!")
+            await MainActor.run {
+                NotificationCenter.default.post(name: .joinedReservation, object: nil)
+                state.isJoinedReservation = true
+            }
         } catch let error as ReservationError {
             await ToastUtils.showToast(error.errorMessage)
         } catch {
