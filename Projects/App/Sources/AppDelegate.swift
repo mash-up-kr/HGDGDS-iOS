@@ -70,13 +70,18 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 // MARK: - FCM
 
 extension AppDelegate: MessagingDelegate {
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().apnsToken = deviceToken
+        let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
+        LoggerUtil.log("DeviceTokenString \(deviceTokenString)", level: .info)
+    }
     
     func messaging(
         _ messaging: Messaging,
         didReceiveRegistrationToken fcmToken: String?
     ) {
+        guard let fcmToken = fcmToken else { return }
         Task {
-            guard let fcmToken = fcmToken else { return }
             try await keychain.addKeychain(key: .fcmToken, value: fcmToken)
             // TODO: [임시] 어디서 부를지 추후 논의하기
             await userUsecase.updateFCM()
