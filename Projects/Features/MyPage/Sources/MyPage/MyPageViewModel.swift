@@ -42,6 +42,7 @@ final class MyPageViewModel: Reducerable {
     @MainActor
     func requestUserInfo() async {
         do {
+            await userManager.requestUserInfo()
             let userInfo = try await userManager.fetchUser()
             self.state.nickname = userInfo.nickname
             self.state.profileType = userInfo.profileType
