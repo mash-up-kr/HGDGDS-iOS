@@ -121,6 +121,7 @@ final class ReservationViewModel: Reducerable {
             let members = try await reservationUseCase.getReservationMembers(id: reservationId)
             state.members = members.members
             state.me = members.me
+            state.isReady = members.me.status == .ready
         } catch {
             LoggerUtil.log("예약 멤버 가져오기 실패: \(error)", level: .error)
         }
