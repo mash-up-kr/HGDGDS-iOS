@@ -363,9 +363,10 @@ struct ReservationView: View {
                         .foregroundStyle(.gray95)
                     HGButton(
                         title: "콕 찌르기",
-                        size: .small,
+                        size: .small,   
                         isMaxWidth: true
                     ) {
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
                         viewModel.reduce(.kokButtonTapped(member.userId))
                     }
                 }
