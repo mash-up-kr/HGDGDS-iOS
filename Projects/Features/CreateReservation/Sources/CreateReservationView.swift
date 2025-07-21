@@ -208,6 +208,7 @@ struct CreateReservationView: View {
                 required: true
             )
             .disabled(true)
+            .contentShape(.rect)
             .onTapGesture {
                 viewModel.reduce(.didTapDatePicker)
             }
@@ -222,6 +223,7 @@ struct CreateReservationView: View {
                 required: true
             )
             .disabled(true)
+            .contentShape(.rect)
             .onTapGesture {
                 viewModel.reduce(.didTapTimePicker)
             }

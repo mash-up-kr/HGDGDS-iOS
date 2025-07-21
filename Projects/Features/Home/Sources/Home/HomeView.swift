@@ -64,6 +64,9 @@ struct HomeView: View {
         .onReceive(NotificationCenter.default.publisher(for: .createReservationComplete)) { _ in
             viewModel.reduce(.onAppear)
         }
+        .onReceive(NotificationCenter.default.publisher(for: .joinedReservation)) { _ in
+            viewModel.reduce(.onAppear)
+        }
     }
     
     @ViewBuilder
@@ -129,6 +132,8 @@ struct HomeView: View {
                     
                     HGColors.gray10.color
                 }
+            } else {
+                HGColors.gray10.color
             }
         }
     }

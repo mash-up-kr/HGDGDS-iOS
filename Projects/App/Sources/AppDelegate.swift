@@ -12,6 +12,7 @@ import HGLogger
 import FirebaseCore
 import FirebaseMessaging
 import UserDomain
+import BranchSDK
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
     @Dependency private var keychain: KeychainManagerable
@@ -21,12 +22,21 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
+        configureBranchSDK(launchOptions: launchOptions)
+        configureFireBase()
+        
         Task {
-            configureFireBase()
             await configureNotification(application: application)
         }
 
         return true
+    }
+}
+
+// MARK: - Branch.io 
+extension AppDelegate {
+    func configureBranchSDK(launchOptions: [UIApplication.LaunchOptionsKey : Any]?) {
+        Branch.getInstance().initSession(launchOptions: launchOptions)
     }
 }
 
@@ -60,13 +70,18 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 // MARK: - FCM
 
 extension AppDelegate: MessagingDelegate {
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().apnsToken = deviceToken
+        let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
+        LoggerUtil.log("DeviceTokenString \(deviceTokenString)", level: .info)
+    }
     
     func messaging(
         _ messaging: Messaging,
         didReceiveRegistrationToken fcmToken: String?
     ) {
+        guard let fcmToken = fcmToken else { return }
         Task {
-            guard let fcmToken = fcmToken else { return }
             try await keychain.addKeychain(key: .fcmToken, value: fcmToken)
             // TODO: [임시] 어디서 부를지 추후 논의하기
             await userUsecase.updateFCM()

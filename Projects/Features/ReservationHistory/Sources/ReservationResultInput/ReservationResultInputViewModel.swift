@@ -48,9 +48,11 @@ final class ReservationResultInputViewModel: Reducerable {
     var state: State = .init()
     
     private let reservationID: Int
+    let title: String
     
-    init(reservationID: Int) {
+    init(reservationID: Int, title: String) {
         self.reservationID = reservationID
+        self.title = title
     }
     
     @ObservationIgnored
@@ -67,8 +69,14 @@ final class ReservationResultInputViewModel: Reducerable {
             checkValidationDoneButton()
         case .didTapReservationDateButton:
             state.isPresentedDatePicker = true
+            let now = Date.now
+            state.successReservationDate = now
+            state.successReservationDateString = now.formatted(with: .yyyyMMddEEKorean)
         case .didTapReservationHourButton:
             state.isPresentedHourPicker = true
+            let now = Date.now
+            state.successReservationTime = now
+            state.successReservationTimeString = now.formatted(with: .ahhmmKorean)
         case let .didChangeDate(date):
             state.successReservationDate = date
             state.successReservationDateString = date.formatted(with: .yyyyMMddEEKorean)

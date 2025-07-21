@@ -21,5 +21,8 @@ public let defaultPlist: [String: Plist.Value] = [
     ],
     "UILaunchStoryboardName": "LaunchScreen",
     "CFBundleShortVersionString": .init(stringLiteral: Constants.version),
-    "CFBundleVersion": .init(stringLiteral: Constants.buildNumber)
+    "CFBundleVersion": .init(stringLiteral: Constants.buildNumber),
+    "branch_key": ["live":"$(BRANCH_LIVE_KEY)"],
+    "FirebaseAppDelegateProxyEnabled": "NO",
+    "hostUrl": "$(HOST_URL)",
 ]

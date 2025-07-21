@@ -20,6 +20,6 @@ public protocol ReservationViewProviderable {
     func reservationShareView(
         reservationId: Int,
         type: ShareViewType,
-        coordinator: (any Coordinatorable)
+        coordinator: (any Coordinatorable)?
     ) -> AnyView
 }

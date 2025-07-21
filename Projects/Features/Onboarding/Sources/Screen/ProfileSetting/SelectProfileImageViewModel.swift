@@ -49,10 +49,7 @@ final class SelectProfileImageViewModel: Reducerable {
     func reduce(_ action: Action) {
         switch action {
         case .setup:
-            Task { @MainActor in
-                self.state.profileList = await getProfileImage()
-            }
-            
+            state.profileList = getProfileImage()
         case let .selectImage(profile):
             state.selectedProfile = profile
         case .didTapNextButton:
@@ -86,9 +83,9 @@ final class SelectProfileImageViewModel: Reducerable {
         }
     }
     
-    private func getProfileImage() async -> [KokProfile] {
-        let profileList = try? await usecase.getProfileList()
-        return profileList ?? []
+    private func getProfileImage() -> [KokProfile] {
+        let profileList = usecase.getProfileList()
+        return profileList
     }
 }
 

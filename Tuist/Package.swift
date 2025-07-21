@@ -15,6 +15,7 @@ import PackageDescription
 //            "Lottie": .framework,
             "Firebase": .framework,
             "Swinject": .framework,
+            "BranchSDK" : .framework,
         ]
     )
 #endif
@@ -26,6 +27,8 @@ let package = Package(
 //        .package(url: "https://github.com/airbnb/lottie-ios.git", from: "4.5.1"),
         .package(url: "https://github.com/kean/Nuke.git", from: "12.8.0"),
         .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "11.12.0"),
-        .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1")
+        .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1"),
+        .package(url: "https://github.com/BranchMetrics/ios-branch-deep-linking-attribution", from: "3.12.1")
+        
     ]
 )

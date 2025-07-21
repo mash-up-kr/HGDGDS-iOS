@@ -89,6 +89,9 @@ struct SettingView: View {
                 Text(viewModel.versionString)
                     .setTypo(.body_16_medium)
                     .foregroundStyle(.gray50)
+                    .onLongPressGesture(minimumDuration: 3) {
+                        viewModel.reduce(.resetKeychain)
+                    }
             }
         }
     }

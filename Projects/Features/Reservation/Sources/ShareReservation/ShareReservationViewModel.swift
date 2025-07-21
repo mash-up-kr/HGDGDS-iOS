@@ -13,6 +13,7 @@ import ReservationDomain
 import ReservationFeatureInterface
 import HGDesignSystem
 import SwiftUI
+import UserDomain
 import Nuke
 
 @Observable
@@ -23,6 +24,7 @@ final class ShareReservationViewModel: Reducerable {
     
     /// 예약장을 받는 사람 보내는 사람의 액션을 구분하기 위함
     let shareViewType: ShareViewType
+    var hostProfile: ProfileType?
     let reservationId: Int
     
     @ObservationIgnored
@@ -52,12 +54,13 @@ final class ShareReservationViewModel: Reducerable {
     }
     
     struct State {
-        var reservation: ReservationDetail = .mockData
+        var reservation: ReservationDetail?
         var cardState: CardState = .front
         var isPresentedShareSheet: Bool = false
         var isPresentedImageViewer: Bool = false
         var isLoading: Bool = false
         var uiImages: [UIImage] = []
+        var isJoinedReservation: Bool = false
     }
     
     enum Action {
@@ -66,6 +69,7 @@ final class ShareReservationViewModel: Reducerable {
         case toggleCardState
         case didTapBottomButton
         case didTapDismiss(dismiss: ()->Void)
+        case showInvalidLinkToast
     }
     
     func reduce(_ action: Action) {
@@ -100,6 +104,7 @@ final class ShareReservationViewModel: Reducerable {
                     }
                     
                     await MainActor.run {
+                        self.hostProfile = ProfileType(rawValue: reservationDetail.host.profileImageCode)
                         self.state.isLoading = false
                         self.state.reservation = reservationDetail
                     }
@@ -109,6 +114,10 @@ final class ShareReservationViewModel: Reducerable {
                         self.state.isLoading = false
                     }
                 }
+            }
+        case .showInvalidLinkToast:
+            Task { @MainActor in
+                ToastUtils.showToast("유효하지 않은 링크입니다!")
             }
             
         case .toggleCardState:
@@ -130,6 +139,10 @@ final class ShareReservationViewModel: Reducerable {
         do {
             try await usecase.joinReservation(reservationId: reservationId)
             await ToastUtils.showToast("예약에 참여했어요!")
+            await MainActor.run {
+                NotificationCenter.default.post(name: .joinedReservation, object: nil)
+                state.isJoinedReservation = true
+            }
         } catch let error as ReservationError {
             await ToastUtils.showToast(error.errorMessage)
         } catch {

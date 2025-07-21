@@ -39,6 +39,6 @@ public extension EndPointable {
 
 extension EndPointable {
     var url: URL? {
-        try? ("https://" + baseURL.rawValue + path).asURL()
+        try? ("https://" + baseURL.url + path).asURL()
     }
 }

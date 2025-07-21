@@ -10,10 +10,8 @@ import Foundation
 public struct KokProfile: Identifiable {
     public var id: String { type.rawValue }
     public let type: ProfileType
-    public let imageUrl: String
     
-    public init(type: ProfileType, imageUrl: String) {
+    public init(type: ProfileType) {
         self.type = type
-        self.imageUrl = imageUrl
     }
 }

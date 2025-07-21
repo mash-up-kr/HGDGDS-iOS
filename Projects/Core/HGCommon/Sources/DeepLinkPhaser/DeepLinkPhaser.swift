@@ -9,13 +9,10 @@ import Foundation
 
 public enum DeepLinkPhaser {
     
-    enum DeepLinkPath: String {
-        case invite = "/invite"
-    }
-    
     public static func phase(_ url: URL) throws -> DeepLinkType {
 
-        guard url.host() == HGConstants.deepLinkHost else {
+        guard url.host() == HGConstants.deepLinkHost ||
+                url.host() == HGConstants.deepLinkAlternateHost else {
             throw DeepLinkError.invalidHost
         }
         

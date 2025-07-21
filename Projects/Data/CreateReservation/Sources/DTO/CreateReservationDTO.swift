@@ -27,10 +27,10 @@ extension CreateReservationDTO {
             reservationId: self.reservationId,
             title: self.title,
             category: self.category,
-            reservationDatetime: reservationDatetime.toDate(with: .iso8601ms),
+            reservationDatetime: reservationDatetime.toDate(with: .iso8601),
             linkUrl: linkUrl,
             hostId: hostId,
-            createAt: createdAt.toDate(with: .iso8601ms)
+            createAt: createdAt.toDate(with: .iso8601)
         )
     }
 }

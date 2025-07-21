@@ -43,8 +43,14 @@ public final class UserUseCaseImpl: UserUseCase {
         await updateFCM()
     }
     
-    public func getProfileList() async throws -> [KokProfile] {
-        try await userRepo.getProfileList()
+    public func getProfileList() -> [KokProfile] {
+        [
+            KokProfile(type: .purple),
+            KokProfile(type: .orange),
+            KokProfile(type: .green),
+            KokProfile(type: .blue),
+            KokProfile(type: .pink)
+        ]
     }
     
     public func validateNickname(nickname: String) -> Bool {

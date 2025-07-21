@@ -30,7 +30,7 @@ struct ReservationView: View {
         self.viewModel = .init(reservationId: reservationId, category: category)
     }
     
-    var dDay: Int { viewModel.reservation.reservationDatetime?.dDayValue() ?? 0 }
+    var dDay: Int { viewModel.reservation?.reservationDatetime?.dDayValue() ?? 0 }
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -115,7 +115,7 @@ struct ReservationView: View {
                 backgroundColor: HGColors.opacityWhite10
             )
             Spacer().frame(height: 20)
-            Text(viewModel.reservation.title)
+            Text(viewModel.reservation?.title ?? "")
                 .setTypo(.display_32_extraBold)
                 .foregroundStyle(.gray0White)
             HStack(spacing: 2) {
@@ -123,14 +123,14 @@ struct ReservationView: View {
                     .resizable()
                     .frame(16)
                     .foregroundStyle(.opacityWhite30)
-                Text(viewModel.reservation.reservationDatetime?.formatted(with: .yyyyMMddKorean) ?? "")
+                Text(viewModel.reservation?.reservationDatetime?.formatted(with: .yyyyMMddKorean) ?? "")
                     .setTypo(.body_14_bold)
                     .foregroundStyle(.opacityWhite60)
                 HGIcons.timer.image
                     .resizable()
                     .frame(16)
                     .foregroundStyle(.opacityWhite30)
-                Text(viewModel.reservation.reservationDatetime?.formatted(with: .ahhmm) ?? "")
+                Text(viewModel.reservation?.reservationDatetime?.formatted(with: .ahhmmKorean) ?? "")
                     .setTypo(.body_14_bold)
                     .foregroundStyle(.opacityWhite60)
             }
@@ -188,10 +188,6 @@ struct ReservationView: View {
             }
         }
         .environment(\.colorScheme, .light)
-        .onAppear {
-            viewModel.countDownTimer.setupTime(endDate: viewModel.reservation.reservationDatetime ?? Date())
-            viewModel.countDownTimer.start()
-        }
         .onDisappear {
             viewModel.countDownTimer.stop()
         }
@@ -244,7 +240,7 @@ struct ReservationView: View {
                         .foregroundStyle(.white)
                         .padding(.horizontal, 15)
                         .padding(.vertical, 5)
-                        .background(viewModel.isReady ? .orange500Main : .gray30)
+                        .background(viewModel.isWithinOneHours ? (viewModel.isReady ? .gray30 : .orange500Main) : .gray30)
                         .clipShape(Capsule())
                 }
                 .disabled(!viewModel.isWithinOneHours)
@@ -321,9 +317,11 @@ struct ReservationView: View {
                 .background(.gray15)
                 .setRadius(20)
             }
+            
             ShareLink(
-                item: URL(string: "https://hgdgds.duckdns.org/invite?reservationId=\(viewModel.reservationId)")!,
-                preview: SharePreview("초대장 링크공유", image: viewModel.category.image)
+                item: DeepLinkPath.invite.generateDeeplinkURL(
+                    parameters: ["reservationId":"\(viewModel.reservationId)"]
+                )!
             ) {
                 Text("+ 초대장 보내기")
                     .setTypo(.body_16_bold)
@@ -363,16 +361,13 @@ struct ReservationView: View {
                     Text(member.nickname)
                         .setTypo(.body_16_bold)
                         .foregroundStyle(.gray95)
-                    Button {
+                    HGButton(
+                        title: "콕 찌르기",
+                        size: .small,   
+                        isMaxWidth: true
+                    ) {
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
                         viewModel.reduce(.kokButtonTapped(member.userId))
-                    } label: {
-                        Text("콕 찌르기")
-                            .setTypo(.body_14_bold)
-                            .foregroundStyle(.gray0White)
-                            .frame(height: 31)
-                            .frame(maxWidth: .infinity)
-                            .background(.orange500Main)
-                            .clipShape(Capsule())
                     }
                 }
                 .padding(.top, 15)
@@ -414,7 +409,7 @@ struct ReservationView: View {
                     .resizable()
                     .foregroundStyle(.gray70)
                     .frame(24)
-                Text(viewModel.reservation.linkUrl)
+                Text(viewModel.reservation?.linkUrl ?? "")
                     .lineLimit(1)
                     .setTypo(.body_16_bold)
                     .foregroundStyle(.gray80)
@@ -424,7 +419,7 @@ struct ReservationView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .strokeBorder(HGColors.gray20.color, radius: 14)
             .onTapGesture {
-                guard let url = URL(string: viewModel.reservation.linkUrl),
+                guard let url = URL(string: viewModel.reservation?.linkUrl ?? ""),
                       UIApplication.shared.canOpenURL(url) else {
                     viewModel.reduce(.showInvalidLinkToast)
                     return
@@ -434,35 +429,42 @@ struct ReservationView: View {
         }
     }
     
+    @ViewBuilder
     private var sharedPhotosSectionView: some View {
-        makeSectionCardView(icon: .cameraShare, title: "공유된 사진") {
-            HStack(spacing: 5) {
-                ForEach(Array(viewModel.reservation.images.enumerated()), id: \.offset) { index, imageURLString in
-                    Button {
-                        viewModel.reduce(.showImageViewer(index))
-                    } label: {
-                        LazyImage(url: URL(string: imageURLString)) { state in
-                            if let image = state.image {
-                                image
-                                    .resizable()
-                            } else {
-                                HGColors.opacityBlack10.color
+        if let images = viewModel.reservation?.images, images.isNotEmpty {
+            makeSectionCardView(icon: .cameraShare, title: "공유된 사진") {
+                HStack(spacing: 5) {
+                    let imageItems = Array(images.enumerated())
+                    ForEach(imageItems, id: \.offset) { index, imageURLString in
+                        Button {
+                            viewModel.reduce(.showImageViewer(index))
+                        } label: {
+                            LazyImage(url: URL(string: imageURLString)) { state in
+                                if let image = state.image {
+                                    image
+                                        .resizable()
+                                } else {
+                                    HGColors.opacityBlack10.color
+                                }
                             }
+                            .frame(photoGridSize)
+                            .setRadius(16)
+                            .strokeBorder(HGColors.gray20.color, radius: 16, linewidth: 1)
                         }
-                        .frame(photoGridSize)
-                        .setRadius(16)
-                        .strokeBorder(HGColors.gray20.color, radius: 16, linewidth: 1)
                     }
                 }
             }
         }
     }
     
+    @ViewBuilder
     private var descriptionSectionView: some View {
-        makeSectionCardView(icon: .writePencilCircle, title: "설명") {
-            Text(viewModel.reservation.description)
-                .setTypo(.body_16_regular)
-                .foregroundStyle(.gray80)
+        if let description = viewModel.reservation?.description, description.isNotEmpty {
+            makeSectionCardView(icon: .writePencilCircle, title: "설명") {
+                Text(description)
+                    .setTypo(.body_16_regular)
+                    .foregroundStyle(.gray80)
+            }
         }
     }
     

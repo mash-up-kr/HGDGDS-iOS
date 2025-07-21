@@ -7,6 +7,10 @@
 
 import Foundation
 
-public enum BaseURL: String {
-    case host = "hgdgds.duckdns.org"
+public enum BaseURL {
+    case host
+    
+    var url: String {
+        Bundle.main.object(forInfoDictionaryKey: "hostUrl") as? String ?? ""
+    }
 }

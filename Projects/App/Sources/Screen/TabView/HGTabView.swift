@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+
 import HGDesignSystem
 import HGCommon
+import BranchSDK
 
 struct HGTabView: View {
     @State private var selectedItem: TabItem = .home
@@ -48,15 +50,23 @@ struct HGTabView: View {
         .fullScreenCover(isPresented: $showCreateView) {
             coordinatorFactory.createReservationRootView
         }
-        .fullScreenCover(item: $deepLinkItem, content: { item in
-            switch item {
-            case let .invite(reservationId):
-                coordinatorFactory.reservationShareView(reservationId: reservationId, type: .receiver)
-            }
-        })
+        .fullScreenCover(
+            item: $deepLinkItem,
+            content: { item in
+                switch item {
+                case let .invite(reservationId):
+                    coordinatorFactory.reservationViewProvider.reservationShareView(
+                        reservationId: reservationId,
+                        type: .receiver,
+                        coordinator: nil
+                    )
+                }
+            })
         .onOpenURL { url in
             let deepLink = try? DeepLinkPhaser.phase(url)
             self.deepLinkItem = deepLink
+            Branch.getInstance().handleDeepLink(url)
+            
         }
         .onReceive(NotificationCenter.default.publisher(for: .showCreateReservation)) { _ in
             self.showCreateView = true

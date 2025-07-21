@@ -9,15 +9,13 @@ import Foundation
 import UserDomain
 
 struct ProfileDTO: Decodable {
-    let profileImageCodeName: String
-    let imageUrl: String
+    let profileImageCode: String
 }
 
 extension ProfileDTO {
     var toDomain: KokProfile {
         .init(
-            type: ProfileType(rawValue: profileImageCodeName) ?? .blue,
-            imageUrl: imageUrl
+            type: ProfileType(rawValue: profileImageCode) ?? .blue
         )
     }
 }

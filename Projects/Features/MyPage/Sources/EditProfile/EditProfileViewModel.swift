@@ -67,16 +67,10 @@ final class EditProfileViewModel: Reducerable {
     }
     
     @MainActor
-    private func getProfileImages() async -> [KokProfile] {
-        do {
-            let profileList = try await userUseCase.getProfileList()
-
-            state.candidateProfiles = profileList
-            return profileList
-        } catch {
-            print(error)
-            return []
-        }
+    private func getProfileImages() -> [KokProfile] {
+        let profileList = userUseCase.getProfileList()
+        state.candidateProfiles = profileList
+        return profileList
     }
     
     @MainActor
