@@ -10,10 +10,8 @@ import Foundation
 public extension DependencyName {
     enum Core: String {
         case hgNetwork = "HGNetwork"
-        case hgDatabase = "HGDataBase"
         case hgLogger = "HGLogger"
         case hgCommon = "HGCommon"
-        case hgThridParty = "HGThridParty"
         case hgImageUploader = "HGImageUploader"
     }
 }
