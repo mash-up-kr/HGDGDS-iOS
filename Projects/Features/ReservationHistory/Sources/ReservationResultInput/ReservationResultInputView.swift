@@ -45,6 +45,7 @@ struct ReservationResultInputView: View {
         }
         .applyNavigationBar(
             title: "예약 결과",
+            backgroundColor: HGColors.gray0White.color,
             rightButtonView: {
                 Button {
                     viewModel.reduce(.didTapDoneButton)
