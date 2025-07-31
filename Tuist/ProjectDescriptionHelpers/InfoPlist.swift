@@ -24,5 +24,5 @@ public let defaultPlist: [String: Plist.Value] = [
     "CFBundleVersion": .init(stringLiteral: Constants.buildNumber),
     "branch_key": ["live":"$(BRANCH_LIVE_KEY)"],
     "FirebaseAppDelegateProxyEnabled": "NO",
-    "hostUrl": "$(HOST_URL)",
+    "hostUrl": "$(HOST_URL)"
 ]

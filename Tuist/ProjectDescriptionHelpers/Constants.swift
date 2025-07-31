@@ -12,6 +12,6 @@ public enum Constants {
     public static let projectName = "HGDGDS"
     public static let targetVersion = "18.0"
     public static let projectBasePath: String = "Projects/"
-    public static let buildNumber: String = "8"
+    public static let buildNumber: String = "10"
     public static let version: String = "1.0.0"
 }
